@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dracula">
+    <html lang="en" data-theme="emerald">
       <body className={inter.className}>
         <Header />
         <Sidebar />
