@@ -3,7 +3,39 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-
-    <main>Fő tartalom</main>
+    <>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div><div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div><div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    <div>Fő tartalom</div>
+    </>
   );
 }

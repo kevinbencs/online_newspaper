@@ -5,7 +5,6 @@ import "./globals.css";
 //components
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
-import Sidebar from "./components/sidebar/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="emerald">
-      <body className={inter.className}>
+    <html lang="en" data-theme="night">
+      <body className={inter.className} >
         <Header />
-        <Sidebar />
-        {children}
+        <main>
+          {children}
+        </main>
+        
         <Footer />
       </body>
     </html>

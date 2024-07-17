@@ -19,6 +19,9 @@ const config: Config = {
       },
       translate: {
         "72px":"72px"
+      },
+      colors:{
+        "sidebar": "rgb( 7, 9, 18)"
       }
     },
   },
