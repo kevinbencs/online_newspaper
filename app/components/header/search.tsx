@@ -3,8 +3,8 @@ import React from 'react'
 
 const Search = () => {
   return (
-    <label className="input input-bordered flex items-center h-16">
-      <input type="text" className="grow text-lg" placeholder="Search" />
+    <label className="input input-bordered flex items-center h-16 gap-2">
+      <input type="text" className="grow text-lg text-base-content" placeholder="Search" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"

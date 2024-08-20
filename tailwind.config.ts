@@ -1,4 +1,13 @@
 import type { Config } from "tailwindcss";
+import { PluginAPI } from "tailwindcss/types/config";
+
+interface Utilities{
+  ".no-scrollbar": scrollbarWidth
+}
+
+interface scrollbarWidth{
+  "scrollbar-width": string
+}
 
 const config: Config = {
   content: [
@@ -25,10 +34,24 @@ const config: Config = {
       }
     },
   },
-  plugins: [require('daisyui'),],
+  plugins: [require('daisyui'),
+    function({ addUtilities }: PluginAPI){
+      const newUtilities = {
+        ".no-scrollbar":{
+          "scrollbar-width": "none",
+          "-ms-overflow-style": "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }
+      }
+
+      addUtilities(newUtilities)
+    }
+  ],
   daisyui: {
-    themes: ["emerald", "night"],
+    themes: ["emerald", "dracula"],
   },
-  darkMode: ['class', '[data-theme="night"]']
+  darkMode: ['class', '[data-theme="dracula"]']
 };
 export default config;

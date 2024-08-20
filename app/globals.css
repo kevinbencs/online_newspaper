@@ -45,3 +45,8 @@ body::-webkit-scrollbar-thumb {
     text-wrap: balance;
   }
 }
+
+#my-drawer:focus-visible + div label{
+  outline-color: currentColor;
+  outline: auto;
+}

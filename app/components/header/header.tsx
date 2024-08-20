@@ -1,44 +1,78 @@
 'use client'
 import Link from 'next/link';
 import CurrentDate from '../date/currentdate';
-import SocialIcons from '../socialicons';
 import ThemeController from './themecontroller';
 import SidebarContainer from '../sidebar/sidebarcontainer';
 import { useEffect, useState } from 'react';
 import Search from './search';
+import SocialIconsHeader from './socialicons';
 
 
+function getHidebarClass(){
+  return 'flex';
+};
 
-const Header = () => {
+function getScrollClass(){
+  return 'translate-y-0';
+};
 
-  const [scrollClass, setScrollClass] = useState<string>('translate-y-0');
-  const [topbarHide, setTopbarHide] = useState<string>('flex');
+function getDurationClass(){
+  return 'duration-0';
+};
+
+const Header = (props: { mainPos: number }) => {
+
+  const [scrollClass, setScrollClass] = useState<string>(getScrollClass);
+  const [topbarHide, setTopbarHide] = useState<string>(getHidebarClass);
   const [scrollCoo, setscrollCoo] = useState<number>(0);
   const [showSearch, setShowSearch] = useState<boolean>(false);
+  const [topbarDuration, setTopbarDuration] = useState<string>(getDurationClass);
 
-  const handleScroll = () => {
-    const position = window.scrollY;
-    const mainPos = document.querySelector('main')!.getBoundingClientRect().top;
-
-    if (position - scrollCoo > 0 && position > 0 && mainPos <= 0) {
-      setScrollClass('-translate-y-96');
-      setTopbarHide('hidden')
-    }
-    else {
-      setScrollClass('translate-y-0');
-      setTopbarHide('flex')
-    }
-    setscrollCoo(position);
-
-  };
+  
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+
+    const handleScroll = () => {
+      const position = window.scrollY;
+  
+      if (position - scrollCoo > 0 && position > 0 && props.mainPos <= 0) {
+        setScrollClass(() => '-translate-y-96');
+      }
+      else {
+        setScrollClass(() => 'translate-y-0');
+      }
+      setscrollCoo(position);
+  
+  
+      if (props.mainPos <= 0) {
+        setTopbarHide(() => 'hidden');
+      }
+      else {
+        setTopbarHide(() => 'flex');
+      }
+  
+  
+      if (position <= 100) {
+        setTopbarDuration(() => 'duration-0');
+        setScrollClass(() => '');
+      }
+      else {
+        setTopbarDuration(() => 'duration-500');
+      }
+    };
+
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener("scroll", handleScroll);
+      }
     };
-  })
+  },[props.mainPos, scrollCoo])
+
 
 
   const clickSearch = () => {
@@ -46,25 +80,25 @@ const Header = () => {
   };
 
   return (
-    <header className={`text-neutral-content bg-neutral sticky top-0 z-10  duration-500 ${scrollClass}`}>
-      <div className={`hidden sm:${topbarHide} justify-between  text-xs bg-base-200 pr-5 pl-5 pt-2  text-base-content pb-3 lg:pb-0 `}>
+    <header className={` bg-base-300 sticky top-0 z-10  ${topbarDuration} ${scrollClass}`}>
+      <div className={`hidden sm:${topbarHide} justify-between  text-xs bg-zinc-950 pr-5 pl-5 pt-2  text-gray-400 pb-3 lg:pb-0`}>
         <CurrentDate />
         <nav className='hidden lg:opacity-100 lg:block'>
           <ul className="menu rounded-box menu-vertical lg:menu-horizontal text-s pt-0">
-            <li><Link href='/menu/uk' className='pt-0 pb-0 '>uk</Link> </li>
-            <li><Link href='/menu/world' className='pt-0 pb-0  hover:text-slate-950'>world</Link></li>
-            <li><Link href='/menu/business' className='pt-0 pb-0  hover:text-slate-950'>business</Link></li>
-            <li><Link href='/menu/tech' className='pt-0 pb-0  hover:text-slate-950'>tech</Link></li>
-            <li><Link href='/menu/culture' className='pt-0 pb-0  hover:text-slate-950'>culture</Link></li>
+            <li><Link href='/menu/uk' className='pt-0 pb-0 hover:text-gray-100'>uk</Link> </li>
+            <li><Link href='/menu/world' className='pt-0 pb-0 hover:text-gray-100'>world</Link></li>
+            <li><Link href='/menu/business' className='pt-0 pb-0  hover:text-gray-100'>business</Link></li>
+            <li><Link href='/menu/tech' className='pt-0 pb-0  hover:text-gray-100'>tech</Link></li>
+            <li><Link href='/menu/culture' className='pt-0 pb-0  hover:text-gray-100'>culture</Link></li>
           </ul>
         </nav>
 
         <nav className='hidden sm:block'>
-          <SocialIcons />
+          <SocialIconsHeader />
         </nav>
       </div>
       <div className='justify-between pt-5 pb-5  pr-5 pl-5 navbar '>
-        <div className='flex'>
+        <div className='flex gap-2'>
           <SidebarContainer />
 
           <button onClick={clickSearch}>
@@ -81,7 +115,7 @@ const Header = () => {
         </div>
 
         <nav className='mr-2 ml-2 text-center'>
-          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif hover:text-slate-50 '>World Times</h1></Link>
+          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif dark:hover:text-slate-50 dark:text-slate-400 hover:text-slate-950 text-stone-700 '>World Times</h1></Link>
         </nav>
         <div>
           <ThemeController />
@@ -89,10 +123,10 @@ const Header = () => {
 
       </div>
       {showSearch &&
-      <div className='p-10 lg:pl-[20%] lg:pr-[20%]  xl:pl-[30%] xl:pr-[30%]'>
-        <Search/>
-      </div>}
-      
+        <div className='p-10 lg:pl-[20%] lg:pr-[20%]  xl:pl-[30%] xl:pr-[30%]'>
+          <Search />
+        </div>}
+
 
 
     </header>

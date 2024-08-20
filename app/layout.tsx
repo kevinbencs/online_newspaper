@@ -5,6 +5,8 @@ import "./globals.css";
 //components
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
+import Main_header_container from "./components/main_header_container";
+import Providers from "./components/themeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,15 +20,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
-    <html lang="en" data-theme="night">
-      <body className={inter.className} >
-        <Header />
-        <main>
-          {children}
-        </main>
-        
-        <Footer />
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className={inter.className} suppressHydrationWarning={true}>
+        <Providers>
+          <Main_header_container Children={children} />
+          <Footer />
+        </Providers>
+
       </body>
     </html>
   );

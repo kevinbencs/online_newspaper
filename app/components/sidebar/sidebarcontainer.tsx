@@ -31,9 +31,9 @@ const SidebarContainer = () => {
 
     return (
         <div className="drawer">
-            <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={checkboxValue} onChange={checked} />
+            <input id="my-drawer" type="checkbox" className="drawer-toggle " checked={checkboxValue} onChange={checked} />
             <div className="drawer-content">
-                <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
+                <label htmlFor="my-drawer" className="btn btn-square btn-ghost ">
                     {/* Page content here */}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
