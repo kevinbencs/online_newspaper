@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <footer className='footer pt-10 pb-5 text-base-content bg-base-300 footer-center'>
       <nav className='border-b-2 block w-full max-h-none'>
-        <ul className='flex gap-10 w-full  pb-5  justify-center pl-30% pr-30% flex-wrap'>
+        <ul className='flex gap-10 w-full pb-5  justify-center md:pl-30% md:pr-30% pl-1 pr-1 flex-wrap'>
           <li>
             <Link href="/" className='link link-hover'> Imprint</Link> 
           </li>

@@ -80,11 +80,11 @@ const Header = (props: { mainPos: number }) => {
   };
 
   return (
-    <header className={` bg-base-300 sticky top-0 z-10  ${topbarDuration} ${scrollClass}`}>
-      <div className={`hidden sm:${topbarHide} justify-between  text-xs bg-zinc-950 pr-5 pl-5 pt-2  text-gray-400 pb-3 lg:pb-0`}>
+    <header className={` bg-base-300 sticky top-0 z-20  ${topbarDuration} ${scrollClass}`}>
+      <div className={`hidden sm:${topbarHide} justify-between  text-xs bg-zinc-950 pr-5 pl-5 pt-2  text-gray-400 pb-2`}>
         <CurrentDate />
-        <nav className='hidden lg:opacity-100 lg:block'>
-          <ul className="menu rounded-box menu-vertical lg:menu-horizontal text-s pt-0">
+        <nav className='hidden  lg:block'>
+          <ul className="menu rounded-box menu-horizontal text-s pt-0 pb-0">
             <li><Link href='/menu/uk' className='pt-0 pb-0 hover:text-gray-100'>uk</Link> </li>
             <li><Link href='/menu/world' className='pt-0 pb-0 hover:text-gray-100'>world</Link></li>
             <li><Link href='/menu/business' className='pt-0 pb-0  hover:text-gray-100'>business</Link></li>
@@ -97,7 +97,7 @@ const Header = (props: { mainPos: number }) => {
           <SocialIconsHeader />
         </nav>
       </div>
-      <div className='justify-between pt-5 pb-5  pr-5 pl-5 navbar '>
+      <div className='justify-between pt-3 pb-3  pr-5 pl-5 navbar '>
         <div className='flex gap-2'>
           <SidebarContainer />
 
@@ -115,7 +115,7 @@ const Header = (props: { mainPos: number }) => {
         </div>
 
         <nav className='mr-2 ml-2 text-center'>
-          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif dark:hover:text-slate-50 dark:text-slate-400 hover:text-slate-950 text-stone-700 '>World Times</h1></Link>
+          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif dark:hover:text-slate-50 dark:text-slate-400 hover:text-slate-950 text-stone-700 lg:pr-20'>World Times</h1></Link>
         </nav>
         <div>
           <ThemeController />

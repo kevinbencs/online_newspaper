@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css");
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -50,3 +52,93 @@ body::-webkit-scrollbar-thumb {
   outline-color: currentColor;
   outline: auto;
 }
+
+main a:hover img{
+  transition: all 0.2s ease-in-out;
+  transform: scale(1.5,1.5);
+}
+
+main .category{
+  @apply relative;
+  left: -10px;
+  z-index: 10;
+  @apply dark:bg-white;
+  @apply dark:text-gray-950;
+  @apply bg-slate-950;
+  @apply text-gray-50;
+  @apply hover:text-gray-300;
+  @apply dark:hover:text-stone-400;
+  @apply pl-2;
+  @apply pr-2;
+  @apply pt-1;
+  @apply pb-1;
+}
+
+.category-picture{
+  top: 10px;
+}
+
+main a {
+  @apply hover:text-stone-500;
+  @apply dark:hover:text-stone-400;
+}
+
+main a article{
+  @apply mt-1;
+}
+
+main a article p{
+  @apply text-sm;
+}
+
+
+
+.button-30 {
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  @apply dark:bg-neutral-600;
+  @apply dark:text-white;
+  @apply dark:shadow-3xl;
+  box-sizing: border-box;
+  color: #36395A;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono",monospace;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow .15s,transform .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow,transform;
+  font-size: 18px;
+}
+
+.button-30:focus {
+  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+}
+
+.button-30:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  @apply dark:shadow-4xl;
+  transform: translateY(-2px);
+}
+
+.button-30:active {
+  box-shadow: #D6D6E7 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
