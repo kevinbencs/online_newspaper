@@ -1,8 +1,8 @@
-import React from 'react'
+
 
 const Newest = () => {
   return (
-    <div>Page</div>
+    <div className="text-center text-3xl mb-10">Latest</div>
   )
 }
 

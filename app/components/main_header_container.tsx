@@ -14,7 +14,6 @@ const Main_header_container = (props: { Children: ReactNode }) => {
     const handleScroll = () => {
             if (mainRef.current) {
                 setMainPos(mainRef.current?.getBoundingClientRect().top);
-                console.log(2);
             }
         }
 
