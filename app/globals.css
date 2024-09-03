@@ -19,7 +19,8 @@
 }
 
 
-html, .sidebar {
+html,
+.sidebar {
   scrollbar-width: thin;
   scrollbar-color: rgb(199, 199, 199) rgb(136, 136, 136);
 }
@@ -48,17 +49,17 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-#my-drawer:focus-visible + div label{
+#my-drawer:focus-visible+div label {
   outline-color: currentColor;
   outline: auto;
 }
 
-main a:hover img{
+main a:hover img {
   transition: all 0.2s ease-in-out;
-  transform: scale(1.5,1.5);
+  transform: scale(1.5, 1.5);
 }
 
-main .category{
+main .category {
   @apply relative;
   left: -10px;
   z-index: 10;
@@ -74,7 +75,7 @@ main .category{
   @apply pb-1;
 }
 
-.category-picture{
+.category-picture {
   top: 10px;
 }
 
@@ -83,11 +84,11 @@ main a {
   @apply dark:hover:text-stone-400;
 }
 
-main a article{
+main a article {
   @apply mt-1;
 }
 
-main a article p{
+main a article p {
   @apply text-sm;
 }
 
@@ -99,7 +100,7 @@ main a article p{
   background-color: #FCFCFD;
   border-radius: 4px;
   border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
   @apply dark:bg-neutral-600;
   @apply dark:text-white;
   @apply dark:shadow-3xl;
@@ -107,7 +108,7 @@ main a article p{
   color: #36395A;
   cursor: pointer;
   display: inline-flex;
-  font-family: "JetBrains Mono",monospace;
+  font-family: "JetBrains Mono", monospace;
   height: 48px;
   justify-content: center;
   line-height: 1;
@@ -118,12 +119,12 @@ main a article p{
   position: relative;
   text-align: left;
   text-decoration: none;
-  transition: box-shadow .15s,transform .15s;
+  transition: box-shadow .15s, transform .15s;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   white-space: nowrap;
-  will-change: box-shadow,transform;
+  will-change: box-shadow, transform;
   font-size: 18px;
 }
 
@@ -142,3 +143,42 @@ main a article p{
   transform: translateY(2px);
 }
 
+
+
+.checkbox-wrapper-62 input[type="checkbox"] {
+  visibility: hidden;
+  display: none;
+}
+
+.checkbox-wrapper-62 *,
+.checkbox-wrapper-62 ::after,
+.checkbox-wrapper-62 ::before {
+  box-sizing: border-box;
+}
+
+.checkbox-wrapper-62 {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.checkbox-wrapper-62 .check {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  opacity: 0;
+}
+
+.checkbox-wrapper-62 .label1 svg {
+  vertical-align: middle;
+}
+
+.checkbox-wrapper-62 .path1 {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  transition: .5s all;
+}
+
+.checkbox-wrapper-62 .check:checked+label svg g path {
+  stroke-dashoffset: 0;
+}

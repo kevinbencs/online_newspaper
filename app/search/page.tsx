@@ -1,14 +1,21 @@
-import Link from "next/link"
 import Pagination from "../components/pagination";
+import Search from "./search";
 
-const Page = ({ searchParams }: { searchParams: { theme: string, title: string, text: string, date: string, page: number } }) => {
+
+
+const Page = ({ searchParams }: { searchParams: { category: string,  text: string, date_from: string, date_to:string, author: string, page: number, filter: string } }) => {
   const lastPage: number = 40;
+  //filter, title theme, text
   return (
     <div>
-      <div>
-        {searchParams.text} {searchParams.title} {searchParams.theme} {searchParams.page}
+      <Search/>
+      <div className="mt-10">
+       <Pagination searchParams={searchParams} lastPage={lastPage} /> 
       </div>
-      <Pagination searchParams={searchParams} lastPage={lastPage} />
+      <div>
+
+      </div>
+      
     </div>
   )
 }

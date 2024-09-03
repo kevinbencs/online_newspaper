@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, RefObject, MutableRefObject } from "react";
+import { Dispatch, SetStateAction, RefObject} from "react";
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>;
 
@@ -20,10 +20,10 @@ export function handleClickNextButtonName(props: {
 }) {
     props.setNameClass('hidden');
     props.setActiveInputElement('email')
-    props.setEmailClass('block');
+    props.setEmailClass('block ');
     const nameLabelLength = props.nameRef.current!.offsetWidth;
     if (props.inputValue.email === '') {
-        props.setEmailTextClass(`top-8`);
+        props.setEmailTextClass(`top-8 invisible`);
         props.setEmailLeft(window.matchMedia("(min-width: 640px)").matches ? -nameLabelLength - 8 : 0);
     }
 }
@@ -114,7 +114,7 @@ export function handleClickNextButtonEmail(props: {
     const emailLabelLength = props.emailRef.current!.offsetWidth;
     const nameLabelLength = props.nameRef.current!.offsetWidth;
     if (props.inputValue.password === '') {
-        props.setPasswordTextClass(`top-8`);
+        props.setPasswordTextClass(`top-8 invisible`);
         props.setPasswordLeft(window.matchMedia("(min-width: 640px)").matches ? -nameLabelLength - 16 - emailLabelLength : 0);
     }
 }
@@ -129,13 +129,11 @@ export function handleClickNextButtonPassword(props: {
     setActiveInputElement: Dispatcher<string>,
     setPrivacyClass: Dispatcher<string>,
     setPasswordCheckboxClass: Dispatcher<string>,
-    setPrivacyTextClass: Dispatcher<string>,
     setNextButtonClass: Dispatcher<string>,
 }) {
     props.setActiveInputElement('privacy');
     props.setPasswordClass('hidden');
     props.setPasswordCheckboxClass('hidden');
     props.setPrivacyClass('block');
-    props.setPrivacyTextClass('inline');
     props.setNextButtonClass('disabled')
 }

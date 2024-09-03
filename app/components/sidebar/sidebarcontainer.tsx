@@ -4,34 +4,11 @@ import { useState } from "react"
 import Sidebar from "./sidebar"
 
 const SidebarContainer = () => {
-    const [showSidebar, setShowSidebar] = useState<boolean>(false);
-    const [checkboxValue, setCheckboxValue] = useState<boolean>(false)
-
-    const checked = () => {
-        if (showSidebar) {
-            setTimeout(() => {
-                setShowSidebar(false);
-            }, 1000)
-        }
-        else {
-            setShowSidebar(true);
-        }
-        if (!checkboxValue) {
-            setTimeout(() => {
-                setCheckboxValue(true)
-            }, 10)
-        }
-        else {
-            setCheckboxValue(false);
-        }
-
-
-    }
-
+    const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
 
     return (
         <div className="drawer">
-            <input id="my-drawer" type="checkbox" className="drawer-toggle " checked={checkboxValue} onChange={checked} />
+            <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={checkboxValue} onChange={() => setCheckboxValue(!checkboxValue)} />
             <div className="drawer-content">
                 <label htmlFor="my-drawer" className="btn btn-square btn-ghost ">
                     {/* Page content here */}
@@ -48,13 +25,10 @@ const SidebarContainer = () => {
                     </svg>
                 </label>
             </div>
-            {showSidebar &&
                 <div className="drawer-side z-10">
                     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <Sidebar setShowSidebar={setShowSidebar} setCheckboxValue={setCheckboxValue} />
+                    <Sidebar setCheckboxValue={setCheckboxValue} />
                 </div>
-            }
-
         </div>
     )
 }

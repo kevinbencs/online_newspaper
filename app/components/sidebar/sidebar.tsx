@@ -5,16 +5,11 @@ import { Dispatch, SetStateAction } from "react";
 
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
-const Sidebar = (props: { setShowSidebar: Dispatcher<boolean>, setCheckboxValue: Dispatcher<boolean> }) => {
-
+const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean>, }) => {
 
   const checked = () => {
-    setTimeout(() => {
-      props.setShowSidebar(false);
-    }, 1000)
     props.setCheckboxValue(false);
   }
-
 
   return (
     <div className='bg-base-300 md:w-[450px] sm:w-96 w-72 h-screen overflow-y-scroll sidebar border-r border-gray-500'>

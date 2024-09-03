@@ -37,6 +37,7 @@ const Header = (props: { mainPos: number }) => {
 
       if (position - scrollCoo > 0 && position > 0 && props.mainPos <= 0) {
         setScrollClass(() => '-translate-y-96');
+        setShowSearch(false);
       }
       else {
         setScrollClass(() => 'translate-y-0');
@@ -124,8 +125,8 @@ const Header = (props: { mainPos: number }) => {
 
       </div>
       {showSearch &&
-        <div className='p-10 lg:pl-[20%] lg:pr-[20%]  xl:pl-[30%] xl:pr-[30%]'>
-          <Search />
+        <div className=' absolute p-10 lg:pl-[20%] lg:pr-[20%]  w-[100%] bg-base-300'>
+          <Search setShowSearch={setShowSearch}/>
         </div>}
 
 

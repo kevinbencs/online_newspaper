@@ -1,5 +1,5 @@
 'use client'
-import { SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState, KeyboardEvent } from 'react';
 import { handleClickEmailLabelText, handleClickNameLabelText, handleClickNextButtonEmail, handleClickNextButtonName, handleClickNextButtonPassword, handleClickPasswordLabelText } from './functionscontainer';
 
 interface Input {
@@ -10,28 +10,27 @@ interface Input {
 }
 
 
-
 const Page = () => {
   const [inputValue, setInputValue] = useState<Input>({ name: '', email: '', password: '', privacy: false });
   const [nameClass, setNameClass] = useState<string>('');
-  const [nameTextClass, setNameTextClass] = useState<string>('top-8');
+  const [nameTextClass, setNameTextClass] = useState<string>('top-8 invisible');
   const [emailClass, setEmailClass] = useState<string>('hidden');
   const [emailTextClass, setEmailTextClass] = useState<string>('hidden');
   const [passwordTextClass, setPasswordTextClass] = useState<string>('hidden');
   const [privacyClass, setPrivacyClass] = useState<string>('hidden');
   const [passwordClass, setPasswordClass] = useState<string>('hidden');
   const [passwordCheckboxClass, setPasswordCheckboxClass] = useState<string>('hidden');
-  const [privacyTextClass, setPrivacyTextClass] = useState<string>('hidden');
   const [showPassword, setShowPassword] = useState<string>('password');
   const [activeInputElement, setActiveInputElement] = useState<string>('name');
   const [NextButtonClass, setNextButtonClass] = useState<string>('');
-  const [nameLabelText, setNameLabelText] = useState<string>('Fill your first name')
+  const [nameLabelText, setNameLabelText] = useState<string>('Fill your name')
   const [emailLabelText, setEmailLabelText] = useState<string>('Fill your email')
   const [passwordLabelText, setPasswordLabelText] = useState<string>('Fill your password')
   const nameRef = useRef<null | HTMLLabelElement>(null);
   const emailRef = useRef<null | HTMLLabelElement>(null);
   const [emailLeft, setEmailLeft] = useState<number>(0);
   const [passLeft, setPassLeft] = useState<number>(0);
+  const [titleChecked, setTitleChecked] = useState<boolean>(false);
   const timeOutRefName1 = useRef<null | ReturnType<typeof setTimeout>>(null);
   const timeOutRefName2 = useRef<null | ReturnType<typeof setTimeout>>(null);
   const timeOutRefName3 = useRef<null | ReturnType<typeof setTimeout>>(null);
@@ -111,10 +110,10 @@ const Page = () => {
         }
 
         timeOutRefPassword2.current = setTimeout(() => {
-          handleClickNextButtonPassword({ setPasswordClass, setActiveInputElement, setPrivacyClass, setPasswordCheckboxClass, setPrivacyTextClass, setNextButtonClass });
+          handleClickNextButtonPassword({ setPasswordClass, setActiveInputElement, setPrivacyClass, setPasswordCheckboxClass,  setNextButtonClass });
         }, inputValue.password.length * 50);
       }
-      else handleClickNextButtonPassword({ setPasswordClass, setActiveInputElement, setPrivacyClass, setPasswordCheckboxClass, setPrivacyTextClass, setNextButtonClass });
+      else handleClickNextButtonPassword({ setPasswordClass, setActiveInputElement, setPrivacyClass, setPasswordCheckboxClass,  setNextButtonClass });
     }
   };
 
@@ -141,14 +140,14 @@ const Page = () => {
 
     switch (name) {
       case 'name':
-        setNameTextClass('-top-8 bg-slate-600 cursor-pointer mr-2 text-white mb-2 text-xs block sm:inline')
+        setNameTextClass('-top-8 visible bg-slate-600 cursor-pointer mr-2 text-white mb-2 text-xs block sm:inline')
         break;
       case 'email':
-        setEmailTextClass('-top-8  bg-slate-600 cursor-pointer left-0 mr-2  pb-1 text-white mb-2 text-xs block sm:inline');
+        setEmailTextClass('-top-8 visible bg-slate-600 cursor-pointer left-0 mr-2  pb-1 text-white mb-2 text-xs block sm:inline');
         setEmailLeft(0);
         break;
       case 'password':
-        setPasswordTextClass('-top-8 bg-slate-600 cursor-pointer left-0 mr-2  pb-1 text-white mb-2 text-xs block sm:inline');
+        setPasswordTextClass('-top-8 visible bg-slate-600 cursor-pointer left-0 mr-2  pb-1 text-white mb-2 text-xs block sm:inline');
         setPassLeft(0);
         break;
     }
@@ -156,91 +155,126 @@ const Page = () => {
 
 
   const handleClickName = () => {
-    if (inputValue.email !== emailLabelText) {
-      let EmailText: string = '';
-      for (let i: number = 0; i < inputValue.email.length; i++) {
-        timeOutRefEmail3.current = setTimeout(() => {
-          EmailText += inputValue.email[i]
-          setEmailLabelText(EmailText);
-        }, 49 * i)
-      }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (inputValue.email === '' && emailLabelText === 'Fill your email') {
+      handleClickNameLabelText({ inputValue, setNameClass, setNameLabelText, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setEmailTextClass, setPasswordTextClass, setActiveInputElement });
     }
-    if (inputValue.password.length !== passwordLabelText.length) {
-      let PasswordText: string = '';
-      for (let i: number = 0; i < inputValue.password.length; i++) {
-        timeOutRefPassword3.current = setTimeout(() => {
-          PasswordText += '*'
-          setPasswordLabelText(PasswordText);
-        }, 49 * i)
+    if ((inputValue.email !== '' || emailLabelText !== 'Fill your email') && emailRegex.test(inputValue.email)) {
+      if (inputValue.email !== emailLabelText) {
+        let EmailText: string = '';
+        for (let i: number = 0; i < inputValue.email.length; i++) {
+          timeOutRefEmail3.current = setTimeout(() => {
+            EmailText += inputValue.email[i]
+            setEmailLabelText(EmailText);
+          }, 49 * i)
+        }
       }
+      if (inputValue.password !== '') {
+        if (inputValue.password.length !== passwordLabelText.length) {
+          let PasswordText: string = '';
+          for (let i: number = 0; i < inputValue.password.length; i++) {
+            timeOutRefPassword3.current = setTimeout(() => {
+              PasswordText += '*'
+              setPasswordLabelText(PasswordText);
+            }, 49 * i)
+          }
+        }
+        handleClickNameLabelText({ inputValue, setNameClass, setNameLabelText, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setEmailTextClass, setPasswordTextClass, setActiveInputElement });
+      }
+      else if (passwordLabelText === 'Fill your password') handleClickNameLabelText({ inputValue, setNameClass, setNameLabelText, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setEmailTextClass, setPasswordTextClass, setActiveInputElement });
     }
-    handleClickNameLabelText({ inputValue, setNameClass, setNameLabelText, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setEmailTextClass, setPasswordTextClass, setActiveInputElement });
   }
 
 
 
   const handleClickEmail = () => {
-    if (inputValue.password.length !== passwordLabelText.length) {
-      let PasswordText: string = '';
-      for (let i: number = 0; i < inputValue.password.length; i++) {
-        timeOutRefPassword4.current = setTimeout(() => {
-          PasswordText += '*'
-          setPasswordLabelText(PasswordText);
-        }, 49 * i)
+    if (inputValue.name !== '') {
+      if (inputValue.name !== nameLabelText) {
+        let NameText: string = '';
+        for (let i: number = 0; i < inputValue.name.length; i++) {
+          timeOutRefName3.current = setTimeout(() => {
+            NameText += inputValue.name[i]
+            setNameLabelText(NameText);
+          }, 49 * i);
+        }
       }
-    }
-    if (inputValue.name !== nameLabelText) {
-      let NameText: string = '';
-      for (let i: number = 0; i < inputValue.name.length; i++) {
-        timeOutRefName3.current = setTimeout(() => {
-          NameText += inputValue.name[i]
-          setNameLabelText(NameText);
-        }, 49 * i)
+
+      if (inputValue.password !== '') {
+        if (inputValue.password.length !== passwordLabelText.length) {
+          let PasswordText: string = '';
+          for (let i: number = 0; i < inputValue.password.length; i++) {
+            timeOutRefPassword4.current = setTimeout(() => {
+              PasswordText += '*'
+              setPasswordLabelText(PasswordText);
+            }, 49 * i)
+          }
+        }
+        handleClickEmailLabelText({ inputValue, setNameClass, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setPasswordTextClass, setActiveInputElement });
       }
+      else if (passwordLabelText === 'Fill your password') handleClickEmailLabelText({ inputValue, setNameClass, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setPasswordTextClass, setActiveInputElement });
     }
-    handleClickEmailLabelText({ inputValue, setNameClass, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setPasswordTextClass, setActiveInputElement });
   }
 
 
 
   const handleClickPassword = () => {
-    if (inputValue.email !== emailLabelText) {
-      let EmailText: string = '';
-      for (let i: number = 0; i < inputValue.email.length; i++) {
-        timeOutRefEmail4.current = setTimeout(() => {
-          EmailText += inputValue.email[i]
-          setEmailLabelText(EmailText);
-        }, 49 * i)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (inputValue.email !== '' && inputValue.name !== '' && emailRegex.test(inputValue.email)) {
+      if (inputValue.email !== emailLabelText) {
+        let EmailText: string = '';
+        for (let i: number = 0; i < inputValue.email.length; i++) {
+          timeOutRefEmail4.current = setTimeout(() => {
+            EmailText += inputValue.email[i]
+            setEmailLabelText(EmailText);
+          }, 49 * i)
+        }
       }
-    }
-    if (inputValue.name !== nameLabelText) {
-      let NameText: string = '';
-      for (let i: number = 0; i < inputValue.name.length; i++) {
-        timeOutRefName4.current = setTimeout(() => {
-          NameText += inputValue.name[i]
-          setNameLabelText(NameText);
-        }, 49 * i)
+      if (inputValue.name !== nameLabelText) {
+        let NameText: string = '';
+        for (let i: number = 0; i < inputValue.name.length; i++) {
+          timeOutRefName4.current = setTimeout(() => {
+            NameText += inputValue.name[i]
+            setNameLabelText(NameText);
+          }, 49 * i)
+        }
       }
+      handleClickPasswordLabelText({ setNameClass, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass, setActiveInputElement })
     }
-    handleClickPasswordLabelText({ setNameClass, setNextButtonClass, setEmailClass, setPasswordCheckboxClass, setPasswordClass, setPrivacyClass,  setActiveInputElement })
   }
+
+  const handleKeyboardTitle = (e: KeyboardEvent<SVGRectElement>) => {
+    if (e.code === 'Space' || e.code === 'Enter') setTitleChecked(!titleChecked);
+  }
+
 
   return (
     <div className='flex justify-center h-[90vh] pt-[20vh]'>
       <form action="" onSubmit={handleSubmit} className='w-[90%] max-w-[800px] relative'>
         <h2 className='mb-20 text-4xl'>Create a new account</h2>
 
-        <label ref={nameRef} className={`relative ${nameTextClass}   pl-10 bg-user bg-no-repeat  duration-500 pr-2 pt-1 pb-1 content-center`} htmlFor='name' onClick={handleClickName}>{nameLabelText}</label>
-        <label ref={emailRef} style={{ left: `${emailLeft}px` }} className={`relative bg-email bg-no-repeat  ${emailTextClass} pl-10 duration-500 pr-2 pt-1 `} htmlFor='email' onClick={handleClickEmail}>{emailLabelText}</label>
-        <label className={`relative pl-10 ${passwordTextClass}  duration-500 pr-2 pt-1 bg-password bg-no-repeat `} style={{ left: `${passLeft}px` }} htmlFor='password' onClick={handleClickPassword}>{passwordLabelText}</label>
+        <label ref={nameRef} className={`relative ${nameTextClass}   pl-10 bg-user bg-no-repeat  duration-500 pr-2 pt-1 pb-1 content-center`} htmlFor='name' onClick={handleClickName} > <button>{nameLabelText}</button> </label>
+        <label ref={emailRef} style={{ left: `${emailLeft}px` }} className={`relative bg-email bg-no-repeat  ${emailTextClass} pl-10 duration-500 pr-2 pt-1 `} htmlFor='email' onClick={handleClickEmail} > <button>{emailLabelText}</button> </label>
+        <label className={`relative pl-10 ${passwordTextClass}  duration-500 pr-2 pt-1 bg-password bg-no-repeat `} style={{ left: `${passLeft}px` }} htmlFor='password' onClick={handleClickPassword} > <button> {passwordLabelText}</button> </label>
 
-        <input type="text" id='name' className={`bg-transparent bg-user bg-no-repeat bg-[length:28px] bg-[left_top_7px]  border-b-2 border-base-content block w-[100%] pl-10 p-2 pb-3 imageClass ${nameClass}  focus-visible:outline-none`} name='name' value={inputValue.name} onChange={handleInputChange} required tabIndex={1} />
-        <input type="email" id='email' required name='email' className={`bg-transparent bg-email bg-[length:24px] bg-[left_top_7px] bg-no-repeat  border-b-2 border-base-content pl-10 block w-[100%] imageClass p-2 ${emailClass} focus-visible:outline-none`} value={inputValue.email} onChange={handleInputChange} tabIndex={1} />
-        <input type={showPassword} required name='password' minLength={10} maxLength={16} className={`${passwordClass} bg-transparent bg-password bg-[length:24px] bg-[left_top_7px] pl-10 bg-no-repeat border-b-2 border-base-content block w-[100%] p-2 imageClass focus-visible:outline-none`} id='password' value={inputValue.password} onChange={handleInputChange} tabIndex={1} />
+        <input type="text" id='name' placeholder='Fill your name' className={`bg-transparent bg-user bg-no-repeat bg-[length:28px] bg-[left_top_7px]  border-b-2 border-base-content block w-[100%] pl-10 p-2 pb-3 imageClass ${nameClass}  focus-visible:outline-none`} name='name' value={inputValue.name} onChange={handleInputChange} required tabIndex={0} />
+        <input type="email" id='email' placeholder='Fill your email' required name='email' className={`bg-transparent bg-email bg-[length:24px] bg-[left_top_7px] bg-no-repeat  border-b-2 border-base-content pl-10 block w-[100%] imageClass p-2 ${emailClass} focus-visible:outline-none`} value={inputValue.email} onChange={handleInputChange} tabIndex={0} />
+        <input type={showPassword} placeholder='Fill your password' required name='password' minLength={10} maxLength={16} className={`${passwordClass} bg-transparent bg-password bg-[length:24px] bg-[left_top_7px] pl-10 bg-no-repeat border-b-2 border-base-content block w-[100%] p-2 imageClass focus-visible:outline-none`} id='password' value={inputValue.password} onChange={handleInputChange} tabIndex={0} />
 
         <div className={`${privacyClass} bg-transparent border-b-2 border-base-content block w-[100%] p-2`}>
-          <input type="checkbox" required name='privacy' className='mr-2' id='privacy' />
-          <label className={`${privacyTextClass} `} htmlFor='privacy'>By creating an account, you agree to privacy notice.</label>
+          <div className="checkbox-wrapper-62 " >
+            <input type="checkbox" className="check" id="check1-62" checked={titleChecked} />
+            <label htmlFor="check1-62" className="label1 flex gap-2 items-center cursor-pointer" onClick={() => setTitleChecked(!titleChecked)}>
+              <svg width="30" height="30" viewBox="0 0 90 90">
+                <rect x="30" y="20" width="50" height="50" stroke="currentColor" fill="none" className='focus:outline  outline-base-content' tabIndex={0} onKeyDown={handleKeyboardTitle} />
+                <g transform="translate(0,-952.36218)">
+                  <path d="m 13,983 c 33,6 40,26 55,48 " stroke="currentColor" stroke-width="3" className="path1" fill="none" />
+                  <path d="M 75,970 C 51,981 34,1014 25,1031 " stroke="currentColor" stroke-width="3" className="path1" fill="none" />
+                </g>
+              </svg>
+              <span>By creating an account, you agree to privacy notice.</span>
+            </label>
+          </div>
         </div>
 
         <div className='flex justify-between items-center'>
