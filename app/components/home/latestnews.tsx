@@ -172,7 +172,7 @@ const LatestNews = () => {
       onTouchEnd={handleTouchEnd}
       ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {adadad.map(ads => <LatestNewsLink Article={{header: ads.header,date: ads.date, link:`/article/${ads.header.replaceAll(' ','-')}`}} key={ads.id} isDragging={isDragging}/>)}
+          {adadad.map(ads => <LatestNewsLink Article={{header: ads.header,date: ads.date, link:`/uk/2020/01/01/${ads.header.replaceAll(' ','-')}`}} key={ads.id} isDragging={isDragging}/>)}
         </section>
       </div>
     </div>

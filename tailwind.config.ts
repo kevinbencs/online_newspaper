@@ -61,11 +61,14 @@ const config: Config = {
       }
 
       addUtilities(newUtilities)
-    }
+    },
   ],
   daisyui: {
     themes: ["emerald", "dracula"],
   },
-  darkMode: ['class', '[data-theme="dracula"]']
+  darkMode: ['class', '[data-theme="dracula"]'],
+  
 };
+
 export default config;
+

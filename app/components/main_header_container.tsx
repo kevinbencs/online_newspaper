@@ -31,7 +31,7 @@ const Main_header_container = (props: { Children: ReactNode }) => {
     return (
         <>
             <Header mainPos={mainPos} />
-            <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1 overflow-hidden">
+            <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1">
                 {props.Children}
             </main>
         </>

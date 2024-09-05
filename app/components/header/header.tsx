@@ -101,23 +101,22 @@ const Header = (props: { mainPos: number }) => {
       <div className='justify-between pt-3 pb-3  pr-5 pl-5 navbar '>
         <div className='flex gap-2'>
           <SidebarContainer />
-          {pathname !== '/search' &&
-            <button onClick={clickSearch}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 30 30"
-                className="fill-current">
-                <path d="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z"></path>
-              </svg>
-            </button>
-          }
+          <button onClick={clickSearch}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              className={`fill-current ${pathname === '/search' ? 'invisible' : 'visible'}`}>
+              <path d="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z"></path>
+            </svg>
+          </button>
+
 
         </div>
 
         <nav className='mr-2 ml-2 text-center'>
-          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif dark:hover:text-slate-50 dark:text-slate-400 hover:text-slate-950 text-stone-700 lg:pr-20'>World Times</h1></Link>
+          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif dark:text-slate-50 dark:hover:text-slate-400 hover:text-slate-950 text-stone-700 lg:pr-20'>World Times</h1></Link>
         </nav>
         <div>
           <ThemeController />
@@ -126,7 +125,7 @@ const Header = (props: { mainPos: number }) => {
       </div>
       {showSearch &&
         <div className=' absolute p-10 lg:pl-[20%] lg:pr-[20%]  w-[100%] bg-base-300'>
-          <Search setShowSearch={setShowSearch}/>
+          <Search setShowSearch={setShowSearch} />
         </div>}
 
 
