@@ -183,3 +183,14 @@ main a article p {
 .checkbox-wrapper-62 .check:checked+label svg g path {
   stroke-dashoffset: 0;
 }
+
+
+
+
+.author img{
+  clip-path: circle(35%);
+}
+
+.author:hover img{
+  transform: none;
+}
