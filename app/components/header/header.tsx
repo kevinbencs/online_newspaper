@@ -86,11 +86,11 @@ const Header = (props: { mainPos: number }) => {
         <CurrentDate />
         <nav className='hidden  lg:block'>
           <ul className="menu rounded-box menu-horizontal text-s pt-0 pb-0">
-            <li><Link href='/menu/uk' className='pt-0 pb-0 hover:text-gray-100'>uk</Link> </li>
-            <li><Link href='/menu/world' className='pt-0 pb-0 hover:text-gray-100'>world</Link></li>
-            <li><Link href='/menu/business' className='pt-0 pb-0  hover:text-gray-100'>business</Link></li>
-            <li><Link href='/menu/tech' className='pt-0 pb-0  hover:text-gray-100'>tech</Link></li>
-            <li><Link href='/menu/culture' className='pt-0 pb-0  hover:text-gray-100'>culture</Link></li>
+            <li><Link href='/category/uk' className='pt-0 pb-0 hover:text-gray-100'>uk</Link> </li>
+            <li><Link href='/category/world' className='pt-0 pb-0 hover:text-gray-100'>world</Link></li>
+            <li><Link href='/category/business' className='pt-0 pb-0  hover:text-gray-100'>business</Link></li>
+            <li><Link href='/category/tech' className='pt-0 pb-0  hover:text-gray-100'>tech</Link></li>
+            <li><Link href='/category/culture' className='pt-0 pb-0  hover:text-gray-100'>culture</Link></li>
           </ul>
         </nav>
 

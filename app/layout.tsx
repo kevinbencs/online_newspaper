@@ -19,14 +19,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
+  const hideHeaderFooter = (children as any)?.type?.noLayout;
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
         <Providers>
           <Main_header_container Children={children} />
-          <Footer />
+          {!hideHeaderFooter &&
+            <Footer />
+          }
         </Providers>
 
       </body>
