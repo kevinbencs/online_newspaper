@@ -1,6 +1,11 @@
 'use client';
 import { useState, useEffect, useRef, ChangeEvent, Dispatch, SetStateAction } from 'react';
 import Link from 'next/link';
+import { FacebookEmbed, InstagramEmbed, YouTubeEmbed, TikTokEmbed, LinkedInEmbed, PinterestEmbed } from 'react-social-media-embed';
+import { Tweet } from 'react-tweet';
+import Image from 'next/image';
+import Stop from '../image/stop.png'
+import AudioElement  from '../components/audio/audio'
 
 
 
@@ -17,6 +22,7 @@ const Page = () => {
   const [paragPlaceholder, setParagPlaceholder] = useState<string>('placeholder');
   const [fa, setF1] = useState<(string | JSX.Element)[]>([])
   const [textError, setTextError] = useState<string>('');
+
 
   const categoryRef = useRef<null | HTMLInputElement>(null);
   const importantRef = useRef<null | HTMLInputElement>(null);
@@ -102,12 +108,19 @@ const Page = () => {
       <section className='flex gap-2 mb-20 flex-wrap'>
         <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>bold</button>
         <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>italic</button>
-        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>img</button>
-        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>li</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>image</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>list</button>
         <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>video</button>
         <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>voice</button>
         <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'>link</button>
         <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> anchor link</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> Facebook</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> Instagram</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> X</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> LinkedIn</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> Pinterest</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> Tiktok</button>
+        <button className='dark:bg-neutral bg-base-200 pt-1 pb-1 min-w-24 rounded'> Youtube </button>
       </section>
 
       <form action="" className='mb-60'>
@@ -139,7 +152,48 @@ const Page = () => {
       }
 
 
-      <div>
+
+      <div className='max-w-[550px]'>
+        <FacebookEmbed url='https://www.facebook.com/peter.konok/posts/8361474520575249' width={'100%'} />
+      </div>
+
+      <div >
+        <Tweet id="1629307668568633344" />
+      </div>
+
+      <div className='max-w-[328px]'>
+        <InstagramEmbed url='https://www.instagram.com/p/C9692HUIQtU/' width={`100%`} />
+      </div>
+
+      <div className='max-w-[328px] mt-10'>
+        <TikTokEmbed url='https://www.tiktok.com/@dordzscerencsingi/video/7407801160251215137' width={`100%`} />
+      </div>
+
+      <div className=' mt-10 max-w-[328px]'>
+        <PinterestEmbed url='https://hu.pinterest.com/pin/770256342549487715/'
+          width={`100%`}
+          height={`100%`}
+        />
+      </div>
+
+
+
+      <div className=' mt-10 max-w-[500px]'>
+        <YouTubeEmbed url='https://www.youtube.com/watch?v=5QmLOfz1L5M' width={`100%`} height={`100%`} />
+      </div>
+
+      <div className='mt-10 max-w-[500px]'>
+        <LinkedInEmbed url='https://www.linkedin.com/embed/feed/update/urn:li:share:7240254513041842176'
+          width={`100%`} />
+      </div>
+
+      <Image src={Stop} alt='swfaw' className='mt-10 mb-10' />
+      <Image src={'https://drive.usercontent.google.com/uc?id=1tzXMb5L46xtEjI1Z91CO9m9ggW_bwEMD'} alt='fesaesf' width={600} height={400} />
+         
+      <AudioElement/>
+
+
+      <div >
         {(imageAltInput !== '' && imageUrlInput !== '') &&
           <img src={imageUrlInput} alt={imageAltInput} className='w-[100%] block mb-10' />
         }
@@ -156,13 +210,60 @@ export default Page
 
 
 
+
+
+
+
+/*************************************************************************************************************************************
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ *************************************************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const chooseTypeOfTextItem = (s: string) => {
+  if (s.indexOf('<p>') === 0) { }
+  else if (s.indexOf('<img>') === 0) { }
+  else if (s.indexOf('<ul>') === 0) { }
+  else if (s.indexOf('video') === 0) { }
+  else if (s.indexOf('<youtube>') === 0) { }
+  else if (s.indexOf('<x>') === 0) { }
+  else if (s.indexOf('<facebook>') === 0) { }
+  else if (s.indexOf('<instagram>') === 0) { }
+  else if (s.indexOf('<linkedin>') === 0) { }
+  else if (s.indexOf('<tiktok>') === 0) { }
+  else if (s.indexOf('<pinterest>') === 0) { }
+  else { }
+}
+
+
 const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
   const textArray: (string | JSX.Element)[] = [];
 
   let index1: number = 0
   let index2: number | JSX.Element = s.indexOf('<')
   let error: string = '';
-  let result:number | JSX.Element;
+  let result: number | JSX.Element = <></>;
 
 
   while (index2 > -1) {
@@ -170,8 +271,8 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
     if (s.indexOf('<Link', index1) === index2 && index2 > -1) {
       textArray.push(s.slice(index1, index2));
       result = createLink(s.slice(index2, s.indexOf('</Link>', index2) + 7), setTextError, index2);
-      
-      if (typeof(result) !== 'number') {
+
+      if (typeof (result) !== 'number') {
         textArray.push(result);
         index1 = s.indexOf('</Link>', index2) + 7;
         index2 = s.indexOf('<', index1);
@@ -179,23 +280,40 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
     }
     else if (s.indexOf('<a', index1) === index2 && index2 > -1) {
       textArray.push(s.slice(index1, index2));
-      textArray.push(createAnchor(s.slice(index2, s.indexOf('</a>', index2) + 4), setTextError, index2));
-      index1 = s.indexOf('</a>', index2) + 4;
-      index2 = s.indexOf('<', index1);
+      result = createAnchor(s.slice(index2, s.indexOf('</a>', index2) + 4), setTextError, index2);
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = s.indexOf('</a>', index2) + 4;
+        index2 = s.indexOf('<', index1);
+      }
+
     }
     else if (s.indexOf('<strong', index1) === index2 && index2 > -1) {
       textArray.push(s.slice(index1, index2));
-      textArray.push(createStrong(s.slice(index2, s.indexOf('</strong>', index2) + 9), setTextError, index2));
-      index1 = s.indexOf('</strong>', index2) + 9;
-      index2 = s.indexOf('<', index1);
+      result = createStrong(s.slice(index2, s.indexOf('</strong>', index2) + 9), setTextError, index2);
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = s.indexOf('</strong>', index2) + 9;
+        index2 = s.indexOf('<', index1);
+      }
+
     }
     else if (s.indexOf('<em', index1) === index2 && index2 > -1) {
       textArray.push(s.slice(index1, index2));
-      textArray.push(createEm(s.slice(index2, s.indexOf('</em>', index2) + 5), setTextError, index2));
-      index1 = s.indexOf('</em>', index2) + 5;
-      index2 = s.indexOf('<', index1);
+      result = createEm(s.slice(index2, s.indexOf('</em>', index2) + 5), setTextError, index2);
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = s.indexOf('</em>', index2) + 5;
+        index2 = s.indexOf('<', index1);
+      }
+
     }
     else {
+      error = 'error';
+      setTextError('Error');
+      index2 = -1;
+    }
+    if (typeof (result) === 'number') {
       error = 'error';
       setTextError('Error');
       index2 = -1;
@@ -223,29 +341,36 @@ const createLink = (s: string, setTextError: Dispatch<SetStateAction<string>>, i
   const text = s.slice(indexHrefEnd + 2, indexTextEnd);
   const textArray: (string | JSX.Element)[] = [];
   let index1: number = 0
-  let index3: number = text.indexOf('<')
+  let index3: number = text.indexOf('<');
+  let result: JSX.Element | number = <></>;
 
   while (index3 > -1) {
     if (text.indexOf('<em') === index3 && index3 > -1) {
-
       textArray.push(text.slice(index1, index3));
-      textArray.push(createEm(text.slice(index3, text.indexOf('</em>', index3) + 5), setTextError, index2));
-      index1 = text.indexOf('</em>', index3) + 5;
-      index3 = text.indexOf('<', index1);
+      result = createEm(text.slice(index3, text.indexOf('</em>', index3) + 5), setTextError, index2);
+
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = text.indexOf('</em>', index3) + 5;
+        index3 = text.indexOf('<', index1);
+      }
     }
     else if (text.indexOf('<strong') === index3 && index3 > -1) {
       textArray.push(text.slice(index1, index3));
-      textArray.push(createStrong(text.slice(index3, text.indexOf('</strong>', index3) + 9), setTextError, index2));
-      index1 = text.indexOf('</strong>', index3) + 9;
-      index3 = text.indexOf('<', index1);
+      result = createStrong(text.slice(index3, text.indexOf('</strong>', index3) + 9), setTextError, index2);
+
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = text.indexOf('</strong>', index3) + 9;
+        index3 = text.indexOf('<', index1);
+      }
     }
     else {
       setTextError('error');
       return -1;
     }
-    if (index2 === -1) {
+    if (typeof (result) === 'number') {
       setTextError('error');
-
       return -1;
     }
   }
@@ -264,9 +389,8 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   const strongIndex: number = s.indexOf('<strong');
   const index: number = s.indexOf('<', 1);
   if (indexHref === -1 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
-    index2 = -1;
     setTextError('Error');
-    return '';
+    return -1;
   }
   ///Fixed the +2 error///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -277,33 +401,37 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   const textArray: (string | JSX.Element)[] = [];
   let index1: number = 0
   let index3: number = text.indexOf('<');
+  let result: JSX.Element | number = <></>;
 
   while (index3 > -1) {
     if (text.indexOf('<em') === index3 && index3 > -1) {
 
       textArray.push(text.slice(index1, index3));
-      textArray.push(createEm(text.slice(index3, text.indexOf('</em>', index3) + 5), setTextError, index2));
-      index1 = text.indexOf('</em>', index3) + 5;
-      index3 = text.indexOf('<', index1);
+      result = createEm(text.slice(index3, text.indexOf('</em>', index3) + 5), setTextError, index2);
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = text.indexOf('</em>', index3) + 5;
+        index3 = text.indexOf('<', index1);
+      }
+
     }
     else if (text.indexOf('<strong') === index3 && index3 > -1) {
       textArray.push(text.slice(index1, index3));
-      textArray.push(createStrong(text.slice(index3, text.indexOf('</strong>', index3) + 9), setTextError, index2));
-      index1 = text.indexOf('</strong>', index3) + 9;
-      index3 = text.indexOf('<', index1);
+      result = createStrong(text.slice(index3, text.indexOf('</strong>', index3) + 9), setTextError, index2);
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = text.indexOf('</strong>', index3) + 9;
+        index3 = text.indexOf('<', index1);
+      }
+
     }
     else {
-      index3 = -1;
-      index2 = -1;
-
       setTextError('error');
-      return '';
+      return -1;
     }
-    if (index2 === -1) {
-      index3 = -1;
+    if (typeof (result) === 'number') {
       setTextError('error');
-
-      return '';
+      return -1;
     }
   }
   textArray.push(text.slice(index1, text.length))
@@ -320,40 +448,37 @@ const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   const index = s.indexOf('<', 1);
   const emIndex = s.indexOf('<em');
   if (indexHrefEnd === -1 || indexTextEnd === -1 || (index !== indexTextEnd && index !== emIndex)) {
-    index2 = -1;
     setTextError('Error');
-    return '';
+    return -1;
   }
 
   const text = s.slice(indexHrefEnd + 1, indexTextEnd);
   const textArray: (string | JSX.Element)[] = [];
   let index1: number = 0
   let index3: number = text.indexOf('<');
+  let result: number | JSX.Element = <></>;
 
   while (index3 > -1) {
     if (text.indexOf('<em') === index3 && index3 > -1) {
 
       textArray.push(text.slice(index1, index3));
-      textArray.push(createEmText(text.slice(index3, text.indexOf('</em>', index3) + 5), setTextError, index2));
-      index1 = text.indexOf('</em>', index3) + 5;
-      index3 = text.indexOf('<', index1);
+      result = createEmText(text.slice(index3, text.indexOf('</em>', index3) + 5), setTextError, index2);
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = text.indexOf('</em>', index3) + 5;
+        index3 = text.indexOf('<', index1);
+      }
     }
     else {
-      index3 = -1;
-      index2 = -1;
-
       setTextError('error');
-      return '';
+      return -1;
     }
-    if (index2 === -1) {
-      index3 = -1;
+    if (typeof (result) === 'number') {
       setTextError('error');
-
-      return '';
+      return -1;
     }
   }
   textArray.push(text.slice(index1, text.length))
-
 
   return (
     <strong>{textArray}</strong>
@@ -364,10 +489,9 @@ const createStrongText = (s: string, setTextError: Dispatch<SetStateAction<strin
   const indexHrefEnd = s.indexOf('>');
   const indexTextEnd = s.indexOf('</strong', 1);
   const index = s.indexOf('<', 1);
-  if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd ) {
-    index2 = -1;
+  if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd) {
     setTextError('Error');
-    return '';
+    return -1;
   }
 
   const text = s.slice(indexHrefEnd + 1, indexTextEnd);
@@ -384,38 +508,36 @@ const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>, ind
   const indexTextEnd = s.indexOf('</em');
   const index = s.indexOf('<', 1);
   const strongIndex = s.indexOf('<strong');
-  
+
   if (indexHrefEnd === -1 || indexTextEnd === -1 || (index !== indexTextEnd && index !== strongIndex)) {
-    index2 = -1;
     setTextError('Error');
-    return '';
+    return -1;
   }
   const text = s.slice(indexHrefEnd + 1, indexTextEnd);
 
   const textArray: (string | JSX.Element)[] = [];
   let index1: number = 0
   let index3: number = text.indexOf('<');
+  let result: number | JSX.Element = <></>;
 
   while (index3 > -1) {
     if (text.indexOf('<strong') === index3 && index3 > -1) {
-
       textArray.push(text.slice(index1, index3));
-      textArray.push(createStrongText(text.slice(index3, text.indexOf('</strong>', index3) + 9), setTextError, index2));
-      index1 = text.indexOf('</strong>', index3) + 9;
-      index3 = text.indexOf('<', index1);
+      result = createStrongText(text.slice(index3, text.indexOf('</strong>', index3) + 9), setTextError, index2);
+
+      if (typeof (result) !== 'number') {
+        textArray.push(result);
+        index1 = text.indexOf('</strong>', index3) + 9;
+        index3 = text.indexOf('<', index1);
+      }
     }
     else {
-      index3 = -1;
-      index2 = -1;
-
       setTextError('error');
-      return '';
+      return -1;
     }
-    if (index2 === -1) {
-      index3 = -1;
+    if (typeof (result) === 'number') {
       setTextError('error');
-
-      return '';
+      return -1;
     }
   }
   textArray.push(text.slice(index1, text.length))
@@ -429,11 +551,10 @@ const createEmText = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   const indexHrefEnd = s.indexOf('>');
   const indexTextEnd = s.indexOf('</em');
   const index = s.indexOf('<', 1);
-  
+
   if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd) {
-    index2 = -1;
     setTextError('Error');
-    return '';
+    return -1;
   }
   const text = s.slice(indexHrefEnd + 1, indexTextEnd);
   return (

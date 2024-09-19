@@ -82,7 +82,7 @@ const Rightsidebar = () => {
                 </div>
             </Link>
             <section className='mb-24 max-w-[400px] ml-2 lg:ml-0'>
-                <Link href='/latest' className='flex items-center mb-2 gap-2'>
+                <Link href='/important' className='flex items-center mb-2 gap-2'>
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" className='size-6 fill-slate-400 text-slate-400 ' viewBox="0 0 24 24"><path stroke="currentColor" d="M12 19.5a2 2 0 1 1 0 4a2 2 0 0 1 0-4Zm2-3h-4v-.129A62 62 0 0 0 8.033.88L8 .75V.5h8v.25l-.033.129A62 62 0 0 0 14 16.37z" /></svg>
                     <h3 className=' text-3xl text-slate-400'>Important</h3>
