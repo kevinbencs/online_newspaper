@@ -1,5 +1,5 @@
 import Latest_important from "../components/category_menu_search/latest_important";
-
+import { v4 as uuid } from "uuid";
 import Pagination from "./pagination";
 import Rightsidebar from "../components/category_menu_search/rightsidebar";
 
@@ -98,7 +98,7 @@ const Page = ({searchParams}: {searchParams:{page: number}}) => {
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
           <div className="mb-10">
-             {adadad.map(r => <Latest_important imageAlt={r.image} imageSrc={r.image} header={r.header}/>)}
+             {adadad.map(r => <Latest_important imageAlt={r.image} imageSrc={r.image} header={r.header} key={uuid()}/>)}
           </div>
            <Pagination searchParams={searchParams} lastPage={lastPage} />
         </div>

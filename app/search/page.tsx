@@ -3,6 +3,7 @@ import Pagination from "./pagination";
 import Search from "./search";
 import Rightsidebar from "../components/category_menu_search/rightsidebar";
 import Latest_important from "../components/category_menu_search/latest_important";
+import { v4 as uuid } from "uuid";
 
 
 const Page = ({ searchParams }: { searchParams: { category: string, text: string, date_from: string, date_to: string, author: string, page: number, filter: string } }) => {
@@ -106,7 +107,7 @@ const Page = ({ searchParams }: { searchParams: { category: string, text: string
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
           <div className="mb-10">
-             {adadad.map(r => <Latest_important imageAlt={r.image} imageSrc={r.image} header={r.header}/>)}
+             {adadad.map(r => <Latest_important imageAlt={r.image} imageSrc={r.image} header={r.header} key={uuid()}/>)}
           </div>
           <Pagination searchParams={searchParams} lastPage={lastPage} />
         </div>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/dark.css';
+import { v4 as uuid } from 'uuid';
 
 const Search = () => {
     const [textInput, setTextInput] = useState<string>('');
@@ -142,13 +143,13 @@ const Search = () => {
                 <label className='lg:w-60 block w-[100%]'>
                     <input type="text" ref={authorRef} onFocus={() => setAuthorClass('h-36')} onBlur={() => setAuthorClass('h-0')} value={authorInput} onChange={handleAuthorChange} placeholder='Author' className='mb-2 pl-1 border-b-2 input-bordered focus-within:outline-none bg-transparent w-[100%] lg:w-60' />
                     <ul className={`${authorClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-1`}>
-                        {table.filter(selectAuthorFilter).map((item: string) => <li tabIndex={0} onFocus={() => setAuthorClass(`h-36`)} onBlur={() => setAuthorClass(`h-0`)} onClick={() => handleAuthorClick(item)}> {item} </li>)}
+                        {table.filter(selectAuthorFilter).map((item: string) => <li tabIndex={0} onFocus={() => setAuthorClass(`h-36`)} onBlur={() => setAuthorClass(`h-0`)} onClick={() => handleAuthorClick(item)} key={uuid()}> {item} </li>)}
                     </ul>
                 </label>
                 <label className='w-[100%] lg:w-60 block'>
                     <input type="text" ref={categoryRef} onFocus={() => setCategoryClass('h-36')} onBlur={() => setCategoryClass('h-0')} value={categoryInput} onChange={handleCategoryChange} placeholder='Category' className='pl-1 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-[100%] lg:w-60' />
                     <ul className={`${categoryClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-1`}>
-                        {table.filter(selectCategoryFilter).map((item: string) => <li tabIndex={0} onFocus={() => setCategoryClass(`h-36`)} onBlur={() => setCategoryClass(`h-0`)} onClick={() => handleCategoryClick(item)}>{item} </li>)}
+                        {table.filter(selectCategoryFilter).map((item: string) => <li tabIndex={0} onFocus={() => setCategoryClass(`h-36`)} onBlur={() => setCategoryClass(`h-0`)} onClick={() => handleCategoryClick(item)} key={uuid()}>{item} </li>)}
                     </ul>
                 </label>
                 <label className='w-[100%] lg:w-60 block'>

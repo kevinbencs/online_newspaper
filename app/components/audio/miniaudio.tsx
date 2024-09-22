@@ -1,5 +1,6 @@
 'use client'
-import React, { Dispatch, SetStateAction, ChangeEvent, KeyboardEvent } from 'react'
+import React, { Dispatch, SetStateAction, ChangeEvent, KeyboardEvent, useState, useRef, useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
 
 const Miniaudio = (props: {
     currentTime: number, audioTime: number, muted: boolean, volume: number,
@@ -7,6 +8,9 @@ const Miniaudio = (props: {
     playCheckboxValue: boolean, setPlayCheckboxValue: Dispatch<SetStateAction<boolean>>, setDisplay: Dispatch<SetStateAction<boolean>>,
     setDisplayHelper: Dispatch<SetStateAction<boolean>>
 }) => {
+    const [title, setTitlte] = useState<string>('Title efesfgshegpe hesuigh seiu hsehg seph gseo hse gse.');
+    const animationRef = useRef<HTMLDivElement | null>(null);
+    const animationContainerRef = useRef<HTMLDivElement | null>(null);
 
     const handleKeydown = (e: KeyboardEvent<SVGElement>) => {
         if (e.code === 'Enter' || e.code === 'Space') {
@@ -22,8 +26,30 @@ const Miniaudio = (props: {
         props.setDisplay(false);
     }
 
+    useEffect(() => {
+        const containerWidth = animationContainerRef.current?.offsetWidth;
+        const elementWidth = animationRef.current?.offsetWidth;
+        let position: number | undefined = containerWidth;
+        let animationId: number;
+        const step = () => {
+            if (typeof(position) === 'number' && elementWidth && containerWidth) {
+                position -= 2;
+                if (position < - elementWidth) position = containerWidth;
+                if (animationRef.current && animationRef.current.style) animationRef.current.style.left = String(position) + "px";
+            }
+            
+            animationId = requestAnimationFrame(step);
+        }
+
+        animationId = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(animationId);
+
+    }, [])
+
+
+
     return (
-        <div className='fixed sm:bottom-4 bottom-0 sm:left-4 bg-slate-500 rounded-lg p-2 z-10 w-full left-0 sm:w-[230px]  text-white'>
+        <div className='fixed sm:bottom-4 bottom-0 sm:left-4 bg-slate-500 rounded-lg p-2 z-10 w-full left-0 sm:w-[230px]  text-white '>
             <div className='flex justify-end pr-2 ' >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                     className="size-9 p-1 focus-within::outline cursor-pointer"
@@ -51,6 +77,12 @@ const Miniaudio = (props: {
                     </label>
                 </div>
             </div>
+            <div className='overflow-hidden h-6 w-full mb-2 mt-2 flex justify-center relative' ref={animationContainerRef}>
+                <div className='absolute flex  h-6 left-[100%]' ref={animationRef}>{title.split(' ').map(c => <span className='mr-2' key={uuid()}>{c}</span>)} </div>
+
+
+            </div>
+
             <div className='flex justify-between mb-4'>
                 <span className='text-sm'>
                     {`${parseInt(`${Number(props.currentTime) / 3600}`, 10)}`.padStart(2, '0')}
@@ -64,12 +96,12 @@ const Miniaudio = (props: {
                 </span>
             </div>
 
-            <input type="range" name='time' min={0} max={props.audioTime} value={props.currentTime}
+            <input type="range" name='time2' min={0} max={props.audioTime} value={props.currentTime}
                 onChange={props.handleRangeChange} className='h-1 w-[100%] block mb-4'
             />
             <div className='flex items-center gap-2'>
                 <label className="swap">
-                    <input type="checkbox" checked={props.muted} onClick={props.volumeHandleClick} />
+                    <input type="checkbox" checked={props.muted} onChange={props.volumeHandleClick} />
 
                     <svg
                         className="swap-off fill-current size-6"
@@ -91,7 +123,7 @@ const Miniaudio = (props: {
                             d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z" />
                     </svg>
                 </label>
-                <input type="range" name="volume" min={0} max={1} step={0.02} className='h-1' value={props.volume} onChange={(e) => props.setVolume(Number(e.target.value))} />
+                <input type="range" name="volume2" min={0} max={1} step={0.02} className='h-1' value={props.volume} onChange={(e) => props.setVolume(Number(e.target.value))} />
             </div>
         </div>
     )

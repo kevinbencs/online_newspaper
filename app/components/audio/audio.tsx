@@ -195,7 +195,7 @@ const AudioElement: React.FC = () => {
 
                         <div className='flex items-center gap-2'>
                             <label className="swap">
-                                <input type="checkbox" checked={muted} onClick={volumeHandleClick} />
+                                <input type="checkbox" checked={muted} onChange={volumeHandleClick} />
 
                                 <svg
                                     className="swap-off fill-current size-6"

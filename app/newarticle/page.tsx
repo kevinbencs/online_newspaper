@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect, useRef, ChangeEvent, Dispatch, SetStateAction } from 'react';
 import Link from 'next/link';
-import { FacebookEmbed, InstagramEmbed, YouTubeEmbed, TikTokEmbed, LinkedInEmbed, PinterestEmbed } from 'react-social-media-embed';
+import { FacebookEmbed, InstagramEmbed, YouTubeEmbed, LinkedInEmbed, PinterestEmbed } from 'react-social-media-embed';
 import { Tweet } from 'react-tweet';
 import Image from 'next/image';
 import Stop from '../image/stop.png'
-import AudioElement  from '../components/audio/audio'
+import AudioElement from '../components/audio/audio'
+import { v4 as uuid } from 'uuid';
+import Tiktok from '../components/tiktokembedded/tiktok';
 
 
 
@@ -133,13 +135,13 @@ const Page = () => {
           <label className='w-[30%]  block'>
             <input type="text" ref={categoryRef} onFocus={() => setCategoryClass('h-36')} onBlur={() => setCategoryClass('h-0')} value={categoryInput} onChange={handleCategoryChange} placeholder='Category' className='pl-2 mb-2 border-b-2  focus-within:outline-none bg-transparent w-[100%] block' />
             <ul className={`${categoryClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-2`}>
-              {table.filter(selectCategoryFilter).map((item: string) => <li tabIndex={0} onFocus={() => setCategoryClass(`h-36`)} onBlur={() => setCategoryClass(`h-0`)} onClick={() => handleCategoryClick(item)}>{item} </li>)}
+              {table.filter(selectCategoryFilter).map((item: string) => <li tabIndex={0} onFocus={() => setCategoryClass(`h-36`)} onBlur={() => setCategoryClass(`h-0`)} onClick={() => handleCategoryClick(item)} key={uuid()}>{item} </li>)}
             </ul>
           </label>
           <label className='w-[30%]  block'>
             <input type="text" ref={importantRef} onFocus={() => setImportantClass('h-36')} onBlur={() => setImportantClass('h-0')} value={importantInput} onChange={handleImportantChange} placeholder='Important?' className='pl-2 mb-2 border-b-2  focus-within:outline-none bg-transparent w-[100%] block' />
             <ul className={`${importantClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-2`}>
-              {Important.filter(selectImportantFilter).map((item: string) => <li tabIndex={0} onFocus={() => setImportantClass(`h-36`)} onBlur={() => setImportantClass(`h-0`)} onClick={() => handleImportantClick(item)}>{item} </li>)}
+              {Important.filter(selectImportantFilter).map((item: string) => <li tabIndex={0} onFocus={() => setImportantClass(`h-36`)} onBlur={() => setImportantClass(`h-0`)} onClick={() => handleImportantClick(item)} key={uuid()}>{item} </li>)}
             </ul>
           </label>
         </div>
@@ -162,12 +164,9 @@ const Page = () => {
       </div>
 
       <div className='max-w-[328px]'>
-        <InstagramEmbed url='https://www.instagram.com/p/C9692HUIQtU/' width={`100%`} />
+        <InstagramEmbed url='https://www.instagram.com/p/C9692HUIQtU/' width={`100%`} captioned />
       </div>
 
-      <div className='max-w-[328px] mt-10'>
-        <TikTokEmbed url='https://www.tiktok.com/@dordzscerencsingi/video/7407801160251215137' width={`100%`} />
-      </div>
 
       <div className=' mt-10 max-w-[328px]'>
         <PinterestEmbed url='https://hu.pinterest.com/pin/770256342549487715/'
@@ -189,9 +188,10 @@ const Page = () => {
 
       <Image src={Stop} alt='swfaw' className='mt-10 mb-10' />
       <Image src={'https://drive.usercontent.google.com/uc?id=1tzXMb5L46xtEjI1Z91CO9m9ggW_bwEMD'} alt='fesaesf' width={600} height={400} />
-         
-      <AudioElement/>
 
+      <AudioElement />
+
+      <Tiktok url='https://www.tiktok.com/@scout2015/video/6718335390845095173' />
 
       <div >
         {(imageAltInput !== '' && imageUrlInput !== '') &&
@@ -201,6 +201,11 @@ const Page = () => {
         <div>
           {fa}
         </div>
+
+
+
+
+
       </div>
     </div>
   )
@@ -241,11 +246,12 @@ export default Page
 
 
 
-const chooseTypeOfTextItem = (s: string) => {
-  if (s.indexOf('<p>') === 0) { }
+const chooseTypeOfTextItem = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
+  let TextArray: (string | JSX.Element)[] = [];
+  if (s.indexOf('<p>') === 0) {TextArray = jsxInText(s, setTextError) }
   else if (s.indexOf('<img>') === 0) { }
   else if (s.indexOf('<ul>') === 0) { }
-  else if (s.indexOf('video') === 0) { }
+  else if (s.indexOf('<video>') === 0) { }
   else if (s.indexOf('<youtube>') === 0) { }
   else if (s.indexOf('<x>') === 0) { }
   else if (s.indexOf('<facebook>') === 0) { }
@@ -253,7 +259,9 @@ const chooseTypeOfTextItem = (s: string) => {
   else if (s.indexOf('<linkedin>') === 0) { }
   else if (s.indexOf('<tiktok>') === 0) { }
   else if (s.indexOf('<pinterest>') === 0) { }
-  else { }
+  else { setTextError('Error'); return }
+
+  return TextArray;
 }
 
 
@@ -376,7 +384,7 @@ const createLink = (s: string, setTextError: Dispatch<SetStateAction<string>>, i
   }
   textArray.push(text.slice(index1, text.length))
   return (
-    <Link href={s.slice(indexHref + 1, indexHrefEnd)}>{textArray}</Link>
+    <Link href={s.slice(indexHref + 1, indexHrefEnd)} key={uuid()}>{textArray}</Link>
   )
 }
 
@@ -392,7 +400,7 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
     setTextError('Error');
     return -1;
   }
-  ///Fixed the +2 error///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///Fixed the +2 error link kinézet miatt {} >///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -437,7 +445,7 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   textArray.push(text.slice(index1, text.length))
 
   return (
-    <a target='blank' href={s.slice(indexHref + 1, indexHrefEnd)}>{textArray}</a>
+    <a target='blank' href={s.slice(indexHref + 1, indexHrefEnd)} key={uuid()}>{textArray}</a>
   )
 }
 
@@ -481,7 +489,7 @@ const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   textArray.push(text.slice(index1, text.length))
 
   return (
-    <strong>{textArray}</strong>
+    <strong key={uuid()}>{textArray}</strong>
   )
 }
 
@@ -497,7 +505,7 @@ const createStrongText = (s: string, setTextError: Dispatch<SetStateAction<strin
   const text = s.slice(indexHrefEnd + 1, indexTextEnd);
 
   return (
-    <strong>{text}</strong>
+    <strong key={uuid()}>{text}</strong>
   )
 }
 
@@ -542,7 +550,7 @@ const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>, ind
   }
   textArray.push(text.slice(index1, text.length))
   return (
-    <em>{textArray}</em>
+    <em key={uuid()}>{textArray}</em>
   )
 }
 
@@ -558,6 +566,6 @@ const createEmText = (s: string, setTextError: Dispatch<SetStateAction<string>>,
   }
   const text = s.slice(indexHrefEnd + 1, indexTextEnd);
   return (
-    <em>{text}</em>
+    <em key={uuid()}>{text}</em>
   )
 }

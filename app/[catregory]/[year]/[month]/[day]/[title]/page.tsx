@@ -1,6 +1,7 @@
 import Rightsidebar from '@/app/components/category_menu_search/rightsidebar';
 import Image from 'next/image';
 import Stop from '../../../../../image/stop.png';
+import { v4 as uuid } from 'uuid';
 
 const Page = ({ params }: { params: { year: string, month: string, day: string, title: string } }) => {
   const adadad = [
@@ -92,7 +93,7 @@ const Page = ({ params }: { params: { year: string, month: string, day: string, 
         <div className="lg:w-[calc(100%-450px)]">
           <div className="mb-10">
              {adadad.map(r => 
-              <div className='mb-10'>
+              <div className='mb-10' key={uuid()}>
                 <p className='mb-5'>{r.parag}</p>
                 <Image src={Stop} alt='adf' className='mb-1'/>
                 <p className='text-xs'>awpoijawopfjwa</p>
