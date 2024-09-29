@@ -1,6 +1,7 @@
 'use client'
 
 import { Dispatch, SetStateAction, useState, KeyboardEvent } from 'react'
+import {v4 as uuid } from 'uuid';
 
 const Themes = (props: { themes: string[], setThemes: Dispatch<SetStateAction<string[]>> }) => {
     const [theme, setTheme] = useState<string>('');
@@ -33,7 +34,7 @@ const Themes = (props: { themes: string[], setThemes: Dispatch<SetStateAction<st
                     Themes:
                 </h3>
                 <ul className='lg:ml-[calc(30%+20px)] ml-2 lg:w-[30%] w-[calc(99%-8px)]'>
-                    {props.themes.map((item: string) => <li className=' flex gap-5 bg-slate-600 justify-between p-1 pl-2 pr-2 rounded text-white mt-3'>
+                    {props.themes.map((item: string) => <li className=' flex gap-5 bg-slate-600 justify-between p-1 pl-2 pr-2 rounded text-white mt-3' key={uuid()}>
                         {item}
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 cursor-pointer" onClick={() => handleClickDelete(item)} tabIndex={0} onKeyDown={(e) => handleKeyDownDelete(e, item)}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
