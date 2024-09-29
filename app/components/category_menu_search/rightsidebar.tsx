@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Stop from '../../image/stop.png';
 import Image from 'next/image';
+import { v4 as uuid } from 'uuid';
 
 const Rightsidebar = () => {
     const data = [
@@ -52,7 +53,7 @@ const Rightsidebar = () => {
                 </Link>
                 <div>
                     {data.map(d =>
-                        <>
+                        <div key={uuid()}>
                             <Link href='/' className='category top-3 uppercase text-[10px] '>dwdw</Link>
                             <Link href='/' className=' flex gap-2 items-start'>
                                 <div className='overflow-hidden max-h-[73px] min-h-[73px] min-w-[130px] max-w-[130px]'>
@@ -60,7 +61,7 @@ const Rightsidebar = () => {
                                 </div>
                                 <h4 className=' text-sm'>{d}</h4>
                             </Link>
-                        </>
+                        </div>
                     )}
                 </div>
             </section>
@@ -95,7 +96,7 @@ const Rightsidebar = () => {
                 </Link>
                 <div >
                     {data.map(d =>
-                        <>
+                        <div key={uuid()}>
                             <Link href='/' className='category top-3 uppercase text-[10px] '>dwdw</Link>
                             <Link href='/' className='flex gap-2 items-start'>
                                 <div className='overflow-hidden max-h-[73px] min-h-[73px] min-w-[130px] max-w-[130px]'>
@@ -103,7 +104,7 @@ const Rightsidebar = () => {
                                 </div>
                                 <h4 className=' text-sm'>{d}</h4>
                             </Link>
-                        </>
+                        </div>
                     )}
                 </div>
             </section>

@@ -203,6 +203,9 @@ main a article p {
 .youtube-iframe iframe{
   aspect-ratio: 16/9;
 }
+video{
+  aspect-ratio: 16/9;
+}
 
 .pinterest-post{
   aspect-ratio: 328/532;

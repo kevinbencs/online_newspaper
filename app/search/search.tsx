@@ -6,37 +6,33 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/dark.css';
 import { v4 as uuid } from 'uuid';
+import Optgroup from '../components/optgroup/optgroup';
 
 const Search = () => {
     const [textInput, setTextInput] = useState<string>('');
     const [authorInput, setAuthorInput] = useState<string>('');
-    const [authorClass, setAuthorClass] = useState('h-0');
     const [categoryInput, setCategoryInput] = useState<string>('');
-    const [categoryClass, setCategoryClass] = useState('h-0');
     const [fromDate, setFromDate] = useState<string>('');
     const [toDate, setToDate] = useState<string>('');
     const { theme } = useTheme();
 
-
-    const categoryRef = useRef<null | HTMLInputElement>(null);
-    const authorRef = useRef<null | HTMLInputElement>(null);
     const FromRef = useRef<null | HTMLInputElement>(null);
     const ToRef = useRef<null | HTMLInputElement>(null);
     const router = useRouter();
 
     const table = [
-        'aaaaa',
-        'cccccc',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
-        'dswaf',
+        {id: 'fvgse', text: 'aaaaa'},
+        {id: 'fsdfxdfs', text: 'cccccc'},
+        {id: 'sefdsfsdfs', text: 'dswaf'},
+        {id: 'dsfxsesffse', text: 'dswaf'},
+        {id: 'dgsdgsdgsd', text: 'dswaf'},
+        {id: 'dsgcxgxdgxdf', text: 'dswaf'},
+        {id: 'dgbxdgxgcx', text: 'dswaf'},
+        {id: 'xvgxcdsee', text: 'dswaf'},
+        {id: 'dddddxs', text: 'dswaf'},
+        {id: 'sdfsdfsd', text: 'dswaf'},
+        {id: 'dfsdfsd', text: 'dswaf'},
+        {id: 'dfsdfdsfsd', text: 'dswaf'},
     ];
 
     useEffect(() => {
@@ -78,41 +74,6 @@ const Search = () => {
     }, [theme]);
 
 
-    const selectAuthorFilter = (arrayItem: string) => {
-        return arrayItem.toLocaleLowerCase().indexOf(authorInput.toLocaleLowerCase()) > -1;
-    }
-
-    const selectCategoryFilter = (arrayItem: string) => {
-        return arrayItem.toLocaleLowerCase().indexOf(categoryInput.toLocaleLowerCase()) > -1;
-    }
-
-    const handleAuthorChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (table.filter((arrayItem) => arrayItem.toLocaleLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > - 1).length > 0) {
-            setAuthorInput(e.target.value);
-        }
-    };
-
-    const handleCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (table.filter((arrayItem) => arrayItem.toLocaleLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > - 1).length > 0) {
-            setCategoryInput(e.target.value);
-        }
-    };
-
-    const handleAuthorClick = (r: string) => {
-        setTimeout(() => {
-            setAuthorInput(r);
-            authorRef.current?.blur();
-            setAuthorClass('h-0');
-        }, 0);
-    };
-
-    const handleCategoryClick = (r: string) => {
-        setTimeout(() => {
-            setCategoryInput(r);
-            categoryRef.current?.blur();
-            setCategoryClass('h-0');
-        }, 0);
-    };
 
 
     const handleSubmit = (e: SyntheticEvent) => {
@@ -139,24 +100,15 @@ const Search = () => {
                     </svg>
                 </button>
             </label>
-            <div className='mt-10  flex gap-5 flex-col lg:flex-row items-start flex-wrap lg:justify-between'>
-                <label className='lg:w-60 block w-[100%]'>
-                    <input type="text" ref={authorRef} onFocus={() => setAuthorClass('h-36')} onBlur={() => setAuthorClass('h-0')} value={authorInput} onChange={handleAuthorChange} placeholder='Author' className='mb-2 pl-1 border-b-2 input-bordered focus-within:outline-none bg-transparent w-[100%] lg:w-60' />
-                    <ul className={`${authorClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-1`}>
-                        {table.filter(selectAuthorFilter).map((item: string) => <li tabIndex={0} onFocus={() => setAuthorClass(`h-36`)} onBlur={() => setAuthorClass(`h-0`)} onClick={() => handleAuthorClick(item)} key={uuid()}> {item} </li>)}
-                    </ul>
+            <div className='mt-10  flex gap-5 flex-col lg:flex-row items-start flex-wrap'>
+                <Optgroup optElement={table} optInput={authorInput} setOptInput={setAuthorInput} placeHolder='Author'/>
+                <Optgroup optElement={table} optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
+
+                <label className='lg:w-[30%] w-full  block'>
+                    <input type="text" ref={FromRef} value={fromDate} onChange={(e) => setFromDate(e.target.value)} placeholder='From' className='pl-2 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-full ' />
                 </label>
-                <label className='w-[100%] lg:w-60 block'>
-                    <input type="text" ref={categoryRef} onFocus={() => setCategoryClass('h-36')} onBlur={() => setCategoryClass('h-0')} value={categoryInput} onChange={handleCategoryChange} placeholder='Category' className='pl-1 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-[100%] lg:w-60' />
-                    <ul className={`${categoryClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-1`}>
-                        {table.filter(selectCategoryFilter).map((item: string) => <li tabIndex={0} onFocus={() => setCategoryClass(`h-36`)} onBlur={() => setCategoryClass(`h-0`)} onClick={() => handleCategoryClick(item)} key={uuid()}>{item} </li>)}
-                    </ul>
-                </label>
-                <label className='w-[100%] lg:w-60 block'>
-                    <input type="text" ref={FromRef} value={fromDate} onChange={(e) => setFromDate(e.target.value)} placeholder='From' className='pl-1 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-[100%] lg:w-60' />
-                </label>
-                <label className='w-[100%] lg:w-60 block'>
-                    <input type="text" ref={ToRef} value={toDate} onChange={(e) => setToDate(e.target.value)} placeholder='To' className='pl-1 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-[100%] lg:w-60' />
+                <label className='lg:w-[30%] w-full  block'>
+                    <input type="text" ref={ToRef} value={toDate} onChange={(e) => setToDate(e.target.value)} placeholder='To' className='pl-2 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-full' />
                 </label>
             </div>
         </form >
