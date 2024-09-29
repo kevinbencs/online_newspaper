@@ -228,7 +228,7 @@ const Page = () => {
         }
         <h2 className='mt-20 text-5xl mb-20 font-bold leading-normal'>{titleInput}</h2>
         <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
-          <div className="lg:w-[calc(100%-450px)]">
+          <div className="lg:w-[calc(100%-450px)] mb-8">
             {text}
           </div>
           {sidebar === 'Sidebar: yes' &&
@@ -255,7 +255,7 @@ const Page = () => {
           }
           <h2 className='mt-20 text-5xl mb-20 font-bold leading-normal'>{titleInput}</h2>
           <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
-            <div className="lg:w-[calc(100%-450px)]">
+            <div className="lg:w-[calc(100%-450px)] mb-8">
               {paywallText}
               <Paywall/>
             </div>

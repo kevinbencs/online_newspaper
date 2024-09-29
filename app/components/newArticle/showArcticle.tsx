@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { FacebookEmbed, InstagramEmbed, YouTubeEmbed, LinkedInEmbed, PinterestEmbed } from 'react-social-media-embed';
 import { Tweet } from 'react-tweet';
 import Image from 'next/image';
-import Stop from '../image/stop.png'
 import AudioElement from '../audio/audio'
 import Tiktok from '../tiktokembedded/tiktok';
 
@@ -366,7 +365,7 @@ const createImg = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
 
     if (BeginOfText.length !== 12 || EndOfText.length !== 3) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return <Image src={s.slice(index1 + 1, index2)} alt='edfeff' key={uuid()} className='w-[550px] block mb-10' width={600} height={337.5}/>
@@ -381,11 +380,11 @@ const createVideo = (s: string, setTextError: Dispatch<SetStateAction<string>>) 
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 12 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div className=' mt-10 max-w-[500px]'>
+        <div className=' mt-10 max-w-[500px]' key={uuid()}>
             <video controls width={`100%`} height={`100%`} key={uuid()}>
                 <source src={s.slice(index1 + 1, index2)} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -403,11 +402,11 @@ const createYoutube = (s: string, setTextError: Dispatch<SetStateAction<string>>
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 14 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div className=' mt-10 max-w-[500px]'>
+        <div className=' mt-10 max-w-[500px]' key={uuid()}>
             <YouTubeEmbed url={s.slice(index1 + 1, index2)} width={`100%`} height={`100%`} />
         </div>
     )
@@ -422,11 +421,11 @@ const createX = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 7 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div >
+        <div key={uuid()}>
             <Tweet id={s.slice(index1 +1 , index2)} />
         </div>
     )
@@ -440,11 +439,11 @@ const createInstagram = (s: string, setTextError: Dispatch<SetStateAction<string
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 16 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div className='max-w-[328px]'>
+        <div className='max-w-[328px]' key={uuid()}>
             <InstagramEmbed url={s.slice(index1 + 1, index2)} width={`100%`} captioned />
         </div>
     )
@@ -458,11 +457,11 @@ const createFacebook = (s: string, setTextError: Dispatch<SetStateAction<string>
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 15 || EndOfText.length !== 3) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div className='max-w-[550px]'>
+        <div className='max-w-[550px]' key={uuid()}>
             <FacebookEmbed url={s.slice(index1 + 1, index2)} width={'100%'} />
         </div>
     )
@@ -476,11 +475,11 @@ const createTiktok = (s: string, setTextError: Dispatch<SetStateAction<string>>)
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 13 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <Tiktok url={s.slice(index1 + 1, index2)} />
+        <Tiktok url={s.slice(index1 + 1, index2)} key={uuid()}/>
     )
 
 }
@@ -493,11 +492,11 @@ const createPinterest = (s: string, setTextError: Dispatch<SetStateAction<string
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 16 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div className=' mt-10 max-w-[328px]'>
+        <div className=' mt-10 max-w-[328px]' key={uuid()}>
             <PinterestEmbed url={s.slice(index1 + 1, index2)}
                 width={`100%`}
                 height={`100%`}
@@ -514,11 +513,11 @@ const createLinkedin = (s: string, setTextError: Dispatch<SetStateAction<string>
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 15 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     return (
-        <div className='mt-10 max-w-[500px]'>
+        <div className='mt-10 max-w-[500px]' key={uuid()}>
             <LinkedInEmbed url={s.slice(index1 + 1, index2)}
                 width={`100%`} />
         </div>
@@ -534,10 +533,12 @@ const createAudio = (s: string, setTextError: Dispatch<SetStateAction<string>>) 
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 12 || EndOfText.length === 2) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
-    return <AudioElement />
+    const url = s.slice(index1+1, index2);
+
+    return <AudioElement Url={url} key={uuid()}/>
 }
 
 
@@ -546,7 +547,7 @@ const createList =  (s: string, setTextError: Dispatch<SetStateAction<string>>) 
     const index2 = s.indexOf('</ul>');
     if (index1 !== 0 || index2 === -1 || s.length !== index2+5) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     const List = s.slice(index1 + 4, index2);
@@ -564,13 +565,13 @@ const createTitlte = (s: string, setTextError: Dispatch<SetStateAction<string>>)
 
     if (index1 !== 0 || index2 === -1 || s.length !== index2+8) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;;
     }
 
     const title = s.slice(7, index2);
 
     return(
-        <h2 className="mb-10 text-3xl font-bold">{title}</h2>
+        <h2 className="mb-10 text-3xl font-bold" key={uuid()}>{title}</h2>
     )
 }
 
@@ -580,13 +581,13 @@ const createHighlight = (s: string, setTextError: Dispatch<SetStateAction<string
 
     if (index1 !== 0 || index2 === -1 || s.length !== index2+12) {
         setTextError('Error');
-        return <></>;
+        return <div key={uuid()}></div>;
     }
 
     const text = s.slice(11, index2);
 
     return(
-        <p className="mb-10 font-bold pl-4 border-l-4 dark:border-slate-50 border-zinc-800"><span className="bg-zinc-800 text-white dark:bg-slate-50 dark:text-black inline-block p-1 font-bold">{text}</span></p>
+        <p className="mb-10 font-bold pl-4 border-l-4 dark:border-slate-50 border-zinc-800" key={uuid()}><span className="bg-zinc-800 text-white dark:bg-slate-50 dark:text-black inline-block p-1 font-bold">{text}</span></p>
     )
 }
 

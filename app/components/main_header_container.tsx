@@ -3,15 +3,17 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Header from "./header/header";
 
+import { AudioProvider } from "./audio/audioprovider";
+
 
 const Main_header_container = (props: { Children: ReactNode }) => {
     const [mainPos, setMainPos] = useState<number>(10);
     const mainRef = useRef<HTMLElement>(null);
 
-    
+
 
     useEffect(() => {
-    const handleScroll = () => {
+        const handleScroll = () => {
             if (mainRef.current) {
                 setMainPos(mainRef.current?.getBoundingClientRect().top);
             }
@@ -32,7 +34,9 @@ const Main_header_container = (props: { Children: ReactNode }) => {
         <>
             <Header mainPos={mainPos} />
             <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1">
-                {props.Children}
+                <AudioProvider>
+                    {props.Children}
+                </AudioProvider>
             </main>
         </>
     )

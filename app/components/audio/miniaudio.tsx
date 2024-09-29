@@ -1,30 +1,34 @@
 'use client'
 import React, { Dispatch, SetStateAction, ChangeEvent, KeyboardEvent, useState, useRef, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
+import { useAudio } from './audioprovider';
 
 const Miniaudio = (props: {
     currentTime: number, audioTime: number, muted: boolean, volume: number,
-    volumeHandleClick: () => void, handleRangeChange: (event: ChangeEvent<HTMLInputElement>) => void, setVolume: Dispatch<SetStateAction<number>>,
-    playCheckboxValue: boolean, setPlayCheckboxValue: Dispatch<SetStateAction<boolean>>, setDisplay: Dispatch<SetStateAction<boolean>>,
-    setDisplayHelper: Dispatch<SetStateAction<boolean>>
+    volumeHandleClick: () => void, handleRangeChange: (event: ChangeEvent<HTMLInputElement>) => void, setVolume: Dispatch<SetStateAction<number>>
 }) => {
     const [title, setTitlte] = useState<string>('Title efesfgshegpe hesuigh seiu hsehg seph gseo hse gse.');
     const animationRef = useRef<HTMLDivElement | null>(null);
     const animationContainerRef = useRef<HTMLDivElement | null>(null);
 
+    const [play, setPlay] = useState<boolean>(true);
+
+    const {togglePlay, setShowAudio, isPlaying, setAudioSource} = useAudio();
+
     const handleKeydown = (e: KeyboardEvent<SVGElement>) => {
         if (e.code === 'Enter' || e.code === 'Space') {
-            props.setDisplayHelper(false);
-            props.setPlayCheckboxValue(false);
-            props.setDisplay(false);
+            setShowAudio(false);
         }
     }
 
     const handleClick = () => {
-        props.setDisplayHelper(false);
-        props.setPlayCheckboxValue(false);
-        props.setDisplay(false);
+        setShowAudio(false);
+        setAudioSource('');
     }
+
+    
+
+    
 
     useEffect(() => {
         const containerWidth = animationContainerRef.current?.offsetWidth;
@@ -47,9 +51,8 @@ const Miniaudio = (props: {
     }, [])
 
 
-
     return (
-        <div className='fixed sm:bottom-4 bottom-0 sm:left-4 bg-slate-500 rounded-lg p-2 z-10 w-full left-0 sm:w-[230px]  text-white '>
+        <div className='fixed sm:bottom-4 bottom-0 sm:left-4 bg-slate-500 rounded-lg p-2 w-full left-0 sm:w-[230px]  text-white z-[11]'>
             <div className='flex justify-end pr-2 ' >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
                     className="size-9 p-1 focus-within::outline cursor-pointer"
@@ -63,7 +66,7 @@ const Miniaudio = (props: {
                 <div className='text-center'>
 
                     <label className="swap ">
-                        <input type="checkbox" checked={props.playCheckboxValue} onChange={() => props.setPlayCheckboxValue(!props.playCheckboxValue)} />
+                        <input type="checkbox" checked={isPlaying} onChange={() => togglePlay()}  />
 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="sm:size-20 size-12 swap-off">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />

@@ -1,104 +1,89 @@
 'use client'
 import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import Link from 'next/link';
-import Miniaudio from './miniaudio';
-import { visualize } from './visualize';
+import { useAudio } from './audioprovider';
 
 
-const AudioElement: React.FC = () => {
-    const [playCheckboxValue, setPlayCheckboxValue] = useState<boolean>(false);
-    const [volume, setVolume] = useState<number>(1);
-    const [latsVolume, setLastVolume] = useState<number>(1);
-    const [audioTime, setAudioTime] = useState<number>(0);
-    const [muted, setMuted] = useState<boolean>(false);
-    const [currentTime, setCurrentTime] = useState<number>(0);
-    const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-    const [animationId, setAnimationId] = useState<number | null>(null);
-    const [display, setDisplay] = useState<boolean>(false);
-    const [displayHelper, setDisplayHelper] = useState<boolean>(false);
-
-    const audioRef = useRef<null | HTMLAudioElement>(null);
+const AudioElement = (props: { Url: string }) => {
+    const { setAudioSource, setShowAudio, showAudio, src, isPlaying, togglePlay, analyser, volumeHandleClick, audioTime, currentTime, muted, handleRangeChange, volume, setVolume, setDisplay } = useAudio();
     const displayAudiRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+
+
+
     useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
+        if (isPlaying) {
+            if (!analyser || !canvasRef.current) return;
 
-        const handlePlay = () => {
-            if (!audioContext) {
-                const context = new AudioContext();
-                setAudioContext(context);
+            const canvas = canvasRef.current;
+            const canvasCtx = canvas.getContext('2d');
+            if (!canvasCtx) return;
 
-                const analyserNode = context.createAnalyser();
+            const bufferLength = analyser.frequencyBinCount // Frekvencia spektrum hossza
+            const dataArray = new Uint8Array(bufferLength); // Az adatok ebben tárolódnak
 
-                const source = context.createMediaElementSource(audio);
+            const draw = () => {
+                analyser.getByteFrequencyData(dataArray); // A frekvencia adatok lekérdezése
 
-                source.connect(analyserNode);
-                analyserNode.connect(context.destination);
+                canvasCtx.clearRect(0, 0, canvas.width, canvas.height); // Canvas törlése
+                canvasCtx.fillStyle = 'rgba(0,0,0,0)'; // Háttér színe
+                canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-                visualize({analyserNode, setAnimationId, canvasRef});
-            }
-        };
+                const barWidth = (canvas.width / bufferLength) * 2.5; // Minden oszlop szélessége
+                let barHeight;
+                let x = 0;
 
-        audio.addEventListener('play', handlePlay);
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] / 2; // A hangerősséghez arányosítjuk
 
-        return () => {
-            audio.removeEventListener('play', handlePlay);
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-            }
-        };
-    }, [audioContext, animationId]);
+                    // Színek
+                    const red = (barHeight / 4) % 255;
+                    const green = 80;
+                    const blue = (barHeight + 100) % 255;
 
-    
-    useEffect(() => {
-        if (audioRef.current !== null) {
-            audioRef.current.volume = volume;
+                    canvasCtx.fillStyle = `rgb(${red},${green},${blue})`;
+                    canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
 
-            if (volume === 0) setMuted(true);
-            else setMuted(false);
+                    x += barWidth + 1; // Következő oszlop pozíciója
+
+                }
+
+                requestAnimationFrame(draw); // A következő frame kirajzolása
+            };
+
+            draw();
         }
 
-    }, [volume]);
+    }, [analyser, isPlaying]);
+
+    ///audio/audio.MP3
 
 
-    useEffect(() => {
-        if (playCheckboxValue) {
-            audioRef.current?.play();
-            setDisplayHelper(true);
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!showAudio) {
+            setShowAudio(true);
+            setTimeout(() => {
+                if (src !== props.Url) setAudioSource(props.Url);
+                togglePlay();
+            }, 10)
         }
-        else audioRef.current?.pause();
-    }, [playCheckboxValue]);
-
-
-    useEffect(() => {
-        const audio = audioRef.current;
-        const audioTimeHandler = () => {
-            if (audio !== null) {
-                setCurrentTime(Number(audio.currentTime));
-            }
-        };
-        const audioTimeLength = () => {
-            if (audio !== null) {
-                setAudioTime(Number(audio.duration));
-            }
-        };
-
-        audio?.addEventListener('loadedmetadata', audioTimeLength);
-        audio?.addEventListener('timeupdate', audioTimeHandler);
-
-        return () => {
-            audio?.removeEventListener('timeupdate', audioTimeHandler);
-            audio?.removeEventListener('loadedmetadata', audioTimeLength);
+        else {
+            if (src !== props.Url) setAudioSource(props.Url);
+            togglePlay();
         }
-    }, []);
+    }
+
+    const handleClick = () => {
+        setAudioSource('');
+        setShowAudio(false);
+    }
+
 
     useEffect(() => {
         const handleScroll = () => {
             if (displayAudiRef.current) {
-                if((displayAudiRef.current?.getBoundingClientRect().top > window.innerHeight || displayAudiRef.current?.getBoundingClientRect().bottom < 0) 
-                    && displayHelper){
+                if((displayAudiRef.current?.getBoundingClientRect().top > window.innerHeight || displayAudiRef.current?.getBoundingClientRect().bottom < 0) ){
                     setDisplay(true);
                 }
                 else setDisplay(false);
@@ -112,33 +97,14 @@ const AudioElement: React.FC = () => {
         return () => {
             if(typeof window !== 'undefined'){
                 window.removeEventListener('scroll', handleScroll);
+                setDisplay(true);
             }
         }
-    }, [displayHelper])
-
-    const volumeHandleClick = () => {
-        if (audioRef.current !== null && volume !== 0) {
-            setLastVolume(volume);
-            setVolume(0);
-            setMuted(true);
-        }
-        else if (audioRef.current !== null) { setVolume(latsVolume); setMuted(false); }
-    }
-
-    const handleRangeChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(event.target.value);
-        setCurrentTime(value);
-        if (audioRef.current) {
-            audioRef.current.currentTime = value;
-        }
-    };
+    }, [])
 
 
     return (
         <>
-            <audio controls className='hidden' preload="auto" ref={audioRef}>
-                <source src="/audio/Teacher.MP3" type='audio/mp3' />
-            </audio>
 
             <div className='w-[100%]  bg-slate-500 mt-10 p-4 pr-6 pt-6 rounded-xl' ref={displayAudiRef}>
                 <div className='flex before:h-[2px] before:w-[calc(100%-32px-160px)] before:bg-slate-950  before:block items-center pl-8 before:mr-8 mb-6'>
@@ -156,31 +122,40 @@ const AudioElement: React.FC = () => {
 
                         <h3 >Unboxing & First cut Review of the most affordable LG Smart Monitor - Budget Monitor</h3>
                         <div>date</div>
-                        <div >
+                        <div>
                             <canvas ref={canvasRef} className='w-full h-20 hidden sm:block'></canvas>
-                            <input type="range" name='time' min={0} max={audioTime} value={currentTime}
-                                onChange={handleRangeChange} className='h-1 w-[100%] block'
-                            />
+                            {(src !== props.Url) && <input type="range" name='time' min={0} max={audioTime} value={0} readOnly className='h-1 w-[100%] block' />}
+                            {(src === props.Url) &&
+                                <input type="range" name='time' min={0} max={audioTime} value={currentTime} onChange={handleRangeChange} className='h-1 w-[100%] block' />
+                            }
                         </div>
                     </div>
 
                     <div className='flex flex-col justify-between'>
+                        {(src !== props.Url) &&
+                            <div className='flex justify-between'>
+                                <span className='text-sm'> 00:00:00</span>
+                                <span className='text-sm'>00:00:00</span>
+                            </div>
+                        }
 
-                        <div className='flex justify-between'>
-                            <span className='text-sm'>
-                                {`${parseInt(`${Number(currentTime) / 3600}`, 10)}`.padStart(2, '0')}
-                                :{`${parseInt(`${Number(currentTime) / 60 % 60}`, 10)}`.padStart(2, '0')}
-                                :{`${parseInt(`${Number(currentTime) % 60}`, 10)}`.padStart(2, '0')}
-                            </span>
-                            <span className='text-sm'>
-                                {`${parseInt(`${Number(audioTime) / 3600}`, 10)}`.padStart(2, '0')}
-                                :{`${parseInt(`${Number(audioTime) / 60 % 60}`, 10)}`.padStart(2, '0')}
-                                :{`${parseInt(`${Number(audioTime) % 60}`, 10)}`.padStart(2, '0')}
-                            </span>
-                        </div>
+                        {( src === props.Url) &&
+                            <div className='flex justify-between'>
+                                <span className='text-sm'>
+                                    {`${parseInt(`${Number(currentTime) / 3600}`, 10)}`.padStart(2, '0')}
+                                    :{`${parseInt(`${Number(currentTime) / 60 % 60}`, 10)}`.padStart(2, '0')}
+                                    :{`${parseInt(`${Number(currentTime) % 60}`, 10)}`.padStart(2, '0')}
+                                </span>
+                                <span className='text-sm'>
+                                    {`${parseInt(`${Number(audioTime) / 3600}`, 10)}`.padStart(2, '0')}
+                                    :{`${parseInt(`${Number(audioTime) / 60 % 60}`, 10)}`.padStart(2, '0')}
+                                    :{`${parseInt(`${Number(audioTime) % 60}`, 10)}`.padStart(2, '0')}
+                                </span>
+                            </div>
+                        }
 
                         <label className="swap mb-3 sm:mt-0">
-                            <input type="checkbox" checked={playCheckboxValue} onChange={() => setPlayCheckboxValue(!playCheckboxValue)} />
+                            <input type="checkbox" checked={isPlaying} onChange={handleChange} />
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="sm:size-20 size-12 swap-off">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -219,16 +194,14 @@ const AudioElement: React.FC = () => {
                             </label>
                             <input type="range" name="volume" min={0} max={1} step={0.02} className='h-1' value={volume} onChange={(e) => setVolume(Number(e.target.value))} />
                         </div>
-
                     </div>
                 </div>
+                { src === props.Url && <button onClick={handleClick}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12 mt-2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </button>}
             </div>
-            {display &&
-                <Miniaudio currentTime={currentTime} audioTime={audioTime} muted={muted}
-                    volume={volume} volumeHandleClick={volumeHandleClick} handleRangeChange={handleRangeChange} setVolume={setVolume}
-                    playCheckboxValue={playCheckboxValue} setPlayCheckboxValue={setPlayCheckboxValue} setDisplayHelper={setDisplayHelper} 
-                    setDisplay={setDisplay}/>
-            }
         </>
     )
 }
