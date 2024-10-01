@@ -7,8 +7,8 @@ const Page = () => {
   }
 
   return (
-    <div className='min-h-[90vh] mt-20 lg:ml-80 w-[500px]'>
-      <p className='mb-2'>If you would like to unsubscribe, enter your email.</p>
+    <div className='min-h-[90vh] mt-20 lg:ml-80 lg:w-[500px]'>
+      <p className='mb-2 text-center lg:text-start'>If you would like to unsubscribe, enter your email.</p>
       <form action="#" className='relative' onSubmit={handleSubmit}>
         <input type="email" name="email" className='block w-[100%] border border-gray-400 dark:border-current p-2 pt-1 pb-1 rounded-sm focus-within:outline-none'/>
         <button className='absolute right-1 top-1'>

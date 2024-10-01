@@ -15,8 +15,8 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-[90vh] lg:ml-80 w-[500px]">
-      <h2 className="mt-20 text-3xl mb-16 font-bold">Subscribe for the newsletters</h2>
+    <div className="min-h-[90vh] lg:ml-80 lg:w-[500px] w-full">
+      <h2 className="mt-20 text-3xl mb-16 font-bold text-center lg:text-start">Subscribe for the newsletters</h2>
       <p className="mb-10">If you would like to be informed the valuable news, subscribe for our newsletters.</p>
       <form action="#" onSubmit={handleSubmit}>
         <input type="email" name="email" placeholder="Email" required className="block w-[100%] mb-3 border border-gray-400 dark:border-current p-2 pt-1 pb-1 rounded-sm focus-within:outline-none"/>
@@ -38,7 +38,7 @@ const Page = () => {
         <input type="submit" value="Subscribe" className="border p-2 cursor-pointer border-gray-400 dark:border-current font-semibold bg-gray-100 hover:bg-gray-50 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-sm"/>
       </form>
       <div>
-        <div className="mt-10 text-xs">Would not you like to get letters? <Link href='/newsletter/unsubscribe' className='text-slate-400'>Unsubscribe</Link></div> 
+        <div className="mt-10 text-xs text-center lg:text-start">Would not you like to get letters? <Link href='/newsletter/unsubscribe' className='text-slate-400'>Unsubscribe</Link></div> 
       </div>
     </div>
   )
