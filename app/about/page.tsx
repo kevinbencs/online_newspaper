@@ -1,7 +1,32 @@
 'use client'
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
+import { useEffect } from "react"
+import { useSession } from "next-auth/react"
 
 const Page = () => {
+  const {push} = useRouter();
+  const {data: session, status} = useSession();
+
+  const handleClickLogOut = async () => {
+    /*await fetch('api/logout',{
+      method: "GET",
+      redirect: "follow"
+    })
+    .then(res => {
+      push(res.url);
+    })
+    .catch(err => {
+      console.log(err);
+    })*/
+    await signOut();
+  }
+
+  useEffect(() => {
+    if(!session) push('/');
+  },[session])
+
   return (
     <div className="w-full lg:w-auto">
       <h2 className='text-3xl mb-20 text-center lg:text-start'>About</h2>
@@ -22,6 +47,10 @@ const Page = () => {
         <li><Link href={'/'}>seoisugs</Link> </li>
       </ul>
 
+      </div>
+
+      <div onClick={handleClickLogOut} className="mt-10 cursor-pointer">
+        Log out
       </div>
 
       

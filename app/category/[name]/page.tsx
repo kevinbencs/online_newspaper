@@ -1,7 +1,7 @@
-import Latest_important from "../../components/category_menu_search/latest_important";
+import Latest_important from "../../_components/category_menu_search/latest_important";
 import { v4 as uuid } from "uuid";
 import Pagination from "./pagination";
-import Rightsidebar from "../../components/category_menu_search/rightsidebar";
+import Rightsidebar from "../../_components/category_menu_search/rightsidebar";
 
 const Page = ({params, searchParams}: {params:{name: string}, searchParams:{page: number}}) => {
   

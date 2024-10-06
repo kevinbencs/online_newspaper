@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, RefObject} from "react";
+import { Dispatch, SetStateAction, RefObject } from "react";
+import { ZodIssue } from "zod";
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>;
 
@@ -29,7 +30,7 @@ export function handleClickNextButtonName(props: {
 }
 
 
-export function handleClickNameLabelText(props:{
+export function handleClickNameLabelText(props: {
     inputValue: Input,
     setNameClass: Dispatcher<string>,
     setNameLabelText: Dispatcher<string>,
@@ -54,7 +55,7 @@ export function handleClickNameLabelText(props:{
 }
 
 
-export function handleClickEmailLabelText(props:{
+export function handleClickEmailLabelText(props: {
     inputValue: Input,
     setNameClass: Dispatcher<string>,
     setNextButtonClass: Dispatcher<string>,
@@ -76,7 +77,7 @@ export function handleClickEmailLabelText(props:{
 }
 
 
-export function handleClickPasswordLabelText(props:{
+export function handleClickPasswordLabelText(props: {
     setNameClass: Dispatcher<string>,
     setNextButtonClass: Dispatcher<string>,
     setEmailClass: Dispatcher<string>,
@@ -121,9 +122,6 @@ export function handleClickNextButtonEmail(props: {
 
 
 
-
-
-
 export function handleClickNextButtonPassword(props: {
     setPasswordClass: Dispatcher<string>,
     setActiveInputElement: Dispatcher<string>,
@@ -135,5 +133,53 @@ export function handleClickNextButtonPassword(props: {
     props.setPasswordClass('hidden');
     props.setPasswordCheckboxClass('hidden');
     props.setPrivacyClass('block');
-    props.setNextButtonClass('disabled')
+    props.setNextButtonClass('disabledButton')
+}
+
+
+export function resetForm(props: {
+    setInputValue: Dispatch<Input>,
+    setNameClass: Dispatch<string>,
+    setNameTextClass: Dispatch<string>,
+    setEmailClass: Dispatch<string>,
+    setEmailTextClass: Dispatch<string>,
+    setPasswordTextClass: Dispatch<string>,
+    setPrivacyClass: Dispatch<string>,
+    setPasswordClass: Dispatch<string>,
+    setPasswordCheckboxClass: Dispatch<string>,
+    setShowPassword: Dispatch<string>,
+    setActiveInputElement: Dispatch<string>,
+    setNextButtonClass: Dispatch<string>,
+    setNameLabelText: Dispatch<string>,
+    setEmailLabelText: Dispatch<string>,
+    setPasswordLabelText: Dispatch<string>,
+    setSubmitButtonClass: Dispatch<string>,
+    setEmailLeft: Dispatch<number>,
+    setRequiredFields: Dispatch<string[]>,
+    setPassLeft: Dispatch<number>,
+    setPrivacyChecked: Dispatch<boolean>,
+    setError: Dispatch<undefined | ZodIssue[]>,
+}) {
+    props.setInputValue({ name: '', email: '', password: '', privacy: false});
+    props.setNameClass('');
+    props.setNextButtonClass('');
+    props.setNameTextClass('top-8 invisible');
+    props.setEmailClass('hidden');
+    props.setEmailTextClass('hidden');
+    props.setPasswordTextClass('hidden');
+    props.setPrivacyClass('hidden');
+    props.setPasswordClass('hidden');
+    props.setPasswordCheckboxClass('hidden');
+    props.setShowPassword('password');
+    props.setActiveInputElement('name');
+    props.setNameLabelText('Fill your name');
+    props.setEmailLabelText('Fill your email');
+    props.setPasswordLabelText('Fill your password');
+    props.setSubmitButtonClass('disabledButton');
+
+    props.setEmailLeft(0);
+    props.setRequiredFields([]);
+    props.setPassLeft(0);
+    props.setPrivacyChecked(false);
+    props.setError([]);
 }

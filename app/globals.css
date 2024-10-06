@@ -144,6 +144,17 @@ main a article p {
   transform: translateY(2px);
 }
 
+.disabledButton:hover{
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  @apply dark:shadow-3xl;
+  transform: translateY(0);
+}
+
+.disabledButton:active{
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  @apply dark:shadow-3xl;
+  transform: translateY(0);
+}
 
 
 .checkbox-wrapper-62 input[type="checkbox"] {

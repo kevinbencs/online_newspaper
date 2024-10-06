@@ -6,6 +6,5 @@ const Page = () => {
   )
 }
 
-Page.noLayout = true;
 
 export default Page

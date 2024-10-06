@@ -1,4 +1,4 @@
-import Rightsidebar from '@/app/components/category_menu_search/rightsidebar';
+import Rightsidebar from '@/app/_components/category_menu_search/rightsidebar';
 import Image from 'next/image';
 import Stop from '../../../../../image/stop.png';
 import { v4 as uuid } from 'uuid';

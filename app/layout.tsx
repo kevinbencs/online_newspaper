@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
 //components
-import Footer from "./components/footer/footer";
-import Main_header_container from "./components/main_header_container";
-import Providers from "./components/themeProvider";
+import Footer from "./_components/footer/footer";
+import Main_header_container from "./_components/main_header_container";
+import Providers from "./_components/themeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,10 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <Providers>
-          <Main_header_container Children={children} />
-          <Footer />
-        </Providers>
+        <SessionProvider>
+          <Providers>
+            <Main_header_container Children={children} />
+            <Footer />
+          </Providers>
+        </SessionProvider>
+
 
       </body>
     </html>

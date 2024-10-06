@@ -14,7 +14,7 @@ function Providers(props: { children: ReactNode }) {
     return null;
   }
   return (
-    <ThemeProvider attribute="data-theme" defaultTheme="dracula" >
+    <ThemeProvider attribute="data-theme" defaultTheme="dracula">
       {props.children}
     </ThemeProvider>
   );

@@ -6,7 +6,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/dark.css';
 import { v4 as uuid } from 'uuid';
-import Optgroup from '../components/optgroup/optgroup';
+import Optgroup from '../_components/optgroup/optgroup';
 
 const Search = () => {
     const [textInput, setTextInput] = useState<string>('');

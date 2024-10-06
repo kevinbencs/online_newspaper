@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Pagination from "./pagination";
 import Search from "./search";
-import Rightsidebar from "../components/category_menu_search/rightsidebar";
-import Latest_important from "../components/category_menu_search/latest_important";
+import Rightsidebar from "../_components/category_menu_search/rightsidebar";
+import Latest_important from "../_components/category_menu_search/latest_important";
 import { v4 as uuid } from "uuid";
 
 

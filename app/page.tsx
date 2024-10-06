@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import NewestNews from "./components/home/latestnews";
-import MainNews from "./components/home/main";
-import Uk from "./components/home/uk";
-import Videos from "./components/home/videos";
+import NewestNews from "./_components/home/latestnews";
+import MainNews from "./_components/home/main";
+import Uk from "./_components/home/uk";
+import Videos from "./_components/home/videos";
 
 export default function Page() {
 
