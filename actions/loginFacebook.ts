@@ -13,7 +13,7 @@ export const loginFacebook = async () => {
               access_type: 'offline',
               prompt: 'consent',
             },
-            redirectTo: 'http://localhost:3000/auth/callback',
+            redirectTo: 'https://online-newspaper.vercel.app/auth/callback',
           },
     })
 
