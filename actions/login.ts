@@ -17,7 +17,7 @@ export const login = async (values: z.infer<typeof LoginShcema>) => {
     const { error } = await supabase.auth.signInWithPassword({email: values.email, password: values.password})
 
   if (error) {
-    return {failed: 'Invalid fields.'}
+    return {error: error.message}
   }
 
     return {success: 'Sent email'}

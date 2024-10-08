@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from "react"
+import {useState } from "react"
 import Sidebar from "./sidebar"
 
 const SidebarContainer = () => {
     const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
+
 
     return (
         <div className="drawer">
@@ -27,7 +28,7 @@ const SidebarContainer = () => {
             </div>
                 <div className="drawer-side z-50">
                     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <Sidebar setCheckboxValue={setCheckboxValue} />
+                    <Sidebar setCheckboxValue={setCheckboxValue}/>
                 </div>
         </div>
     )

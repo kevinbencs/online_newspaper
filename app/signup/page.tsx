@@ -38,6 +38,7 @@ const Page = () => {
   const [privacyChecked, setPrivacyChecked] = useState<boolean>(false);
   const [error, setError] = useState<ZodIssue[] | undefined>([]);
   const [success, setSuccess] = useState<string | undefined>('');
+  const [failed, setFailed] = useState<string | undefined>('');
 
   const nameRef = useRef<null | HTMLLabelElement>(null);
   const emailRef = useRef<null | HTMLLabelElement>(null);
@@ -160,6 +161,7 @@ const Page = () => {
   const handleClickSubmit = () => {
     setRequiredFields([]);
     setSuccess('');
+    setFailed('');
     const Arr: string[] = []
     if (inputValue.name === '') Arr.push('Name is required.');
     if (inputValue.email === '') Arr.push('Email is required.');
@@ -172,11 +174,12 @@ const Page = () => {
         Register(inputValue)
           .then((val) => {
             setError(val.error);
+            setFailed(val.failed)
             if (val.success) {
               setSuccess(val.success);
               resetForm({
                 setInputValue, setNameClass, setNameTextClass, setEmailClass, setEmailTextClass, setPasswordClass, setPasswordTextClass, setPrivacyClass, setPasswordCheckboxClass, setShowPassword,
-                setActiveInputElement, setNextButtonClass, setNameLabelText, setEmailLabelText, setPasswordLabelText, setSubmitButtonClass, setEmailLeft, setRequiredFields, setPassLeft, 
+                setActiveInputElement, setNextButtonClass, setNameLabelText, setEmailLabelText, setPasswordLabelText, setSubmitButtonClass, setEmailLeft, setRequiredFields, setPassLeft,
                 setPrivacyChecked, setError
               })
             }
@@ -320,6 +323,11 @@ const Page = () => {
             {(error && error.length > 0) &&
               <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5  p-2'>
                 {error.map(e => <p key={uuid()}>{e.message}</p>)}
+              </div>
+            }
+            {failed &&
+              <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5 text-center  p-2'>
+                {failed}
               </div>
             }
             {requiredFields.length > 0 &&

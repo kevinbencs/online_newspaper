@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import Header from "./header/header";
 
 import { AudioProvider } from "./audio/audioprovider";
+import { IsLoggedProvider } from "./islogged/isloggedprovider";
 
 
 const Main_header_container = (props: { Children: ReactNode }) => {
@@ -32,12 +33,16 @@ const Main_header_container = (props: { Children: ReactNode }) => {
     }, [])
     return (
         <>
-            <Header mainPos={mainPos} />
-            <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1">
-                <AudioProvider>
-                    {props.Children}
-                </AudioProvider>
-            </main>
+            <IsLoggedProvider>
+                <Header mainPos={mainPos} />
+                <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1">
+                    <AudioProvider>
+                        {props.Children}
+                    </AudioProvider>
+                </main>
+            </IsLoggedProvider>
+
+
         </>
     )
 }

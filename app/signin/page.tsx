@@ -8,15 +8,20 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import { FaFacebook } from 'react-icons/fa'
 import { login } from '@/actions/login'
+import { useLogged } from '../_components/islogged/isloggedprovider'
+import { loginGoogle } from '@/actions/loginGoogle'
+import { loginGithub } from '@/actions/loginGithub'
+import { loginFacebook } from '@/actions/loginFacebook'
 
 const Page = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { push } = useRouter();
-  const { data: session, status } = useSession();
+  //const { data: session, status } = useSession();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('')
+  const { setLogged } = useLogged();
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -26,40 +31,48 @@ const Page = () => {
       login({ email, password })
         .then((data) => {
           setError(data.error);
-          setSuccess(data.success);
+          if (data.success) {
+            setLogged(true);
+            push('/');
+          }
         })
     })
   }
 
-  useEffect(() => {
-    if (session) push('/');
-  }, [session])
 
-  const handleGoogleSignIn = () => {
-    const signInUrl = "/signin-google";  // NextAuth.js Google signin route
+
+  /*useEffect(() => {
+    if (session) push('/');
+  }, [session])*/
+
+  const handleGoogleSignIn = async () => {
+    /*const signInUrl = "/signin-google";  // NextAuth.js Google signin route
     const newWindow = window.open(signInUrl, '_blank', 'width=500,height=600');
 
     if (newWindow) {
       newWindow.focus();  // Bring the new window to focus
-    }
+    }*/
+   loginGoogle()
   }
 
   const handleFacebookSignIn = () => {
-    const signInUrl = "/signin-facebook";  // NextAuth.js Google signin route
+    /*const signInUrl = "/signin-facebook";  // NextAuth.js Google signin route
     const newWindow = window.open(signInUrl, '_blank', 'width=500,height=600');
 
     if (newWindow) {
       newWindow.focus();  // Bring the new window to focus
-    }
+    }*/
+   loginFacebook();
   }
 
   const handleGithubSignIn = () => {
-    const signInUrl = "/signin-github";  // NextAuth.js Google signin route
+    /*const signInUrl = "/signin-github";  // NextAuth.js Google signin route
     const newWindow = window.open(signInUrl, '_blank', 'width=500,height=600');
 
     if (newWindow) {
       newWindow.focus();  // Bring the new window to focus
-    }
+    }*/
+   loginGithub()
   }
 
   return (
@@ -67,7 +80,7 @@ const Page = () => {
       <div className='w-80'>
         <h2 className='text-center mb-5 text-3xl'>Sign in to Word Times</h2>
         <form action="#" className='dark:bg-neutral bg-gray-200 border-gray-800 rounded-lg p-[5%] pt-6 pb-6 mb-10 border dark:border-slate-400' onSubmit={handleSubmit}>
-          
+
           {error &&
             <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5 text-center p-2'>{error}</div>
           }
@@ -86,7 +99,7 @@ const Page = () => {
               <input type="password" disabled={isPending} name='password' minLength={8} maxLength={16} required className='block w-[100%] focus-within:outline-none pl-2 mt-1 rounded-md pt-1 pb-1' value={password} onChange={(e) => setPassword(e.target.value)} />
             </label>
           </div>
-          <input type="submit" value="Sign up" disabled={isPending} className='block w-[100%] rounded-lg bg-base-300 dark:bg-gray-400 p-2 cursor-pointer hover:bg-base-100 dark:hover:bg-gray-500' />
+          <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg bg-base-300 dark:bg-gray-400 p-2 cursor-pointer hover:bg-base-100 dark:hover:bg-gray-500' />
         </form>
         <div className=' text-center text-xs'>New to Word Times? <Link href='/signup' className='text-slate-400' >Create an account</Link></div>
         <div className='mt-10 before:w-full gap-2 after:w-full flex-nowrap items-center before:h-[1px] before:bg-gray-500 before:dark:bg-white before:relative after:h-[1px] after:dark:bg-white after:bg-gray-500 after:relative flex justify-center'><span className=' text-center'>OR</span></div>

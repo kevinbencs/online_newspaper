@@ -152,10 +152,6 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
 
         </div>
       }
-
-
-
-
       {children}
     </AudioContext.Provider>
   );
