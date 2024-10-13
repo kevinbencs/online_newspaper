@@ -1,14 +1,31 @@
-/*import { auth  } from "@/auth";
-
-export default auth((req) => {
-  const isLogged = !!req.auth;
-})*/
-
-
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
+
 export async function middleware(request: NextRequest) {
+
+  if(!request.cookies.get('admin-log') && (
+    request.nextUrl.pathname === '/createdadmin' || 
+    request.nextUrl.pathname === '/dashboard' ||
+    request.nextUrl.pathname === '/delete_data' ||
+    request.nextUrl.pathname.startsWith('/editarticle') ||
+    request.nextUrl.pathname === '/newarticle'
+  )) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
+    return NextResponse.redirect(url)
+  }
+
+  if(request.cookies.get('admin-log') && (
+    request.nextUrl.pathname === '/signin' ||
+    request.nextUrl.pathname === '/signup' ||
+    request.nextUrl.pathname === '/dhdhdhsefgsgerhtrherwgerhagfws'
+  )) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
+    return NextResponse.redirect(url)
+  }
+
   return await updateSession(request)
 }
 
@@ -17,17 +34,7 @@ export const config = {
   };
 
 
-/*import { NextRequest, NextResponse } from "next/server";
-
-export function middleware(request: NextRequest){
-
-    const token = request.cookies.get('token');
-    console.log(token);
-    const pathName= request.nextUrl.pathname;
-    if(!token && (pathName.startsWith("/about") || pathName.startsWith("/admin") || pathName === "/newarticle" || pathName.startsWith("/edit") )) return NextResponse.redirect(new URL("/", request.url));
-    if(token && (pathName === '/signin' || pathName === '/signup')) return NextResponse.redirect(new URL("/", request.url));
-}
-
+/*
 export const config = {
     matcher: [
         "/about/:path*",

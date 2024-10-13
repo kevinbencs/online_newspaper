@@ -1,61 +1,40 @@
 'use client'
 
-import Link from 'next/link'
-import { SyntheticEvent, useState, useTransition, useEffect } from 'react'
+import { useState, useTransition, SyntheticEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { FcGoogle } from 'react-icons/fc'
-import { FaGithub } from 'react-icons/fa'
-import { FaDiscord } from 'react-icons/fa6'
-import { login } from '@/actions/login'
+import Link from 'next/link'
+import { adminLogin } from '@/actions/adminlogin'
 import { useLogged } from '../_components/islogged/isloggedprovider'
-import { loginGoogle } from '@/actions/loginGoogle'
-import { loginGithub } from '@/actions/loginGithub'
-import { loginDiscord } from '@/actions/loginDiscord'
 
 const Page = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { push } = useRouter();
+  //const { data: session, status } = useSession();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('')
-  const { setLogged, WhoLogged } = useLogged();
+  const { setLogged, setRole } = useLogged();
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     startTransition(() => {
-      login({ email, password })
-        .then((data) => {
-          setError(data.error);
-          if (data.success) {
-            setLogged('user');
+      adminLogin({ email, password })
+        .then(res => {
+          setError(res.error);
+          if (res.success) {
+            setLogged('admin');
+            setRole('admin')
+            push('/');
           }
         })
     })
   }
 
-  useEffect(() => {
-    if(WhoLogged !== '')
-    push('/');
-  },[WhoLogged])
-
-
-  const handleGoogleSignIn = () => {
-   loginGoogle()
-  }
-
-  const handleDiscordSignIn = () => {
-    loginDiscord();
-  }
-
-  const handleGithubSignIn = () => {
-   loginGithub()
-  }
-
   return (
-    <div className='flex justify-center h-[90vh] pt-[10vh]'>
+    <div className='flex items-center flex-col min-h-[90vh] pt-[10vh]'>
       <div className='w-80'>
         <h2 className='text-center mb-5 text-3xl'>Sign in to Word Times</h2>
         <form action="#" className='dark:bg-neutral bg-gray-200 border-gray-800 rounded-lg p-[5%] pt-6 pb-6 mb-10 border dark:border-slate-400' onSubmit={handleSubmit}>
@@ -80,19 +59,36 @@ const Page = () => {
           </div>
           <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg bg-base-300 dark:bg-gray-400 p-2 cursor-pointer hover:bg-base-100 dark:hover:bg-gray-500' />
         </form>
-        <div className=' text-center text-xs'>New to Word Times? <Link href='/signup' className='text-slate-400' >Create an account</Link></div>
-        <div className='mt-10 before:w-full gap-2 after:w-full flex-nowrap items-center before:h-[1px] before:bg-gray-500 before:dark:bg-white before:relative after:h-[1px] after:dark:bg-white after:bg-gray-500 after:relative flex justify-center'><span className=' text-center'>OR</span></div>
-
-        <section className='mt-10'>
-          <button onClick={handleGoogleSignIn} className='w-[100%] pl-16 rounded-lg bg-white p-2 text-black cursor-pointer   flex items-center  gap-4  shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]'><FcGoogle className='h-5 w-5' /> Sign in with Google</button>
-          <button onClick={handleDiscordSignIn} className='w-[100%] pl-16 rounded-lg  p-2 text-white cursor-pointer  bg-[#5865F2] flex items-center  gap-4 mt-5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]'><FaDiscord className='h-5 w-5' /> Sign in with Discord</button>
-          <button onClick={handleGithubSignIn} className='w-[100%] pl-16 rounded-lg bg-black p-2 text-white cursor-pointer  flex items-center  gap-4 mt-5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]'><FaGithub className='h-5 w-5' /> Sign in with Github</button>
-        </section>
-
       </div>
+      <section className='w-[600px] mt-20 mb-32 flex flex-col items-center gap-5'>
+        <ul>
+          <li>
+            Email: admin@admin.com
+          </li>
+          <li>
+            Password: Admin1234*
+          </li>
+          <li>
+            Can do: create new article, admin, editor, author, edit article, delete article, editor, author, admin and write newsletter.
+          </li>
+        </ul>
+        <ul>
+          <li>
+            Email: editor@editor.hu
+          </li>
+          <li>
+            Password: Admin1234*
+          </li>
+          <li>
+            Can do: create new article, admin, editor, author, edit article, delete article, and write newsletter.
+          </li>
+        </ul>
+        
+      </section>
 
     </div>
   )
 }
+
 
 export default Page

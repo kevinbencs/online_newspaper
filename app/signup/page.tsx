@@ -345,11 +345,26 @@ const Page = () => {
           <label ref={emailRef} style={{ left: `${emailLeft}px` }} className={`relative bg-email bg-no-repeat  ${emailTextClass} pl-10 duration-500 pr-2 pt-1 `} htmlFor='email' onClick={handleClickEmail} > <button>{emailLabelText}</button> </label>
           <label className={`relative pl-10 ${passwordTextClass}  duration-500 pr-2 pt-1 bg-password bg-no-repeat `} style={{ left: `${passLeft}px` }} htmlFor='password' onClick={handleClickPassword} > <button> {passwordLabelText}</button> </label>
 
-          <input type="text" id='name' placeholder='Fill your name' disabled={isPending} className={`bg-transparent bg-user bg-no-repeat bg-[length:28px] bg-[left_top_7px]  border-b-2 border-base-content block w-[100%] pl-10 p-2 pb-3 imageClass ${nameClass}  focus-visible:outline-none`} name='name' value={inputValue.name} onChange={handleInputChange} required tabIndex={0} />
-          <input type="email" id='email' placeholder='Fill your email' disabled={isPending} required name='email' className={`bg-transparent bg-email bg-[length:24px] bg-[left_top_7px] bg-no-repeat  border-b-2 border-base-content pl-10 block w-[100%] imageClass p-2 ${emailClass} focus-visible:outline-none`} value={inputValue.email} onChange={handleInputChange} tabIndex={0} />
-          <input type={showPassword} placeholder='Fill your password' disabled={isPending} required name='password' maxLength={16} className={`${passwordClass} bg-transparent bg-password bg-[length:24px] bg-[left_top_7px] pl-10 bg-no-repeat border-b-2 border-base-content block w-[100%] p-2 imageClass focus-visible:outline-none`} id='password' value={inputValue.password} onChange={handleInputChange} tabIndex={0} />
+          <input type="text" id='name' placeholder='Fill your name' disabled={isPending} className={`bg-transparent bg-user bg-no-repeat bg-[length:28px] bg-[left_top_7px]  border-b-2 border-base-content block w-full pl-10 p-2 pb-2 imageClass ${nameClass}  focus-visible:outline-none`} name='name' value={inputValue.name} onChange={handleInputChange} required tabIndex={0} />
+          <input type="email" id='email' placeholder='Fill your email' disabled={isPending} required name='email' className={`bg-transparent bg-email bg-[length:24px] bg-[left_top_7px] bg-no-repeat  border-b-2 border-base-content pl-10 block w-full imageClass p-2 ${emailClass} focus-visible:outline-none`} value={inputValue.email} onChange={handleInputChange} tabIndex={0} />
 
-          <div className={`${privacyClass} bg-transparent border-b-2 border-base-content block w-[100%] p-2`}>
+          <div className={`flex justify-end ${passwordClass}`}>
+            <input type={showPassword} placeholder='Fill your password' disabled={isPending} required name='password' maxLength={16} className={`${passwordClass} bg-transparent bg-password bg-[length:24px] bg-[left_top_7px] pl-10 bg-no-repeat border-b-2 border-base-content block w-full p-2 imageClass focus-visible:outline-none`} id='password' value={inputValue.password} onChange={handleInputChange} tabIndex={0} />
+            <label className={`${passwordCheckboxClass} swap swap-rotate mr-5 absolute`}>
+              <input type="checkbox" name="showPassword" onChange={handlePassword} disabled={isPending} />
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 swap-on">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 swap-off">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+            </label>
+          </div>
+
+          <div className={`${privacyClass} bg-transparent border-b-2 border-base-content block w-[100%] pl-2 pb-2 pt-[2px]`}>
             <div className="checkbox-wrapper-62 " >
               <input type="checkbox" className="check" id="check1-62" checked={privacyChecked} onChange={handleInputChange} disabled={isPending} name='privacy' />
               <label htmlFor="check1-62" className="label1 flex gap-2 items-center cursor-pointer" onClick={() => setPrivacyChecked(!privacyChecked)}>
@@ -365,30 +380,15 @@ const Page = () => {
             </div>
           </div>
 
-          <div className='flex justify-between items-center'>
-            <label className={`${passwordCheckboxClass} swap swap-rotate order-2 mr-5 -top-14`}>
-              <input type="checkbox" name="showPassword" onChange={handlePassword} disabled={isPending} />
-
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 swap-on">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
-              </svg>
-
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 swap-off">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-              </svg>
-            </label>
-
+          <div className='flex items-center'>
+            <button onClick={handleClick} ref={clickButtonNextRef} className={` button-30 mt-6 ${NextButtonClass} mr-3 relative `} disabled={isPending}>Next</button>
             <div className='mr-5'>
-              <input type="submit" value="Sign up" className={`button-30 mt-6 ml-20 ${submitButtonClass}`} disabled={isPending} onClick={handleClickSubmit} />
+              <input type="submit" value="Sign up" className={`button-30 mt-6  ${submitButtonClass}`} disabled={isPending} onClick={handleClickSubmit} />
             </div>
           </div>
 
         </form>
-        <button onClick={handleClick} ref={clickButtonNextRef} className={` button-30 mt-6 ${NextButtonClass} mr-3 relative bottom-[72px]`} disabled={isPending}>Next</button>
       </div>
-
-
     </div>
 
   )

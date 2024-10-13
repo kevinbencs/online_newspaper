@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
 //components
@@ -25,13 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <SessionProvider>
           <Providers>
             <Main_header_container Children={children} />
             <Footer />
           </Providers>
-        </SessionProvider>
-
 
       </body>
     </html>

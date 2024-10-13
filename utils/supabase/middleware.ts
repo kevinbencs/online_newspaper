@@ -38,10 +38,7 @@ export async function updateSession(request: NextRequest) {
   if (
     !user &&
     (
-      request.nextUrl.pathname.startsWith('/about') ||
-      request.nextUrl.pathname.startsWith('/edit') ||
-      request.nextUrl.pathname.startsWith('/newarticle') ||
-      request.nextUrl.pathname.startsWith('/admin')
+      request.nextUrl.pathname.startsWith('/about')
     )
   ) {
     const url = request.nextUrl.clone()
@@ -54,7 +51,7 @@ export async function updateSession(request: NextRequest) {
     (
       request.nextUrl.pathname.startsWith('/signin') ||
       request.nextUrl.pathname.startsWith('/signup') ||
-      request.nextUrl.pathname.startsWith('/adslogin')
+      request.nextUrl.pathname === '/dhdhdhsefgsgerhtrherwgerhagfws'
     )
   ) {
     const url = request.nextUrl.clone()
@@ -62,18 +59,18 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-    // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-    // creating a new response object with NextResponse.next() make sure to:
-    // 1. Pass the request in it, like so:
-    //    const myNewResponse = NextResponse.next({ request })
-    // 2. Copy over the cookies, like so:
-    //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-    // 3. Change the myNewResponse object to fit your needs, but avoid changing
-    //    the cookies!
-    // 4. Finally:
-    //    return myNewResponse
-    // If this is not done, you may be causing the browser and server to go out
-    // of sync and terminate the user's session prematurely!
+  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
+  // creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
 
-    return supabaseResponse
+  return supabaseResponse
 }

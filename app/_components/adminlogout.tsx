@@ -1,17 +1,17 @@
 'use client'
 
-import { logout } from "@/actions/logout"
+import { adminLogOut } from "@/actions/adminlogout"
 import { useLogged } from "../_components/islogged/isloggedprovider"
 import { useRouter } from "next/navigation"
 import { SyntheticEvent } from "react"
 
-export default function Logout() {
+export default function AdminLogout() {
     const { setLogged, setRole } = useLogged();
     const { push } = useRouter();
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
-        logout()
+        adminLogOut()
             .then(val => {
                 if (val) {
                     setLogged('');

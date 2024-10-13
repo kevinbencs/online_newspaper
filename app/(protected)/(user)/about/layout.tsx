@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import Logout from '../_components/logout'
+import Logout from '../../../_components/logout'
 
 const Layout = ({children}: {children: React.ReactNode}) => {
   return (

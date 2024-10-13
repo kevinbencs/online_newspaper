@@ -14,7 +14,7 @@ export const Register = async (values: z.infer<typeof RegisterShcema>) => {
 
     const {data: user, error } = await supabase.auth.signUp({email: values.email, password: values.password, options:{ 
       data: {
-        user_metadat:{
+        user_metadata:{
           name: values.name
         }
       }

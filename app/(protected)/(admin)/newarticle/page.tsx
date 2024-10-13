@@ -3,15 +3,15 @@ import { useState, useEffect, useRef, SyntheticEvent } from 'react';
 import { YouTubeEmbed, } from 'react-social-media-embed';
 import Image from 'next/image';
 import { v4 as uuid } from 'uuid';
-import { chooseTypeOfTextItem } from '../_components/newArticle/showArcticle'
-import Bold_italic from '../_components/newArticle/bold_italic';
-import Link_Anchor from '../_components/newArticle/link_Anchor';
-import List_embedded from '../_components/newArticle/list_embedded';
-import Rightsidebar from '../_components/category_menu_search/rightsidebar';
-import Optgroup from '../_components/optgroup/optgroup';
-import OptgroupWithOutFilter from '../_components/optgroup/optgroupwithoutfilter';
-import Themes from '../_components/newArticle/themes';
-import Paywall from '../_components/paywall';
+import { chooseTypeOfTextItem } from '../../../_components/newArticle/showArcticle'
+import Bold_italic from '../../../_components/newArticle/bold_italic';
+import Link_Anchor from '../../../_components/newArticle/link_Anchor';
+import List_embedded from '../../../_components/newArticle/list_embedded';
+import Rightsidebar from '../../../_components/category_menu_search/rightsidebar';
+import Optgroup from '../../../_components/optgroup/optgroup';
+import OptgroupWithOutFilter from '../../../_components/optgroup/optgroupwithoutfilter';
+import Themes from '../../../_components/newArticle/themes';
+import Paywall from '../../../_components/paywall';
 
 
 

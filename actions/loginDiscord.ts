@@ -3,17 +3,17 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
-export const loginFacebook = async () => {
+export const loginDiscord = async () => {
     const supabase = createClient();
 
     const {data, error} = await supabase.auth.signInWithOAuth({
-        provider: 'facebook',
+        provider: 'discord',
         options: {
             queryParams: {
               access_type: 'offline',
               prompt: 'consent',
             },
-            redirectTo: 'https://online-newspaper.vercel.app/auth/callback',
+            redirectTo: 'http://localhost:3000/auth/callback',
           },
     })
 
