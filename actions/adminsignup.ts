@@ -5,18 +5,30 @@ import { AdminRegisterShcema } from '@/schema'
 import Admin from '@/model/Admin'
 import { hash } from 'bcrypt'
 import mongoose from 'mongoose'
+import { cookies } from 'next/headers';
+import jwt, { JwtPayload } from "jsonwebtoken"
+import Token from '@/model/Token'
 
+interface Decoded extends JwtPayload {
+  id: string
+}
 
 async function connectToMongo() {
-  if (!mongoose.connection.readyState) {
-    await mongoose.connect(process.env.MONGODB_URI!); // A Mongoose kapcsolat létrehozása
+  if (mongoose.connection.readyState === 0) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI!,); // A Mongoose kapcsolat létrehozása
+    }
+    catch (error) {
+      console.error('Failed to connect to MongoDB:', error);
+      throw new Error('MongoDB connection failed');
+    }
   }
 }
 
 export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) => {
   const validatedFields = AdminRegisterShcema.safeParse(values)
 
-  if (!validatedFields.success) return { failed:  validatedFields.error.errors}
+  if (!validatedFields.success) return { failed: validatedFields.error.errors }
 
   const email = values.email;
   const password = values.password;
@@ -26,19 +38,36 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
   try {
     await connectToMongo();
 
-    const exitingAdmin = await Admin.findOne({ email });
-    if (exitingAdmin) return { error: "Admin already exits." };
+    const Cookies = cookies().get('admin-log');
 
-    const hashPassword = await hash(password, 12);
+    if (!Cookies) return { error: 'Please sign in.' }
 
-    const newAdmin = new Admin({ email, password: hashPassword, name, role });
+    const token = await Token.findOne({ token: Cookies.value })
 
-    await newAdmin.save();
+    if (!token) return { error: 'Please sign in.' }
 
-    return { success: `${role} created successfully.` }
+    const decoded = jwt.verify(Cookies.value, process.env.SECRET_CODE!) as Decoded;
+
+    if (!decoded) return { error: 'Token error' }
+
+    const account = await Admin.findById(decoded.id)
+
+    if (account.role === 'admin') {
+
+      const hashPassword = await hash(password, 12);
+
+      const newAdmin = new Admin({ email, password: hashPassword, name, role });
+
+      await newAdmin.save();
+
+      return { success: `${name} created successfully.` }
+    }
+    else {
+      return { error: 'You do not have admin privileges.' }
+    }
   }
   catch (error) {
-    
+
     return { error: 'server error' }
   }
 

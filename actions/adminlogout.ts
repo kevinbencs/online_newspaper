@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 import Token from "@/model/Token"
 
 async function connectToMongo() {
-    if (!mongoose.connection.readyState) {
+    if (mongoose.connection.readyState === 0) {
         await mongoose.connect(process.env.MONGODB_URI!); // A Mongoose kapcsolat létrehozása
     }
 }

@@ -24,9 +24,9 @@ const Page = () => {
       adminLogin({ email, password })
         .then(res => {
           setError(res.error);
-          if (res.success) {
-            setLogged('admin');
-            setRole('admin')
+          if (res.name) {
+            setLogged(res.name);
+            setRole(res.role)
             push('/');
           }
         })
@@ -60,7 +60,7 @@ const Page = () => {
           <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg bg-base-300 dark:bg-gray-400 p-2 cursor-pointer hover:bg-base-100 dark:hover:bg-gray-500' />
         </form>
       </div>
-      <section className='w-[600px] mt-20 mb-32 flex flex-col items-center gap-5'>
+      <section className='max-w-[600px] mt-20 mb-32 flex flex-col items-start gap-5'>
         <ul>
           <li>
             Email: admin@admin.com
@@ -69,7 +69,7 @@ const Page = () => {
             Password: Admin1234*
           </li>
           <li>
-            Can do: create new article, admin, editor, author, edit article, delete article, editor, author, admin and write newsletter.
+            Can do: create new articles, admins, editors, authors, edit articles, delete articles, editors, authors, admins and write newsletters.
           </li>
         </ul>
         <ul>
@@ -80,10 +80,20 @@ const Page = () => {
             Password: Admin1234*
           </li>
           <li>
-            Can do: create new article, admin, editor, author, edit article, delete article, and write newsletter.
+            Can do: create, edit, delete articles, and write newsletters.
           </li>
         </ul>
-        
+        <ul>
+          <li>
+            Email: author@author.hu
+          </li>
+          <li>
+            Password: Admin1234*
+          </li>
+          <li>
+            Can do: create articles, edit, delete own articles, and write newsletters.
+          </li>
+        </ul>
       </section>
 
     </div>

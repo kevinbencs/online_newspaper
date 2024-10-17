@@ -8,6 +8,6 @@ const TokenSchema = new Schema({
         require: true,
         ref: "User",
     }
-});
+},{timestamps: true});
 
 export default mongoose.models.Token || mongoose.model("Token", TokenSchema);

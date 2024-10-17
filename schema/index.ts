@@ -38,3 +38,17 @@ export const AdminRegisterShcema = z.object({
     name: z.string().min(1, { message: 'Name is required' }),
     role: z.string().min(1, { message: 'Role is required' }),
 })
+
+export const NewPasswordSchema = z.object({
+    password: z.string()
+        .refine((val) => {
+            const lowercase = /[a-z]/.test(val);
+            const uppercase = /[A-Z]/.test(val);
+            const specialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(val);
+            const passwordLength = val.length > 8
+
+            return lowercase && uppercase && specialCharacter && passwordLength
+
+        }, { message: "Password must be at least 8 characters and contain 1 lowercase, 1 uppercase, 1 number and 1 special character." }),
+    passwordConfirm: z.string()
+}).refine((data) => data.passwordConfirm === data.password, { message: "PasswordConfirm and password have to be equal.", path: ["passwordConfirm"] });

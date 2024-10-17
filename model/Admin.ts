@@ -24,6 +24,6 @@ const AdminSchema = new Schema({
         require: "Role is required",
     },
 
-})
+}, {timestamps: true})
 
-export default mongoose.models.Admin || mongoose.model("admin", AdminSchema);
+export default mongoose.models.Admin || mongoose.model("Admin", AdminSchema);
