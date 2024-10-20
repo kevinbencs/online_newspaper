@@ -52,3 +52,18 @@ export const NewPasswordSchema = z.object({
         }, { message: "Password must be at least 8 characters and contain 1 lowercase, 1 uppercase, 1 number and 1 special character." }),
     passwordConfirm: z.string()
 }).refine((data) => data.passwordConfirm === data.password, { message: "PasswordConfirm and password have to be equal.", path: ["passwordConfirm"] });
+
+
+export const AudioVideoImageUrlSchema = z.object({
+    name: z.string().min(1,{message: 'Name is required'}),
+    url: z.string().min(1,{message: 'Url is required'}),
+    detail: z.string().min(1,{message: 'Detail is required'})
+})
+
+export const AudioVideoImageDeleteUrlSchema = z.object({
+    url: z.string().min(1,{message: 'Url is required'}),
+})
+
+export const CategorySchema = z.object({
+    name: z.string().min(1,{message: 'Name is required'}),
+})

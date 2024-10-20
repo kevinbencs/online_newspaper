@@ -23,6 +23,18 @@ async function connectToMongo() {
     }
 }
 
+async function closeConnection() {
+    if (mongoose.connection.readyState !== 0) {
+        try {
+            await mongoose.connection.close();
+        }
+        catch (error) {
+            console.error('Failed to close the connection:', error);
+            throw new Error('Failed to close the connection');
+        }
+    }
+}
+
 export const AddTask = async (inputValue: string) => {
     const cookie = cookies().get('admin-log');
     if (!cookie) return { error: 'Please log in' };
@@ -31,17 +43,27 @@ export const AddTask = async (inputValue: string) => {
         await connectToMongo();
 
         const token = await Token.findOne({ token: cookie.value });
-        if (!token) return { error: 'Please log in' };
+        if (!token) {
+            await closeConnection();
+            return { error: 'Please log in' };
+        }
 
         const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) return { error: 'Token error' };
+        if (!decoded) {
+            await closeConnection();
+            return { error: 'Please log in' };
+        }
 
         const account = await Admin.findById(decoded.id);
-        if (!account) return { error: 'Token error' };
+        if (!account) {
+            await closeConnection();
+            return { error: 'Please log in' };
+        }
 
         const task = new Task({ task: inputValue });
 
         await task.save();
+        await closeConnection();
 
         return { success: 'Success' };
     }

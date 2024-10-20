@@ -1,16 +1,15 @@
 'use server'
 
-import Task from "@/model/Task"
+import mongoose from "mongoose"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
-import mongoose from "mongoose"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
+import { supabase } from "@/utils/supabase/article";
 
 interface Decoded extends JwtPayload {
     id: string
 }
-
 
 async function connectToMongo() {
     if (mongoose.connection.readyState === 0) {
@@ -36,37 +35,57 @@ async function closeConnection() {
     }
 }
 
-export const DeleteTask = async (id: string) => {
+
+
+
+export const WriteArticle = async () => {
     const cookie = cookies().get('admin-log');
     if (!cookie) return { error: 'Please log in' };
 
-    try{
+    try {
         await connectToMongo();
 
-        const token = await Token.findOne({token: cookie.value});
-        if(!token) {
+        const token = await Token.findOne({ token: cookie.value });
+        if (!token) {
             await closeConnection();
-            return { error: "PLease log in" };
+            return { error: 'Please log in' };
         }
 
         const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
-        if(!decoded) {
+        if (!decoded) {
             await closeConnection();
-            return { error: "PLease log in" };
+            return { error: 'Please log in' };
         }
 
         const account = await Admin.findById(decoded.id);
-        if(!account) {
+        if (!account) {
             await closeConnection();
-            return { error: "PLease log in" };
+            return { error: 'Please log in' };
         }
 
-        await Task.findByIdAndDelete(id)
+        const currentDate: string = new Date().toLocaleDateString();
+        const currentTime: string = new Date().toLocaleTimeString();
 
-        await closeConnection();
-        return {success: 'Success'};
+        const {data, error} = await supabase.from('article').insert({
+            date: currentDate,
+            time: currentTime,
+            text: 'fa',
+            title: 'e',
+            first_element: 'wf',
+            first_element_url:'fsa',
+            author: 'afe',
+            category: 'fa',
+            important: 'ad',
+            paywall: false,
+            sidebar: false,
+            themes: 'fa'
+        })
+
+        await closeConnection()
+
+        return { success: 'Success' }
     }
-    catch(err){
-        return {error: 'Server error'}
+    catch (err) {
+        return { error: 'Server error' }
     }
 }

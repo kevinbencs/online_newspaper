@@ -12,6 +12,7 @@ import Optgroup from '../../../_components/optgroup/optgroup';
 import OptgroupWithOutFilter from '../../../_components/optgroup/optgroupwithoutfilter';
 import Themes from '../../../_components/newArticle/themes';
 import Paywall from '../../../_components/paywall';
+import { WriteArticle } from '@/actions/writearticle';
 
 
 
@@ -146,6 +147,7 @@ const Page = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    WriteArticle();
   }
 
   const saveTheArticle = () => {

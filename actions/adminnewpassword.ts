@@ -11,7 +11,25 @@ import Token from '@/model/Token';
 
 async function connectToMongo() {
     if (mongoose.connection.readyState === 0) {
-        await mongoose.connect(process.env.MONGODB_URI!); // A Mongoose kapcsolat létrehozása
+        try {
+            await mongoose.connect(process.env.MONGODB_URI!);
+        }
+        catch (error) {
+            console.error('Failed to connect to MongoDB:', error);
+            throw new Error('MongoDB connection failed');
+        }
+    }
+}
+
+async function closeConnection() {
+    if (mongoose.connection.readyState !== 0) {
+        try {
+            await mongoose.connection.close(); 
+        }
+        catch (error) {
+            console.error('Failed to close the connection:', error);
+            throw new Error('Failed to close the connection');
+        }
     }
 }
 
@@ -21,38 +39,44 @@ interface Decoded extends JwtPayload {
 
 
 export const changeAdminPassword = async (values: z.infer<typeof NewPasswordSchema>) => {
-    const validatedFields = NewPasswordSchema.safeParse(values);
-
-    if (validatedFields.error) return { failed: validatedFields.error.errors };
-
-    const newPassword = await hash(values.password, 12);
-
-
 
     try {
+        const Cookies = cookies().get('admin-log');
+        if (!Cookies) return { error: 'Please log in' };
+
         await connectToMongo();
 
-        const Cookies = cookies().get('admin-log');
-        if(!Cookies) return {error: 'Please log in'};
+        const token = await Token.findOne({ token: Cookies.value });
 
-        const token = await Token.findOne({token: Cookies.value});
-
-        if(!token) return {error: "PLease log in"};
+        if (!token) {
+            await closeConnection();
+            return { error: "PLease log in" };
+        }
 
         const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
 
-        if(!decoded) return {error: 'Token error'}
+        if (!decoded) {
+            await closeConnection(); 
+            return { error: 'Please log in' };
+        }
 
-        const res = await Admin.findByIdAndUpdate(decoded.id,  {password: newPassword})
-        if(!res) return {error: 'Token error'}
-        
-        return {success: 'Password changed.'}
+        const validatedFields = NewPasswordSchema.safeParse(values);
+
+        if (validatedFields.error) {
+            await closeConnection();
+            return { failed: validatedFields.error.errors };
+        }
+
+        const newPassword = await hash(values.password, 12);
+
+        const res = await Admin.findByIdAndUpdate(decoded.id, { password: newPassword })
+        await closeConnection();
+        if (!res) return { error: 'Please log in' };
+
+        return { success: 'Password changed.' }
 
     }
     catch (error) {
         return { error: 'Server error' }
     }
-
-
-
 }

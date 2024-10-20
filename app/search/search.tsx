@@ -6,7 +6,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/dark.css';
 import { v4 as uuid } from 'uuid';
-import Optgroup from '../_components/optgroup/optgroup';
+import OptgroupSearch from '../_components/optgroup/optgroup';
 
 const Search = () => {
     const [textInput, setTextInput] = useState<string>('');
@@ -101,8 +101,8 @@ const Search = () => {
                 </button>
             </label>
             <div className='mt-10  flex gap-5 flex-col lg:flex-row items-start flex-wrap'>
-                <Optgroup optElement={table} optInput={authorInput} setOptInput={setAuthorInput} placeHolder='Author'/>
-                <Optgroup optElement={table} optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
+                <OptgroupSearch optElement={table} optInput={authorInput} setOptInput={setAuthorInput} placeHolder='Author'/>
+                <OptgroupSearch optElement={table} optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
 
                 <label className='lg:w-[30%] w-full  block'>
                     <input type="text" ref={FromRef} value={fromDate} onChange={(e) => setFromDate(e.target.value)} placeholder='From' className='pl-2 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-full ' />

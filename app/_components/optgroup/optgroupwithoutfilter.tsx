@@ -21,7 +21,7 @@ const OptgroupWithOutFilter = (props: {optElement:{id:string, text:string}[], op
     return (
         <label className='lg:w-[30%] w-full block'>
             <input ref={optRef} type="text" name='search_audio' onFocus={() => setOptClass('h-36')} onBlur={() => setOptClass('h-0')} className='focus-within:outline-none border-b-2 block w-full bg-transparent pl-2' placeholder={props.placeHolder} readOnly value={props.optInput} />
-            <ul className={`${optClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-60 dark:bg-neutral bg-base-200 duration-100 pl-2`}>
+            <ul className={`${optClass} overflow-y-scroll sidebar absolute w-[100%] lg:w-[calc(15%-20px)] dark:bg-neutral bg-base-200 duration-100 pl-2`}>
                 {props.optElement.map((item) => <li tabIndex={0} onFocus={() => setOptClass(`h-36`)} onBlur={() => setOptClass(`h-0`)} key={item.id} onClick={() => handleClick(item.text)} onKeyDown={(e) => handleKeyDown(e, item.text)}>{item.text} </li>)}
             </ul>
         </label>

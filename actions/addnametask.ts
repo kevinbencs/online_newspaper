@@ -11,12 +11,6 @@ interface Decoded extends JwtPayload {
     id: string
 }
 
-interface TaskType {
-    id: string,
-    name: string,
-    task: string
-}
-
 async function connectToMongo() {
     if (mongoose.connection.readyState === 0) {
         try {

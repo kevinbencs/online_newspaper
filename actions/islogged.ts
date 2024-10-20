@@ -23,6 +23,18 @@ async function connectToMongo() {
     }
 }
 
+async function closeConnection() {
+    if (mongoose.connection.readyState !== 0) {
+        try {
+            await mongoose.connection.close();
+        }
+        catch (error) {
+            console.error('Failed to close the connection:', error);
+            throw new Error('Failed to close the connection');
+        }
+    }
+}
+
 
 export const isLogged = async () => {
     const supabase = createClient();
@@ -36,17 +48,26 @@ export const isLogged = async () => {
     if (Cookie) {
         try {
             await connectToMongo();
-            const token = await Token.findOne({ token: Cookie.value });
 
-            if (!token) return { role: '', name: '' };
+            const token = await Token.findOne({ token: Cookie.value });
+            if (!token) {
+                await closeConnection();
+                return { role: '', name: '' };
+            }
+
             const decoded = jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded
-            if (!decoded) return { role: '', name: '' };
+            if (!decoded) {
+                await closeConnection();
+                return { role: '', name: '' };
+            }
 
             const account = await Admin.findById(decoded.id)
 
+            await closeConnection();
+
             if (!account) return { role: '', name: '' };
 
-            return { role: decoded.role, name: decoded.name };
+            return { role: account.role , name: account.name };
         }
         catch (err) {
             return { role: '', name: '' }

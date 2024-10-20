@@ -1,9 +1,10 @@
 'use server'
 
-import Task from "@/model/Task"
+import Category from "@/model/Category"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
+import { CategorySchema } from "@/schema"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 
@@ -11,6 +12,9 @@ interface Decoded extends JwtPayload {
     id: string
 }
 
+interface Cat{
+    name: string
+}
 
 async function connectToMongo() {
     if (mongoose.connection.readyState === 0) {
@@ -36,35 +40,33 @@ async function closeConnection() {
     }
 }
 
-export const DeleteTask = async (id: string) => {
-    const cookie = cookies().get('admin-log');
-    if (!cookie) return { error: 'Please log in' };
+export const addVideoUrl = async () => {
+    const Cookie = cookies().get('admin-log');
+    if(!Cookie) return {error: 'Please log in'};
 
     try{
         await connectToMongo();
-
-        const token = await Token.findOne({token: cookie.value});
+        const token = await Token.findOne({token: Cookie.value});
         if(!token) {
             await closeConnection();
-            return { error: "PLease log in" };
+            return { error: 'Please log in' };
         }
 
-        const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
+        const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
         if(!decoded) {
             await closeConnection();
-            return { error: "PLease log in" };
+            return { error: 'Please log in' };
         }
 
         const account = await Admin.findById(decoded.id);
         if(!account) {
             await closeConnection();
-            return { error: "PLease log in" };
+            return { error: 'Please log in' };
         }
 
-        await Task.findByIdAndDelete(id)
-
+        const category: Cat[] = await Category.find();
         await closeConnection();
-        return {success: 'Success'};
+        return {success: category}
     }
     catch(err){
         return {error: 'Server error'}

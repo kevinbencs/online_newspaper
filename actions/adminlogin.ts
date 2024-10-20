@@ -22,10 +22,22 @@ async function connectToMongo() {
   }
 }
 
+async function closeConnection() {
+  if (mongoose.connection.readyState !== 0) {
+      try {
+          await mongoose.connection.close(); 
+      }
+      catch (error) {
+        console.error('Failed to close the connection:', error);
+        throw new Error('Failed to close the connection');
+    }
+  }
+}
+
 export const adminLogin = async (values: z.infer<typeof LoginShcema>) => {
   const validatedFields = LoginShcema.safeParse(values)
 
-  if (!validatedFields.success) return { error: 'Invalid fields' }
+  if (!validatedFields.success) {return { error: 'Invalid fields' }}
 
   const email = values.email;
   const password = values.password;
@@ -36,11 +48,17 @@ export const adminLogin = async (values: z.infer<typeof LoginShcema>) => {
     await connectToMongo();
 
     const admin = await Admin.findOne({ email });
-    if (!admin) return { error: "Account does not exist" }
+    if (!admin) {
+      await closeConnection();
+      return { error: "Account does not exist" }
+    }
 
     const isPasswordValid = await bcrypt.compare(password, admin.password);
 
-    if (!isPasswordValid) return { error: "Invalid email or password. Please try again with the correct credentials." }
+    if (!isPasswordValid) {
+      await closeConnection();
+      return { error: "Invalid email or password. Please try again with the correct credentials." };
+    }
 
     const token = jwt.sign({
       id: admin.id.toString(),
@@ -51,6 +69,7 @@ export const adminLogin = async (values: z.infer<typeof LoginShcema>) => {
     const newToken = new Token({ token });
 
     await newToken.save();
+    await closeConnection();
 
     return { name: admin.name, role: admin.role }
   }
