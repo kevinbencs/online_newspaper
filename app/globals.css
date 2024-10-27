@@ -208,7 +208,7 @@ main a article p {
 
 /*newarticle page, paragraph placeholder*/
 .placeholder{
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='100%'><text x='50%' y='50%' fill='gray' font-size='40'>Text</text></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='100%'><text x='48%' y='50%' fill='gray' font-size='40'>Text</text></svg>");
 }
 
 .youtube-iframe iframe{

@@ -55,15 +55,49 @@ export const NewPasswordSchema = z.object({
 
 
 export const AudioVideoImageUrlSchema = z.object({
-    name: z.string().min(1,{message: 'Name is required'}),
-    url: z.string().min(1,{message: 'Url is required'}),
-    detail: z.string().min(1,{message: 'Detail is required'})
+    name: z.string().min(1, { message: 'Name is required' }),
+    url: z.string().min(1, { message: 'Url is required' }),
+    detail: z.string().min(1, { message: 'Detail is required' })
 })
 
 export const AudioVideoImageDeleteUrlSchema = z.object({
-    url: z.string().min(1,{message: 'Url is required'}),
+    url: z.string().min(1, { message: 'Url is required' }),
 })
 
 export const CategorySchema = z.object({
-    name: z.string().min(1,{message: 'Name is required'}),
+    name: z.string().min(1, { message: 'Name is required' }),
+})
+
+export const NewsletterSchema = z.object({
+    text: z.string().min(1, { message: 'Text is required' }),
+    subject: z.string().min(1, {message: 'Subject is required'}),
+})
+
+export const NewArticleSchema = z.object({
+    text: z.string().min(1, { message: 'Text is required' }),
+    title: z.string().min(1, { message: 'Title is required' }),
+    first_element: z.string(),
+    first_element_url: z.string(),
+    category: z.string().min(1, { message: 'Category is required' }),
+    important: z.string().min(1, { message: 'Important is required' }),
+    paywall: z.boolean({message: 'Paywall is required'}),
+    sidebar: z.boolean({message: 'Sidebar is required'}),
+    themes: z.string().min(1, {message: 'Themes is required'})
+})
+
+export const EmailSchema = z.object({
+    email: z.string().email({message: 'Email is required'})
+})
+
+export const SubscribeSchema = z.object({
+    email: z.string().email({message: 'Email is required'}),
+    name: z.string().min(1, {message: 'Name is required'}),
+    privacy: z.boolean().refine((val) => val === true,{message: 'You must agree to privacy notice.'})
+})
+
+export const updateUserSchema = z.object({
+    name: z.string().min(1, {message: 'Name is require'}),
+    email: z.string().email({message: 'Email is required'}),
+    newsletter: z.boolean(),
+    articles: z.string()
 })

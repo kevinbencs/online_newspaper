@@ -18,7 +18,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
   }
   return (
     <>
-      <form action="#" onSubmit={handleSubmit} className="input input-bordered flex items-center h-16 gap-2">
+      <form action="#" onSubmit={handleSubmit} className="input input-bordered dark:border-2 border-none dark:border-solid focus-within:outline-none flex items-center h-16 gap-2">
         <input type="text" onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} className="grow text-lg text-base-content" placeholder="Search" value={Input} onChange={(e) => setInput(e.target.value)} />
         <button>
           <svg
@@ -35,7 +35,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
 
       </form >
       {(Input !== '' && focus) &&
-        <div className='h-64 bg-base-200 dark:bg-neutral absolute lg:w-[60%] w-[calc(100%-80px)] m-10 lg:ml-[20%] lg:mr-[20%] left-0 top-16 overflow-y-scroll overflow-x-hidden text-base-content dark:text-neutral-content sidebar'>
+        <div className='h-64 bg-base-200 dark:bg-neutral  absolute lg:w-[59.3%] w-[calc(100%-92px)] m-10 lg:ml-[20.3%] lg:mr-[20%] left-[6px] lg:left-0  top-16 overflow-y-scroll overflow-x-hidden text-base-content dark:text-neutral-content sidebar'>
           <div>weafkwhifowafi</div>
           <div>weafkwhifowafi</div>
           <div>weafkwhifowafi</div>

@@ -6,6 +6,8 @@ import Token from "@/model/Token"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { supabase } from "@/utils/supabase/article";
+import { NewArticleSchema } from "@/schema";
+import * as z from 'zod'
 
 interface Decoded extends JwtPayload {
     id: string
@@ -38,7 +40,7 @@ async function closeConnection() {
 
 
 
-export const WriteArticle = async () => {
+export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
     const cookie = cookies().get('admin-log');
     if (!cookie) return { error: 'Please log in' };
 
@@ -63,25 +65,30 @@ export const WriteArticle = async () => {
             return { error: 'Please log in' };
         }
 
+        await closeConnection()
+
+        const validatedFields = NewArticleSchema.safeParse(value);
+        if(validatedFields.error) return {failed: validatedFields.error.errors};
+
         const currentDate: string = new Date().toLocaleDateString();
         const currentTime: string = new Date().toLocaleTimeString();
 
         const {data, error} = await supabase.from('article').insert({
             date: currentDate,
             time: currentTime,
-            text: 'fa',
-            title: 'e',
-            first_element: 'wf',
-            first_element_url:'fsa',
-            author: 'afe',
-            category: 'fa',
-            important: 'ad',
-            paywall: false,
-            sidebar: false,
-            themes: 'fa'
+            text: value.text,
+            title: value.title,
+            first_element: value.first_element,
+            first_element_url: value.first_element_url,
+            author: account.name,
+            category: value.category,
+            important: value.important,
+            paywall: value.paywall,
+            sidebar: value.sidebar,
+            themes: value.themes,
         })
 
-        await closeConnection()
+        if(error) return{error: 'Server error'}
 
         return { success: 'Success' }
     }

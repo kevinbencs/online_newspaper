@@ -19,7 +19,7 @@ const Page = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('')
-  const { setLogged, WhoLogged } = useLogged();
+  const { RoleLogged, setRole } = useLogged();
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -30,16 +30,16 @@ const Page = () => {
         .then((data) => {
           setError(data.error);
           if (data.success) {
-            setLogged('user');
+            setRole('user');
           }
         })
     })
   }
 
   useEffect(() => {
-    if(WhoLogged !== '')
+    if(RoleLogged !== '')
     push('/');
-  },[WhoLogged])
+  },[RoleLogged])
 
 
   const handleGoogleSignIn = () => {

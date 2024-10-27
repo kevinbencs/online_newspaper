@@ -85,8 +85,8 @@ const Search = () => {
 
     return (
         <form action="#" onSubmit={handleSubmit} className='mt-1'>
-            <label className="input input-bordered flex items-center h-16 gap-2 w-[100%] ">
-                <input type="text" className="grow text-lg text-base-content" placeholder="Search" value={textInput} onChange={(e) => setTextInput(e.target.value)} />
+            <label className="input input-bordered border-2 flex items-center h-16 gap-2 w-[100%] focus-within:outline-none">
+                <input type="text" className="grow text-lg text-base-content border-none focus-within:outline-none" placeholder="Search" value={textInput} onChange={(e) => setTextInput(e.target.value)} />
                 <button>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

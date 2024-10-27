@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, SyntheticEvent } from 'react';
+import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, RefObject } from 'react';
 import { YouTubeEmbed, } from 'react-social-media-embed';
 import Image from 'next/image';
 import { v4 as uuid } from 'uuid';
@@ -13,8 +13,9 @@ import OptgroupWithOutFilter from '../../../_components/optgroup/optgroupwithout
 import Themes from '../../../_components/newArticle/themes';
 import Paywall from '../../../_components/paywall';
 import { WriteArticle } from '@/actions/writearticle';
+import * as z from 'zod';
 
-
+type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
 const Page = () => {
   const [text, setText] = useState<(string | JSX.Element)[]>(['']);
@@ -33,13 +34,17 @@ const Page = () => {
   const [sidebar, setSidebar] = useState<string>('Sidebar: yes');
 
   const [imageAltInput, setImageAltInput] = useState<string>('');
-  const [paragraphInput, setParagraphInput] = useState('');
+  const [paragraphInput, setParagraphInput] = useState<string>('');
   const [paragraphPaywallInput, setParagraphPaywallInput] = useState('');
   const [paragPlaceholder, setParagPlaceholder] = useState<string>('placeholder');
 
   const [paywallText, setPaywallText] = useState<(string | JSX.Element)[]>(['']);
   const [paragPaywallPlaceholder, setParagPaywallPlaceholder] = useState<string>('placeholder');
   const [textError, setTextError] = useState<string>('');
+
+  const [success, setSuccess] = useState<string | undefined>('');
+  const [error, setError] = useState<string | undefined>('');
+  const [failed, setFailed] = useState<undefined | z.ZodIssue[]>([])
 
   const TextEnterRef = useRef<null | HTMLParagraphElement>(null);
   const PaywallParagRef = useRef<null | HTMLParagraphElement>(null);
@@ -146,8 +151,28 @@ const Page = () => {
   }
 
   const handleSubmit = (e: SyntheticEvent) => {
+    setSuccess(''),
+      setError('');
+    setFailed([]);
     e.preventDefault();
-    WriteArticle();
+    WriteArticle({
+      text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
+      paywall: paywall === 'Paywall no' ? false : true, sidebar: sidebar === 'Sidebar: yes' ? true : false, themes: themes.join('$')
+    })
+      .then((res) => {
+        if (res.success) {
+          setSuccess(res.success);
+
+          setText([]);
+          reset(
+            setText, setCategoryInput, setImportantInput, setFirstElementInput, setSearchImageInput, setSearchVideoInput, setSearchAudioInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
+            setSidebar, setImageAltInput, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef
+          )
+
+        }
+        if (res.error) setError(res.error);
+        if (res.failed) setFailed(res.failed);
+      })
   }
 
   const saveTheArticle = () => {
@@ -165,10 +190,10 @@ const Page = () => {
       </section>
 
       <form action="" className='mb-60' onSubmit={handleSubmit}>
-        <input type="text" name='title' className='focus-within:outline-none border-b-2 block w-[100%] mb-8 bg-transparent pl-2' placeholder='Article title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
+        <input type="text" name='title' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2' placeholder='Article title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
         <div className='flex gap-5 flex-wrap mb-8'>
           <OptgroupWithOutFilter optElement={FirstElement} setOptInput={setFirstElementInput} optInput={firstElementInput} placeHolder='Choose first element' />
-          <input type="text" name='first_element_url' className='focus-within:outline-none border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
+          <input type="text" name='first_element_url' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
           <Optgroup optElement={table} setOptInput={setCategoryInput} optInput={categoryInput} placeHolder='Select category' />
@@ -177,17 +202,17 @@ const Page = () => {
         <div className='flex gap-5 flex-wrap mb-8'>
           <Optgroup optElement={tableImage} setOptInput={setSearchImageInput} optInput={searchImageInput} placeHolder='Search image' />
 
-          <input type="text" name='first_picture_alt' className='focus-within:outline-none border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
+          <input type="text" name='first_picture_alt' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
           <Optgroup optElement={tableVideo} setOptInput={setSearchVideoInput} optInput={searchVideoInput} placeHolder='Search video' />
 
-          <input type="text" name='first_picture_alt' className='focus-within:outline-none border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
+          <input type="text" name='first_picture_alt' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
           <Optgroup optElement={tableAudio} setOptInput={setSearchAudioInput} optInput={searchAudioInput} placeHolder='Search audio' />
 
-          <input type="text" name='first_picture_alt' className='focus-within:outline-none border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
+          <input type="text" name='first_picture_alt' className='focus-within:outline-none border-b-2 block input-bordered lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
           <OptgroupWithOutFilter optElement={paywallTable} setOptInput={setPaywall} optInput={paywall} placeHolder='Paywall' />
@@ -203,13 +228,28 @@ const Page = () => {
           <p contentEditable="true" className={`mt-10 focus-within:outline-none border p-3 rounded min-h-24 ${paragPaywallPlaceholder}`} onInput={handleParagraphPaywallChange} tabIndex={0} ref={PaywallParagRef}></p>
         }
         <div className='text-end'>
-        <input type="submit" value='Save' onClick={saveTheArticle} className='bg-slate-600 text-white cursor-pointer hover:bg-slate-400 rounded p-2 mt-10'/>
+          <input type="submit" value='Save' onClick={saveTheArticle} className='bg-slate-600 text-white cursor-pointer hover:bg-slate-400 rounded p-2 mt-10' />
         </div>
-        
+
       </form>
 
       {textError !== '' &&
         <div className='text-5xl text-red-500'>{textError}</div>
+      }
+
+      {success &&
+        <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>{success}</div>
+      }
+
+      {error  &&
+        <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 text-center bg-red-700/25 rounded-lg mb-5  p-2'>
+          {error}
+        </div>
+      }
+      {(failed && failed.length > 0)&&
+        <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 text-center rounded-lg mb-5  p-2'>
+          {failed.map(e => <p key={uuid()}>{e.message}</p>)}
+        </div>
       }
 
 
@@ -259,7 +299,7 @@ const Page = () => {
           <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
             <div className="lg:w-[calc(100%-450px)] mb-8">
               {paywallText}
-              <Paywall/>
+              <Paywall />
             </div>
             {sidebar === 'Sidebar: yes' &&
               <div className="lg:w-80"> <Rightsidebar /></div>
@@ -277,7 +317,52 @@ export default Page
 
 
 
+const reset = (
+  setText: Dispatcher<(string | JSX.Element)[]>,
+  setCategoryInput: Dispatcher<string>,
+  setImportantInput: Dispatcher<string>,
+  setFirstElementInput: Dispatcher<string>,
+  setSearchImageInput: Dispatcher<string>,
+  setSearchVideoInput: Dispatcher<string>,
+  setSearchAudioInput: Dispatcher<string>,
+  setThemes: Dispatcher<string[]>,
 
+  setTitleInput: Dispatcher<string>,
+  setFirstElementUrl: Dispatcher<string>,
+  setPaywall: Dispatcher<string>,
+  setSidebar: Dispatcher<string>,
+
+  setImageAltInput: Dispatcher<string>,
+  setParagraphInput: Dispatcher<string>,
+  setParagraphPaywallInput: Dispatcher<string>,
+  setParagPlaceholder: Dispatcher<string>,
+
+  setPaywallText: Dispatch<(string | JSX.Element)[]>,
+  setParagPaywallPlaceholder: Dispatcher<string>,
+  setTextError: Dispatcher<string>,
+  TextEnterRef: RefObject<HTMLParagraphElement>
+) => {
+  setText([]);
+  setCategoryInput('');
+  setImportantInput('');
+  setFirstElementInput('');
+  setFirstElementUrl('');
+  setSearchAudioInput('');
+  setSearchImageInput('');
+  setSearchVideoInput('');
+  setThemes([]);
+  setTitleInput('');
+  setPaywall('Paywall: no')
+  setSidebar('Sidebar: yes');
+  setImageAltInput('');
+  setParagraphInput('');
+  setParagPaywallPlaceholder('placeholder');
+  setParagPlaceholder('placeholder');
+  setParagraphPaywallInput('');
+  setPaywallText(['']);
+  setTextError('');
+  if(TextEnterRef.current) TextEnterRef.current.innerText ='';
+}
 
 
 

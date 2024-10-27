@@ -1,24 +1,31 @@
-import { type EmailOtpType } from '@supabase/supabase-js'
-import { createClient } from '@/utils/supabase/server'
+'use server'
+import { createClient } from '@/utils/supabase/server';
+import { supabase } from '@/utils/supabase/article';
 
-export const Confirm = async (token_hash: string, type2: string) => {
-    const type = type2 as EmailOtpType | null;
+export const Confirm = async (token_hash: string) => {
 
-    if (token_hash && type) {
-        const supabase = createClient()
-    
-        const { error } = await supabase.auth.verifyOtp({
-          type,
-          token_hash,
-        })
-        if (!error) {
-          
-          return {error: 'Error in the confirm'}
-        }
+  if (token_hash) {
+    try {
+      const supabase = createClient()
 
-        return{success: 'Account is confirmed.'}
+      const { data, error } = await supabase.auth.verifyOtp({
+        type: 'signup',
+        token_hash,
+      })
+      if (error) {
+        return { error: 'Error in the confirm' }
+      }
+
+      await supabase.from('newsletter').update({user_id: data.user?.id, name: data.user?.user_metadata.name}).eq('email', data.user?.email)
+
+      return { success: 'Account is confirmed.' }
     }
-    else{
-        return {error: 'Error in the link.'}
+    catch (err) {
+      return { error: 'Server error' }
     }
+
+  }
+  else {
+    return { error: 'Error in the link.' }
+  }
 }

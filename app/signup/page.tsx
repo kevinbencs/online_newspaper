@@ -194,6 +194,10 @@ const Page = () => {
     else setShowPassword('password');
   }
 
+  useEffect(() => {
+    setInputValue({...inputValue, 'privacy': privacyChecked})
+  },[privacyChecked])
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSuccess('');
@@ -311,7 +315,7 @@ const Page = () => {
   }
 
   const handleKeyboardTitle = (e: KeyboardEvent<SVGRectElement>) => {
-    if (e.code === 'Space' || e.code === 'Enter') setPrivacyChecked(!privacyChecked);
+    if (e.code === 'Space' || e.code === 'Enter') {setPrivacyChecked(!privacyChecked);}
   }
 
   return (
@@ -366,7 +370,7 @@ const Page = () => {
 
           <div className={`${privacyClass} bg-transparent border-b-2 border-base-content block w-[100%] pl-2 pb-2 pt-[2px]`}>
             <div className="checkbox-wrapper-62 " >
-              <input type="checkbox" className="check" id="check1-62" checked={privacyChecked} onChange={handleInputChange} disabled={isPending} name='privacy' />
+              <input type="checkbox" className='check'  id="check1-62" checked={privacyChecked} readOnly disabled={isPending} name='privacy' />
               <label htmlFor="check1-62" className="label1 flex gap-2 items-center cursor-pointer" onClick={() => setPrivacyChecked(!privacyChecked)}>
                 <svg width="30" height="30" viewBox="0 0 90 90">
                   <rect x="30" y="20" width="50" height="50" stroke="currentColor" fill="none" className='focus:outline  outline-base-content' tabIndex={0} onKeyDown={handleKeyboardTitle} />

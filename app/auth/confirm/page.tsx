@@ -1,9 +1,9 @@
 import { Confirm } from '@/actions/confirm'
-import { error } from 'console';
 import React from 'react'
 
-const Page = async ({searchParams}: {searchParams: {token_hash: string, type: string}}) => {
-    const res = await Confirm(searchParams.token_hash, searchParams.type);
+const Page = async ({searchParams}: {searchParams: {token_hash: string}}) => {
+
+    const res = await Confirm(searchParams.token_hash);
     const error = res.error;
     const success = res.success;
     
