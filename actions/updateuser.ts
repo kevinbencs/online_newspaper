@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { supabase } from "@/utils/supabase/article";
-import { updateUserSchema } from "@/schema";
+import { NewPasswordSchema, updateUserSchema } from "@/schema";
 import * as z from 'zod'
 
 
@@ -23,12 +23,30 @@ export const updateUser = async (value: z.infer<typeof updateUserSchema>) => {
             if (value.newsletter) await supabase.from('newsletter').update({ name: value.name }).eq('email', data.data.user?.email);
         }
 
-        if (data.data.user?.email !== value.email) { const data2 = await createClient().auth.updateUser({ email: value.email }) 
-            if(data2.error) return {error: `Already registered an account with ${value.email}.`}
+        if (data.data.user?.email !== value.email) {
+            const data2 = await createClient().auth.updateUser({ email: value.email })
+            if (data2.error) return { error: `Already registered an account with ${value.email}.` }
         }
 
         return { success: data.data.user?.email !== value.email ? 'We sent a confirm email.' : 'Success' }
 
+    }
+    catch (err) {
+        return { error: 'Server error' }
+    }
+}
+
+export const changePassword = async (value: z.infer<typeof NewPasswordSchema>) => {
+    try {
+        const data = await createClient().auth.getUser();
+        if (!data) return { error: 'Please log in' };
+
+        const validatedFields = NewPasswordSchema.safeParse(value);
+        if (validatedFields.error) return { failed: validatedFields.error.errors };
+        
+        await createClient().auth.updateUser({password: value.password})
+
+        return {success: 'Password changed'}
     }
     catch (err) {
         return { error: 'Server error' }

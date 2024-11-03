@@ -4,7 +4,7 @@ import Category from "@/model/Category"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { CategorySchema } from "@/schema"
+import { AudioVideoImageCategoryDeleteUrlSchema, CategorySchema } from "@/schema"
 import * as z from 'zod'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -37,7 +37,7 @@ async function closeConnection() {
     }
 }
 
-export const addVideoUrl = async (category: z.infer<typeof CategorySchema>) => {
+export const deleteCategory = async (category: z.infer<typeof AudioVideoImageCategoryDeleteUrlSchema>) => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -61,10 +61,10 @@ export const addVideoUrl = async (category: z.infer<typeof CategorySchema>) => {
             return { error: 'Please log in' };
         }
 
-        const validatedFields = CategorySchema.safeParse(category);
+        const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(category);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        await Category.deleteOne({category});
+        await Category.findByIdAndDelete(category.Id)
         
         return {success: 'Success'}
     }

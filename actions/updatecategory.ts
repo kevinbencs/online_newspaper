@@ -1,10 +1,10 @@
 'use server'
 
-import Image from "@/model/Image"
+import Category from "@/model/Category"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { ImageUrlSchema } from "@/schema"
+import { CategoryUpdateSchema } from "@/schema"
 import * as z from 'zod'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -37,7 +37,7 @@ async function closeConnection() {
     }
 }
 
-export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) => {
+export const updateCategoryDetail = async (category: z.infer<typeof CategoryUpdateSchema>) => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -61,24 +61,16 @@ export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) =>
             return { error: 'Please log in' };
         }
 
-        const validatedFields = ImageUrlSchema.safeParse(imageoData);
+        const validatedFields = CategoryUpdateSchema.safeParse(category);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        const data = await Image.findOne({url: imageoData.url});
-
-        if(data) return {error: `Url is in database. Detail: ${data.detail}`}
-
-        const NewImageUrl = new Image({
-            alt: imageoData.alt,
-            url: imageoData.url,
-            detail: imageoData.detail
-        })
-
-        await NewImageUrl.save();
-        await closeConnection();
+        await Category.findByIdAndUpdate(category.id, {name: category.name});
+        closeConnection();
+        
         return {success: 'Success'}
     }
     catch(err){
+        console.log(err)
         return {error: 'Server error'}
     }
 }

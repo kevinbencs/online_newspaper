@@ -69,7 +69,7 @@ const Page = () => {
                         </svg>
                         Name
                     </label>
-                    <input type="text" name="name" id="name" className="mb-5 p-2 bg-black text-white rounded" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" name="name" id="name" className="mb-5 p-2 dark:bg-[#121212] text-white rounded" value={name} onChange={(e) => setName(e.target.value)} />
 
                     <label htmlFor="name" className="pl-2 flex gap-2 items-center mb-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
@@ -77,7 +77,7 @@ const Page = () => {
                         </svg>
                         Email
                     </label>
-                    <input type="text" className="mb-12 p-2 bg-black text-white rounded" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="text" className="mb-12 p-2 dark:bg-[#121212] text-white rounded" value={email} onChange={(e) => setEmail(e.target.value)} />
 
                     <h2 className="mb-5 text-2xl border-b dark:border-white border-black font-bold">Subscribe for newsletter</h2>
                     <div className="checkbox-wrapper-62 mb-12" >

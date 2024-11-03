@@ -37,7 +37,7 @@ async function closeConnection() {
     }
 }
 
-export const addVideoUrl = async (categoryData: z.infer<typeof CategorySchema>) => {
+export const addNewCategory = async (categoryData: z.infer<typeof CategorySchema>) => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -63,6 +63,10 @@ export const addVideoUrl = async (categoryData: z.infer<typeof CategorySchema>) 
 
         const validatedFields = CategorySchema.safeParse(categoryData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
+
+        const cate = await Category.findOne({name: categoryData.name});
+
+        if(cate) return {error: 'This category is in the database.'}
 
         const NewCategory = new Category({
             name: categoryData.name,

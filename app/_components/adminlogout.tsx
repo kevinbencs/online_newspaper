@@ -22,7 +22,7 @@ export default function AdminLogout() {
     }
     return (
         <form onSubmit={handleSubmit}>
-            <button className='border-zinc-500 border hover:dark:bg-slate-500 hover:text-white hover:dark:text-white hover:bg-gray-700 text-center inline-block p-2 min-w-32'>Log out</button>
+            <button className='border-zinc-500 border hover:dark:bg-slate-500 hover:text-white hover:dark:text-white hover:bg-gray-700 text-center inline-block p-2 md:min-w-32 lg:min-w-64 min-w-full'>Log out</button>
         </form>
     )
 

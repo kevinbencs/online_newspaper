@@ -63,9 +63,11 @@ export const adminLogin = async (values: z.infer<typeof LoginShcema>) => {
     const token = jwt.sign({
       id: admin.id.toString(),
     },
-      process.env.SECRET_CODE!)
+      process.env.SECRET_CODE!,
+    //{expiresIn: '1h'}
+    )
 
-    cookies().set({ name: 'admin-log', value: token, httpOnly: true, sameSite: 'lax', path: '/' })
+    cookies().set({ name: 'admin-log', value: token, httpOnly: true, sameSite: 'strict', path: '/', /*secure: true, maxAge: 60*60*1000 */})
     const newToken = new Token({ token });
 
     await newToken.save();

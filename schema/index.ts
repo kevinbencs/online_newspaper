@@ -54,23 +54,42 @@ export const NewPasswordSchema = z.object({
 }).refine((data) => data.passwordConfirm === data.password, { message: "PasswordConfirm and password have to be equal.", path: ["passwordConfirm"] });
 
 
-export const AudioVideoImageUrlSchema = z.object({
-    name: z.string().min(1, { message: 'Name is required' }),
+export const ImageUrlSchema = z.object({
+    alt: z.string().min(1, { message: 'Alt is required' }),
     url: z.string().min(1, { message: 'Url is required' }),
     detail: z.string().min(1, { message: 'Detail is required' })
 })
 
-export const AudioVideoImageDeleteUrlSchema = z.object({
+export const AudioVideoUrlSchema = z.object({
     url: z.string().min(1, { message: 'Url is required' }),
+    title: z.string().min(1, { message: 'Title is required' })
+})
+
+
+export const ImageUrlUpdateSchema = z.object({
+    id: z.string().min(1, { message: 'Id is required' }),
+    alt: z.string(),
+    url: z.string(),
+    detail: z.string()
+})
+
+export const CategoryUpdateSchema = z.object({
+    id: z.string().min(1, { message: 'Id is required' }),
+    name: z.string().min(1,{ message: 'New category is required'})
+})
+
+export const AudioVideoImageCategoryDeleteUrlSchema = z.object({
+    Id: z.string().min(1, { message: 'Id is required' }),
 })
 
 export const CategorySchema = z.object({
-    name: z.string().min(1, { message: 'Name is required' }),
+    name: z.string().min(1, { message: 'Category is required' }),
 })
 
 export const NewsletterSchema = z.object({
     text: z.string().min(1, { message: 'Text is required' }),
     subject: z.string().min(1, {message: 'Subject is required'}),
+    title: z.string()
 })
 
 export const NewArticleSchema = z.object({
@@ -100,4 +119,8 @@ export const updateUserSchema = z.object({
     email: z.string().email({message: 'Email is required'}),
     newsletter: z.boolean(),
     articles: z.string()
+})
+
+export const urlSchema = z.object({
+    url: z.string().url({message: 'Url error'})
 })

@@ -319,7 +319,7 @@ const Page = () => {
   }
 
   return (
-    <div className='flex justify-center h-[90vh] pt-[20vh]'>
+    <div className='flex justify-center min-h-[90vh] pt-[20vh]'>
       <div className='w-[90%] max-w-[800px]'>
         <form action="" onSubmit={handleSubmit} className='relative'>
           <div className='mb-20'>

@@ -4,7 +4,7 @@ import Image from "@/model/Image"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { ImageUrlSchema } from "@/schema"
+import {  ImageUrlUpdateSchema } from "@/schema"
 import * as z from 'zod'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -28,7 +28,7 @@ async function connectToMongo() {
 async function closeConnection() {
     if (mongoose.connection.readyState !== 0) {
         try {
-            await mongoose.connection.close(); 
+            await mongoose.connection.close();
         }
         catch (error) {
             console.error('Failed to close the connection:', error);
@@ -37,48 +37,50 @@ async function closeConnection() {
     }
 }
 
-export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) => {
+export const updateImageUrl = async (imageData: z.infer<typeof ImageUrlUpdateSchema>) => {
     const Cookie = cookies().get('admin-log');
-    if(!Cookie) return {error: 'Please log in'};
+    if (!Cookie) return { error: 'Please log in' };
 
-    try{
+    try {
         await connectToMongo();
-        const token = await Token.findOne({token: Cookie.value});
-        if(!token) {
+        const token = await Token.findOne({ token: Cookie.value });
+        if (!token) {
             await closeConnection();
             return { error: 'Please log in' };
         }
 
         const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
-        if(!decoded) {
+        if (!decoded) {
             await closeConnection();
             return { error: 'Please log in' };
         }
 
         const account = await Admin.findById(decoded.id);
-        if(!account) {
+        if (!account) {
             await closeConnection();
             return { error: 'Please log in' };
         }
 
-        const validatedFields = ImageUrlSchema.safeParse(imageoData);
-        if(validatedFields.error) return {failed: validatedFields.error.errors};
+        const validatedFields = ImageUrlUpdateSchema.safeParse(imageData);
+        if (validatedFields.error) {
+            await closeConnection();
+            return { failed: validatedFields.error.errors };
+        }
 
-        const data = await Image.findOne({url: imageoData.url});
+        if (!imageData.detail && !imageData.url && !imageData.alt) {
+            await closeConnection();
+            return { error: 'One information is required for update' };
+        }
 
-        if(data) return {error: `Url is in database. Detail: ${data.detail}`}
+        if (imageData.detail) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.detail });
+        if (imageData.url) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.url });
+        if (imageData.alt) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.alt })
 
-        const NewImageUrl = new Image({
-            alt: imageoData.alt,
-            url: imageoData.url,
-            detail: imageoData.detail
-        })
 
-        await NewImageUrl.save();
         await closeConnection();
-        return {success: 'Success'}
+        return { success: 'Success' }
     }
-    catch(err){
-        return {error: 'Server error'}
+    catch (err) {
+        return { error: 'Server error' }
     }
 }

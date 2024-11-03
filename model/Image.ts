@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const ImageSchema = new Schema({
-    name: {
+    alt: {
         type: String,
         require: "Name is require",
     },

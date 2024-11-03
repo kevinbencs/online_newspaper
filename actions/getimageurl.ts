@@ -5,10 +5,19 @@ import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
 import { cookies } from 'next/headers';
-import jwt, { JwtPayload } from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken";
+import * as z from 'zod'
+import { urlSchema } from "@/schema"
 
 interface Decoded extends JwtPayload {
     id: string
+}
+
+interface img {
+    url: string,
+    detail: string,
+    alt: string,
+    _id: string
 }
 
 async function connectToMongo() {
@@ -26,7 +35,7 @@ async function connectToMongo() {
 async function closeConnection() {
     if (mongoose.connection.readyState !== 0) {
         try {
-            await mongoose.connection.close(); 
+            await mongoose.connection.close();
         }
         catch (error) {
             console.error('Failed to close the connection:', error);
@@ -35,35 +44,57 @@ async function closeConnection() {
     }
 }
 
-export const addImageUrl = async () => {
+export const getImageUrls = async () => {
     const Cookie = cookies().get('admin-log');
-    if(!Cookie) return {error: 'Please log in'};
+    if (!Cookie) return { error: 'Please log in' };
 
-    try{
+    try {
         await connectToMongo();
-        const token = await Token.findOne({token: Cookie.value});
-        if(!token) {
+        const token = await Token.findOne({ token: Cookie.value });
+        if (!token) {
             await closeConnection();
             return { error: 'Please log in' };
         }
 
         const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
-        if(!decoded) {
+        if (!decoded) {
             await closeConnection();
             return { error: 'Please log in' };
         }
 
         const account = await Admin.findById(decoded.id);
-        if(!account) {
+        if (!account) {
             await closeConnection();
             return { error: 'Please log in' };
         }
 
-        const image = await Image.find();
+
+        const image: img[] = await Image.find();
         await closeConnection();
-        return {success: image}
+        return { success: image }
+
+
     }
-    catch(err){
-        return {error: 'Server error'}
+    catch (err) {
+        console.log(err)
+        return { error: 'Server error' }
+    }
+}
+
+
+export const getImageByUrl = async (value: z.infer<typeof urlSchema>) => {
+
+    try {
+        await connectToMongo();
+
+        const image: img | null = await Image.findOne({
+            url: value.url
+        });
+
+        await closeConnection();
+        return { success: image }
+    }
+    catch (err) {
+        return { error: 'Server error' }
     }
 }

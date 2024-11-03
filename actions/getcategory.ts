@@ -4,7 +4,6 @@ import Category from "@/model/Category"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { CategorySchema } from "@/schema"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 
@@ -13,7 +12,8 @@ interface Decoded extends JwtPayload {
 }
 
 interface Cat{
-    name: string
+    name: string,
+    _id: string
 }
 
 async function connectToMongo() {
@@ -40,7 +40,7 @@ async function closeConnection() {
     }
 }
 
-export const addVideoUrl = async () => {
+export const getCategory = async () => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 

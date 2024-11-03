@@ -1,3 +1,5 @@
+'use client'
+
 import { v4 as uuid } from "uuid";
 import {Dispatch, SetStateAction} from 'react';
 import Link from 'next/link';
@@ -217,7 +219,7 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
     textArray.push(text.slice(index1, text.length))
 
     return (
-        <a target='blank' href={s.slice(indexHref + 1, indexHrefEnd)} key={uuid()}>{textArray}</a>
+        <a target='_blank' href={s.slice(indexHref + 1, indexHrefEnd)} key={uuid()}>{textArray}</a>
     )
 }
 

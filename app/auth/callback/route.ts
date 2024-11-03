@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 // The client you created from the Server-Side Auth instructions
 import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/article'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -9,9 +10,10 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') ?? '/'
 
   if (code) {
-    const supabase = createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const supabase_user = createClient()
+    const { data, error } = await supabase_user.auth.exchangeCodeForSession(code)
     if (!error) {
+      await supabase.from('newsletter').update({user_id: data.user.id}).eq('email', data.user.email);
       const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development'
       if (isLocalEnv) {

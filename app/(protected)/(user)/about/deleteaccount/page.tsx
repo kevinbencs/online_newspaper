@@ -2,9 +2,11 @@
 import { deleteAccount } from '@/actions/deleteaccounr';
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
+import { useLogged } from '@/app/_components/islogged/isloggedprovider';
 
 const Page = () => {
-    const [error, setError] = useState<string | undefined>('')
+    const [error, setError] = useState<string | undefined>('');
+    const { setLogged, setRole } = useLogged();
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const { push } = useRouter();
 
@@ -19,7 +21,11 @@ const Page = () => {
     const handleDelete = () => {
         deleteAccount()
             .then((err) => {
-                if (err.success) push('/');
+                if (err.success) {
+                    setLogged('');
+                    setRole('');
+                    push('/');
+                }
                 setError(err.error);
                 setShowPopup(false);
             })
