@@ -4,7 +4,7 @@ import Video from "@/model/Video"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { AudioVideoImageUrlSchema } from "@/schema"
+import { AudioVideoUrlSchema } from "@/schema"
 import * as z from 'zod'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -37,7 +37,7 @@ async function closeConnection() {
     }
 }
 
-export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoImageUrlSchema>) => {
+export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoUrlSchema>) => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -61,13 +61,18 @@ export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoImageUrlSc
             return { error: 'Please log in' };
         }
 
-        const validatedFields = AudioVideoImageUrlSchema.safeParse(videoData);
+        const validatedFields = AudioVideoUrlSchema.safeParse(videoData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
+        const video = await Video.findOne({url: videoData.url})
+        if(video) {
+            await closeConnection();
+            return {error: "Url is in the database"}
+        }
+
         const NewVideoUrl = new Video({
-            name: videoData.name,
             url: videoData.url,
-            detail: videoData.detail
+            title: videoData.title
         })
 
         await NewVideoUrl.save();

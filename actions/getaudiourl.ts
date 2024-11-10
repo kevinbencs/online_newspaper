@@ -35,7 +35,7 @@ async function closeConnection() {
     }
 }
 
-export const addAudioUrl = async () => {
+export const getAudioUrl = async () => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -59,10 +59,9 @@ export const addAudioUrl = async () => {
             return { error: 'Please log in' };
         }
 
-        const audio = await Audio.find();
-        
+        const video = await Audio.find();
         await closeConnection();
-        return {success: audio};
+        return {success: video};
     }
     catch(err){
         return {error: 'Server error'}

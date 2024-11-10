@@ -73,6 +73,12 @@ export const ImageUrlUpdateSchema = z.object({
     detail: z.string()
 })
 
+export const AudioVideoUrlUpdateSchema = z.object({
+    id: z.string().min(1, { message: 'Id is required' }),
+    title: z.string(),
+    url: z.string(),
+})
+
 export const CategoryUpdateSchema = z.object({
     id: z.string().min(1, { message: 'Id is required' }),
     name: z.string().min(1,{ message: 'New category is required'})

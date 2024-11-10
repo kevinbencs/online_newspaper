@@ -19,7 +19,6 @@ export const IsLoggedProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         isLogged()
             .then((data) => {
-                console.log(data);
                 setLogged(data.name);
                 setRole(data.role);
             })

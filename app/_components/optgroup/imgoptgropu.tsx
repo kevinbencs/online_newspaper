@@ -17,10 +17,6 @@ const ImgOptgroup = (props: { setVideoCopyMessage: Dispatcher<string>, setAudioC
     const [optInput, setOptInput] = useState<string>('');
     const [optElement, setOptElement] = useState<imageUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
-    const [imgUrl, setImgUrl] = useState<string>('');
-    const [imgAlt, setImgAlt] = useState<string>('');
-    const [imgTop, setImgTop] = useState<number>(0);
-    const [imgLeft, setImgLeft] = useState<number>(0);
     const [imageId, setImageId] = useState<string>('');
 
     const optRef = useRef<null | HTMLInputElement>(null);
@@ -77,14 +73,11 @@ const ImgOptgroup = (props: { setVideoCopyMessage: Dispatcher<string>, setAudioC
 
     return (
         <>
-            {imgUrl &&
-                <Image src={imgUrl} alt={imgAlt} width={300} height={100} className={`fixed w-[600px] z-50 `} style={{ left: imgLeft + 100, top: imgTop - 336 }} />
-            }
 
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => setOptClass('h-0')} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Image url' value={optInput} onChange={handleChange} disabled={props.isPending} />
-                <ul className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `}>
-                    {optElement.filter(handleFilter).map((item) => <ImgItem setImageId={setImageId} setImgTop={setImgTop} setImgAlt={setImgAlt} setImgUrl={setImgUrl} setImgLeft={setImgLeft} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
+                <ul className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
+                    {optElement.filter(handleFilter).map((item) => <ImgItem setImageId={setImageId}  key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
                 </ul>
             </label>

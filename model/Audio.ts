@@ -3,17 +3,13 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const AudioSchema = new Schema({
-    name: {
-        type: String,
-        require: "Name is require",
-    },
     url: {
         type: String,
         required: "Url is required",
     },
-    detail: {
+    title: {
         type: String,
-        require: "Role is required",
+        require: "Title is required",
     },
 
 }, {timestamps: true})

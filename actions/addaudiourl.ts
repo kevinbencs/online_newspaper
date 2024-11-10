@@ -4,7 +4,7 @@ import Audio from "@/model/Audio"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { AudioVideoImageUrlSchema } from "@/schema"
+import { AudioVideoUrlSchema } from "@/schema"
 import * as z from 'zod'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -37,7 +37,7 @@ async function closeConnection() {
     }
 }
 
-export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoImageUrlSchema>) => {
+export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoUrlSchema>) => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -61,16 +61,21 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoImageUrlSc
             return { error: 'Please log in' };
         }
 
-        const validatedFields = AudioVideoImageUrlSchema.safeParse(audioData);
+        const validatedFields = AudioVideoUrlSchema.safeParse(audioData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        const NewAudioUrl = new Audio({
-            name: audioData.name,
+        const audio = await Audio.findOne({url: audioData.url})
+        if(audio) {
+            await closeConnection();
+            return {error: "Url is in the database"}
+        }
+
+        const NewVideoUrl = new Audio({
             url: audioData.url,
-            detail: audioData.detail
+            title: audioData.title
         })
 
-        await NewAudioUrl.save();
+        await NewVideoUrl.save();
         await closeConnection();
         return {success: 'Success'}
     }

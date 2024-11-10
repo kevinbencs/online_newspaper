@@ -18,6 +18,7 @@ const Miniaudio = (props: {
     const handleKeydown = (e: KeyboardEvent<SVGElement>) => {
         if (e.code === 'Enter' || e.code === 'Space') {
             setShowAudio(false);
+            setAudioSource('');
         }
     }
 

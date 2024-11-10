@@ -4,7 +4,7 @@ import Audio from "@/model/Audio"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import mongoose from "mongoose"
-import { AudioVideoImageDeleteUrlSchema } from "@/schema"
+import { AudioVideoImageCategoryDeleteUrlSchema } from "@/schema"
 import * as z from 'zod'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
@@ -37,7 +37,7 @@ async function closeConnection() {
     }
 }
 
-export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoImageDeleteUrlSchema>) => {
+export const deleteAudioUrl = async (audioData: z.infer<typeof AudioVideoImageCategoryDeleteUrlSchema>) => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
@@ -61,10 +61,10 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoImageDelet
             return { error: 'Please log in' };
         }
 
-        const validatedFields = AudioVideoImageDeleteUrlSchema.safeParse(audioData);
+        const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(audioData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        await Audio.findOneAndDelete({url: audioData.url})
+        await Audio.findByIdAndDelete(audioData.Id)
         await closeConnection();
         return {success: 'Success'}
     }

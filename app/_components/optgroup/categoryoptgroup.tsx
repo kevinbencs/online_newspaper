@@ -75,7 +75,7 @@ const CategoryOptgroup = (props: { setVideoCopyMessage: Dispatcher<string>, setA
         <>
 
             <label className='relative w-full mb-4 block'>
-                <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => setOptClass('h-0')} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Image url' value={optInput} onChange={handleChange} disabled={props.isPending} />
+                <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => setOptClass('h-0')} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Category' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `}>
                     {optElement.filter(handleFilter).map((item) => <CategoryItem setImageId={setImageId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}

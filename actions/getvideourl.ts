@@ -35,7 +35,7 @@ async function closeConnection() {
     }
 }
 
-export const addVideoUrl = async () => {
+export const getVideoUrl = async () => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 

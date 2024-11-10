@@ -71,7 +71,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
         } else {
           audioRef.current?.play().catch(error => {
             console.error('Play failed:', error);
-          });;
+          });
         }
         return !prev;
       });
