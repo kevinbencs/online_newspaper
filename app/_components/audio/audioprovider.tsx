@@ -21,6 +21,8 @@ type AudioContextType = {
   setShowAudio: (show: boolean) => void;
   showAudio: boolean;
   display: boolean;
+  Title: string,
+  SetTitle: (s: string) => void,
   setDisplay: (disp: boolean) => void
 };
 
@@ -34,6 +36,7 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   const [audioTime, setAudioTime] = useState<number>(0);
   const [showAudio, setShowAudio] = useState<boolean>(false);
   const [display, setDisplay] = useState<boolean>(false);
+  const [Title, SetTitle] = useState<string>('');
 
   const [muted, setMuted] = useState<boolean>(false);
   const [src, setSrc] = useState<string>('');
@@ -139,15 +142,14 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   }, [src]);
 
   return (
-    <AudioContext.Provider value={{ isPlaying, src, volume, muted, lastVolume, currentTime, audioTime, audioContext, analyser, togglePlay, setAudioSource, setVolume, volumeHandleClick, handleRangeChange, setShowAudio, showAudio, display, setDisplay }}>
+    <AudioContext.Provider value={{ isPlaying, Title, SetTitle, src, volume, muted, lastVolume, currentTime, audioTime, audioContext, analyser, togglePlay, setAudioSource, setVolume, volumeHandleClick, handleRangeChange, setShowAudio, showAudio, display, setDisplay }}>
       {showAudio &&
         <div>
           <audio ref={audioRef} controls preload="auto" className='hidden'>
             <source ref={sourceRef} type='audio/mp3' />
           </audio>
           {display &&
-            <Miniaudio currentTime={currentTime} audioTime={audioTime} muted={muted}
-              volume={volume} volumeHandleClick={volumeHandleClick} handleRangeChange={handleRangeChange} setVolume={setVolume} />
+            <Miniaudio />
           }
 
         </div>

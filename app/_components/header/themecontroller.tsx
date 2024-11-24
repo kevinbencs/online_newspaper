@@ -4,14 +4,14 @@ const ThemeController = () => {
     const { theme, setTheme } = useTheme()
 
     const changeTheme = () => {
-        if(theme === 'dracula')  setTheme('emerald'); 
-        else setTheme('dracula');
+        if(theme === 'dark')  setTheme('light'); 
+        else setTheme('dark');
     }
 
     return (
         <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
-            <input type="checkbox" className="theme-controller" checked={theme === 'emerald' ? true : false } onChange={changeTheme}/>
+            <input type="checkbox" className="theme-controller" checked={theme === 'light' ? true : false } onChange={changeTheme}/>
 
 
             {/* sun icon */}

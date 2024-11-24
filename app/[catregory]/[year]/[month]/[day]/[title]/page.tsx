@@ -1,113 +1,70 @@
 import Rightsidebar from '@/app/_components/category_menu_search/rightsidebar';
-import Image from 'next/image';
-import Stop from '../../../../../image/stop.png';
+import Link from 'next/link';
+import Img from '@/app/_components/article/img';
+import Vid from '@/app/_components/article/vid';
+import Paywall from '@/app/_components/paywall';
+import { getArticle } from '@/actions/getarticle';
+import { notFound } from 'next/navigation';
+import Youtube from '@/app/_components/article/embedded/youtube';
+import ChooseTypeOfTextItem  from '@/app/_components/article/showArticle';
 import { v4 as uuid } from 'uuid';
 
-const Page = ({ params }: { params: { year: string, month: string, day: string, title: string } }) => {
-  const adadad = [
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyseT ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvspaewfsaefgseagfvwsservde',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgwegwegposydjviosgjiesgksegjvwqefwegfsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjwegfwegwegwegvfdsvregergsaEWAEGWpsoegjspoejgposydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvspasefpojsegjsepokgvsepojgvisoerojfpoasej',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgkawélfjawoipfjawpofjaifhioawefjaopwefsegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgafjaioewfjapowfwifhnaoiuwfguiwfgfeposydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgpoalkwefiowfjapowfjpoawjfawiojfawwfawfwasydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvsawfjaiwoefjaiwofjapowfjioawjioawioahfwhhhhhhhhp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgpoawjfioawfjaoipwfjpoyclyxjfciofhuwefzhweafaweffesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgwafawfscyfcefgregthztzuhdhgdhgdfposydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvspafjoaiowpfjsxyxfyfysdxcyycyxcyxyxyxy',
-      image: ''
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      parag: 'oiwehnfuerwifhniuewrhoifjpoefjwopfjewpofkaqjf pqfjipoq whiq jwqpoj iqwjf oefjpo wejpowejf ioewf jpoqwfj oiwef ioqef poe jfpo po j jiewj fpowkefpowej fowejkfpowejfeowpfpweijfiewjf poewjf weioj fpo jie jpo jweio jwepo jwoij fpowej fiowe poewqjfiwe fpwejf iewjf powej fiwejf powekfpoejfpo wqkpoqjfdpoi wejfpowejk fpowe fwopefpo  o wjfiowejfpowej iwejf wiej fpowe fpowjfpowej fwepjf powe fpowe fpowefj.',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgpoysjkfsjjfjjjjjjjysícgbfhzygfhszagfhsfsydjviosgjiesgksegjvsp',
-      image: ''
-    },
-    
-  ]
-  return (
-    <>
-      <h2 className='mt-20 text-4xl mb-20 font-bold'>{params.title.replaceAll('-',' ')}</h2>
 
-      <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
-        <div className="lg:w-[calc(100%-450px)]">
-          <div className="mb-10">
-             {adadad.map(r => 
-              <div className='mb-10' key={uuid()}>
-                <p className='mb-5'>{r.parag}</p>
-                <Image src={Stop} alt='adf' className='mb-1'/>
-                <p className='text-xs'>awpoijawopfjwa</p>
-              </div>
+const Page = async ({ params }: { params: { category: string, year: string, month: string, day: string, title: string } }) => {
 
-             )}
+  const date = params.year+'. '+params.month+'. '+params.day+'.'
+  const res = await getArticle(params.title.replaceAll('-', ' '), date);
+
+  if (res.error) notFound();
+
+  if (res.data)
+
+    return (
+      <>
+
+        {(res.data.first_element === 'Image' && res.data.first_element_url !== '') &&
+          <Img id={res.data.first_element_url} />
+        }
+        {(res.data.first_element === 'Video' && res.data.first_element_url !== '') &&
+          <Vid id={res.data.first_element_url} />
+        }
+        {(res.data.first_element === 'Youtube' && res.data.first_element_url !== '') &&
+          <div className=' mb-10'>
+            <Youtube url={res.data.first_element_url} />
           </div>
+        }
+        <h2 className='mt-20 text-4xl mb-20 font-bold'>{params.title.replaceAll('-', ' ')}</h2>
+
+        <Link href={`/category/${res.data.category}`} >
+          {res.data.category}
+        </Link>
+
+        <span className='ml-1'>
+          {res.data.date}
+        </span>
+        <span className='ml-1'>
+          {res.data.time}
+        </span>
+
+
+        <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
+          <div className="lg:w-[calc(100%-450px)] mb-8">
+            
+            { res.data.text.split('$').map((s:string) => <ChooseTypeOfTextItem key={uuid()} s={s}/> )}
+            {res.data.paywall &&
+              <Paywall />
+            }
+          </div>
+          {res.data.sidebar &&
+            <div className="lg:w-80"> <Rightsidebar /></div>
+          }
         </div>
-        <div className="lg:w-80">
-          <Rightsidebar/>
-        </div>
-      </div>
-    </>
-  )
+
+      </>
+    )
+
+
+
 }
 
 export default Page

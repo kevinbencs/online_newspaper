@@ -2,14 +2,28 @@
 import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useAudio } from './audioprovider';
+import { getAudioById } from '@/actions/getaudiourl';
 
 
-const AudioElement = (props: { Url: string }) => {
-    const { setAudioSource, setShowAudio, showAudio, src, isPlaying, togglePlay, analyser, volumeHandleClick, audioTime, currentTime, muted, handleRangeChange, volume, setVolume, setDisplay } = useAudio();
+const AudioElement = (props: { Id: string }) => {
+    const { Title, SetTitle, setAudioSource, setShowAudio, showAudio, src, isPlaying, togglePlay, analyser, volumeHandleClick, audioTime, currentTime, muted, handleRangeChange, volume, setVolume, setDisplay } = useAudio();
     const displayAudiRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+    const [url, setUrl] = useState<string>('');
+    const [title, setTitle] = useState<string>('');
+    const [date, setDate] = useState<string>('');
 
+    useEffect(() => {
+        getAudioById({id: props.Id})
+        .then((res) => {
+            if(res.success){
+                setUrl(res.success.url);
+                setTitle(res.success.title);
+                setDate(res.success.date);
+            }
+        })
+    },[])
 
 
     useEffect(() => {
@@ -64,18 +78,25 @@ const AudioElement = (props: { Url: string }) => {
         if (!showAudio) {
             setShowAudio(true);
             setTimeout(() => {
-                if (src !== props.Url) setAudioSource(props.Url);
+                if (src !== url) {
+                    setAudioSource(url);
+                    SetTitle(title);
+                }
                 togglePlay();
             }, 10)
         }
         else {
-            if (src !== props.Url) setAudioSource(props.Url);
+            if (src !== url) {
+                setAudioSource(url);
+                SetTitle(title)
+            }
             togglePlay();
         }
     }
 
     const handleClick = () => {
         setAudioSource('');
+        SetTitle('');
         setShowAudio(false);
     }
 
@@ -120,26 +141,26 @@ const AudioElement = (props: { Url: string }) => {
 
                     <div className=' mb-2 w-full flex flex-col justify-between gap-2'>
 
-                        <h3 >Unboxing & First cut Review of the most affordable LG Smart Monitor - Budget Monitor</h3>
-                        <div>date</div>
+                        <h3 >{title}</h3>
+                        <div>{date}</div>
                         <div>
                             <canvas ref={canvasRef} className='w-full h-20 hidden sm:block'></canvas>
-                            {(src !== props.Url) && <input type="range" name='time' min={0} max={audioTime} value={0} readOnly className='h-1 w-[100%] block' />}
-                            {(src === props.Url) &&
+                            {(src !== url) && <input type="range" name='time' min={0} max={audioTime} value={0} readOnly className='h-1 w-[100%] block' />}
+                            {(src === url) &&
                                 <input type="range" name='time' min={0} max={audioTime} value={currentTime} onChange={handleRangeChange} className='h-1 w-[100%] block' />
                             }
                         </div>
                     </div>
 
                     <div className='flex flex-col justify-between'>
-                        {(src !== props.Url) &&
+                        {(src !== url) &&
                             <div className='flex justify-between'>
                                 <span className='text-sm'> 00:00:00</span>
                                 <span className='text-sm'>00:00:00</span>
                             </div>
                         }
 
-                        {( src === props.Url) &&
+                        {( src === url) &&
                             <div className='flex justify-between'>
                                 <span className='text-sm'>
                                     {`${parseInt(`${Number(currentTime) / 3600}`, 10)}`.padStart(2, '0')}
@@ -196,7 +217,7 @@ const AudioElement = (props: { Url: string }) => {
                         </div>
                     </div>
                 </div>
-                { src === props.Url && <button onClick={handleClick}>
+                { src === url && <button onClick={handleClick}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12 mt-2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>

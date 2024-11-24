@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, RefObject } from 'react';
+import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, RefObject, useTransition } from 'react';
 import { YouTubeEmbed, } from 'react-social-media-embed';
 import Image from 'next/image';
 import { v4 as uuid } from 'uuid';
@@ -14,6 +14,11 @@ import Themes from '../../../_components/newArticle/themes';
 import Paywall from '../../../_components/paywall';
 import { WriteArticle } from '@/actions/writearticle';
 import * as z from 'zod';
+import ImgOptgroup from '@/app/_components/optgroup/articleimggroup';
+import AudioOptgroup from '@/app/_components/optgroup/articleaudiogroup';
+import VideoOptgroup from '@/app/_components/optgroup/articlevideogroup';
+import Img from '@/app/_components/newArticle/img';
+import Vid from '@/app/_components/newArticle/vid';
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
@@ -22,11 +27,20 @@ const Page = () => {
   const [categoryInput, setCategoryInput] = useState<string>('');
   const [importantInput, setImportantInput] = useState<string>('');
   const [firstElementInput, setFirstElementInput] = useState<string>('');
+  const [coverImageId, setCoverImageId] = useState<string>('');
 
-  const [searchImageInput, setSearchImageInput] = useState<string>('');
   const [searchVideoInput, setSearchVideoInput] = useState<string>('');
   const [searchAudioInput, setSearchAudioInput] = useState<string>('');
   const [themes, setThemes] = useState<string[]>([]);
+
+  const [Reset1, setReset] = useState<boolean>(false);
+
+  const [imageCopyMessage, setImageCopyMessage] = useState<string>('Click to copy');
+  const [categoryCopyMessage, setCategoryCopyMessage] = useState<string>('Click to copy');
+  const [audioCopyMessage, setAudioCopyMessage] = useState<string>('Click to copy');
+  const [videoCopyMessage, setVideoCopyMessage] = useState<string>('Click to copy');
+  const [isPending, startTransition] = useTransition();
+
 
   const [titleInput, setTitleInput] = useState<string>('');
   const [firstElementUrl, setFirstElementUrl] = useState<string>('');
@@ -52,10 +66,10 @@ const Page = () => {
   const bold_italic: string[] = ['bold', 'italic'];
   const link_anchor: string[] = ['Link', 'anchor_link'];
   const list_embedded = [
-    { text: 'image', textElem: '<Image url=()/>' },
+    { text: 'image', textElem: '<Image id=()/>' },
     { text: 'list', textElem: '<ul>item1<list>item2<list>item3</ul>' },
-    { text: 'video', textElem: '<video url=()></video>' },
-    { text: 'audio', textElem: '<audio url=()></audio>' },
+    { text: 'video', textElem: '<video id=()></video>' },
+    { text: 'audio', textElem: '<audio id=()></audio>' },
     { text: 'facebook', textElem: '<facebook url=()/>' },
     { text: 'instagram', textElem: '<instagram url=()/>' },
     { text: 'X', textElem: '<X id=()/>' },
@@ -89,7 +103,7 @@ const Page = () => {
     { id: 'wadaww', text: 'None', },
     { id: 'awdsws', text: 'Image', },
     { id: 'awdwssaw', text: 'Video', },
-    { id: 'awdsadwssadasdas', text: 'Youtube' }
+    { id: 'awdsfadwssadasdas', text: 'Youtube' }
   ];
 
   const table = [
@@ -107,24 +121,6 @@ const Page = () => {
     { id: '1awwa', text: 'dswaf', }
   ];
 
-
-  const tableImage = [
-    { id: 'awdfaw', text: 'aaaaa', },
-    { id: 'wadsd', text: 'cccccc', },
-    { id: 'öaweda', text: 'dswaf', },
-  ];
-
-  const tableVideo = [
-    { id: 'awdfaw', text: 'aaaaa', },
-    { id: 'wadsd', text: 'cccccc', },
-    { id: 'öaweda', text: 'dswaf', },
-  ];
-
-  const tableAudio = [
-    { id: 'awdfaw', text: 'aaaaa', },
-    { id: 'wadsd', text: 'cccccc', },
-    { id: 'öaweda', text: 'dswaf', },
-  ];
 
   useEffect(() => {
     const Text = paragraphInput.split('\n').filter(item => item !== '');
@@ -151,32 +147,37 @@ const Page = () => {
   }
 
   const handleSubmit = (e: SyntheticEvent) => {
-    setSuccess(''),
-      setError('');
+    setSuccess('');
+    setError('');
     setFailed([]);
     e.preventDefault();
-    WriteArticle({
-      text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
-      paywall: paywall === 'Paywall no' ? false : true, sidebar: sidebar === 'Sidebar: yes' ? true : false, themes: themes.join('$')
-    })
-      .then((res) => {
-        if (res.success) {
-          setSuccess(res.success);
-
-          setText([]);
-          reset(
-            setText, setCategoryInput, setImportantInput, setFirstElementInput, setSearchImageInput, setSearchVideoInput, setSearchAudioInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
-            setSidebar, setImageAltInput, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef
-          )
-
-        }
-        if (res.error) setError(res.error);
-        if (res.failed) setFailed(res.failed);
-      })
   }
 
   const saveTheArticle = () => {
     if (titleInput !== '' && categoryInput !== '' && importantInput !== '' && paywall !== '' && sidebar !== '' && themes.length !== 0) {
+      startTransition(() => {
+        WriteArticle({
+          text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
+          paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, themes: themes.join('$'), keyword: themes, cover_img_id: coverImageId, 
+          paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$')
+
+        })
+          .then((res) => {
+            if (res.success) {
+              setSuccess(res.success);
+
+              setText([]);
+              reset(
+                setText, setCategoryInput, setImportantInput, setFirstElementInput, setSearchVideoInput, setSearchAudioInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
+                setSidebar, setImageAltInput, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef
+              )
+
+            }
+            if (res.error) setError(res.error);
+            if (res.failed) setFailed(res.failed);
+          })
+
+      })
     }
   }
 
@@ -191,34 +192,27 @@ const Page = () => {
 
       <form action="" className='mb-60' onSubmit={handleSubmit}>
         <input type="text" name='title' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2' placeholder='Article title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
+        <input type="text" name='cover_image_id' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2' placeholder='Cover image id' value={coverImageId} onChange={(e) => setCoverImageId(e.target.value)} />
         <div className='flex gap-5 flex-wrap mb-8'>
           <OptgroupWithOutFilter optElement={FirstElement} setOptInput={setFirstElementInput} optInput={firstElementInput} placeHolder='Choose first element' />
-          <input type="text" name='first_element_url' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
+          <input type="text" name='first_element_url' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL/Id' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
           <Optgroup optElement={table} setOptInput={setCategoryInput} optInput={categoryInput} placeHolder='Select category' />
           <Optgroup optElement={Important} setOptInput={setImportantInput} optInput={importantInput} placeHolder='Important?' />
         </div>
-        <div className='flex gap-5 flex-wrap mb-8'>
-          <Optgroup optElement={tableImage} setOptInput={setSearchImageInput} optInput={searchImageInput} placeHolder='Search image' />
 
-          <input type="text" name='first_picture_alt' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
-        </div>
-        <div className='flex gap-5 flex-wrap mb-8'>
-          <Optgroup optElement={tableVideo} setOptInput={setSearchVideoInput} optInput={searchVideoInput} placeHolder='Search video' />
-
-          <input type="text" name='first_picture_alt' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
-        </div>
-        <div className='flex gap-5 flex-wrap mb-8'>
-          <Optgroup optElement={tableAudio} setOptInput={setSearchAudioInput} optInput={searchAudioInput} placeHolder='Search audio' />
-
-          <input type="text" name='first_picture_alt' className='focus-within:outline-none border-b-2 block input-bordered lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL' value={imageAltInput} onChange={(e) => setImageAltInput(e.target.value)} />
-        </div>
-        <div className='flex gap-5 flex-wrap mb-8'>
+        <div className='flex gap-5 flex-wrap mb-20'>
           <OptgroupWithOutFilter optElement={paywallTable} setOptInput={setPaywall} optInput={paywall} placeHolder='Paywall' />
 
           <OptgroupWithOutFilter optElement={sidebarTable} setOptInput={setSidebar} optInput={sidebar} placeHolder='Right sidebar' />
         </div>
+
+        <ImgOptgroup reset={Reset1} setAudioCopyMessage={setAudioCopyMessage} setVideoCopyMessage={setVideoCopyMessage} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} imageCopyMessage={imageCopyMessage} setSuccess={setSuccess} />
+        <VideoOptgroup reset={Reset1} setAudioCopyMessage={setAudioCopyMessage} setVideoCopyMessage={setVideoCopyMessage} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} videoCopyMessage={videoCopyMessage} setSuccess={setSuccess} />
+        <AudioOptgroup reset={Reset1} setAudioCopyMessage={setAudioCopyMessage} setVideoCopyMessage={setVideoCopyMessage} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} audioCopyMessage={audioCopyMessage} setSuccess={setSuccess} />
+
+
         <div>
           <Themes themes={themes} setThemes={setThemes} />
         </div>
@@ -241,12 +235,12 @@ const Page = () => {
         <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>{success}</div>
       }
 
-      {error  &&
+      {error &&
         <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 text-center bg-red-700/25 rounded-lg mb-5  p-2'>
           {error}
         </div>
       }
-      {(failed && failed.length > 0)&&
+      {(failed && failed.length > 0) &&
         <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 text-center rounded-lg mb-5  p-2'>
           {failed.map(e => <p key={uuid()}>{e.message}</p>)}
         </div>
@@ -255,15 +249,12 @@ const Page = () => {
 
       <div >
         {(firstElementInput === 'Image' && firstElementUrl !== '') &&
-          <Image src={firstElementUrl} alt='fesaesf' className='w-[100%] block mb-10' width={600} height={337.5} />
+          <Img id={firstElementUrl} />
         }
         {(firstElementInput === 'Video' && firstElementUrl !== '') &&
-          <video controls width={600} height={337.5} className='w-full mb-10'>
-            <source src={firstElementUrl} />
-            Your browser does not support the video tag.
-          </video>
+          <Vid id={firstElementUrl} />
         }
-        {(firstElementInput === 'Youtube') &&
+        {(firstElementInput === 'Youtube' && firstElementUrl !== '') &&
           <div className=' mb-10'>
             <YouTubeEmbed url={firstElementUrl} width={`100%`} height={`100%`} />
           </div>
@@ -322,7 +313,6 @@ const reset = (
   setCategoryInput: Dispatcher<string>,
   setImportantInput: Dispatcher<string>,
   setFirstElementInput: Dispatcher<string>,
-  setSearchImageInput: Dispatcher<string>,
   setSearchVideoInput: Dispatcher<string>,
   setSearchAudioInput: Dispatcher<string>,
   setThemes: Dispatcher<string[]>,
@@ -336,6 +326,8 @@ const reset = (
   setParagraphInput: Dispatcher<string>,
   setParagraphPaywallInput: Dispatcher<string>,
   setParagPlaceholder: Dispatcher<string>,
+  setReset: Dispatcher<boolean>,
+  Reset1: boolean,
 
   setPaywallText: Dispatch<(string | JSX.Element)[]>,
   setParagPaywallPlaceholder: Dispatcher<string>,
@@ -348,7 +340,6 @@ const reset = (
   setFirstElementInput('');
   setFirstElementUrl('');
   setSearchAudioInput('');
-  setSearchImageInput('');
   setSearchVideoInput('');
   setThemes([]);
   setTitleInput('');
@@ -361,7 +352,8 @@ const reset = (
   setParagraphPaywallInput('');
   setPaywallText(['']);
   setTextError('');
-  if(TextEnterRef.current) TextEnterRef.current.innerText ='';
+  setReset(!Reset1)
+  if (TextEnterRef.current) TextEnterRef.current.innerText = '';
 }
 
 

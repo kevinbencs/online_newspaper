@@ -6,10 +6,20 @@ import Token from "@/model/Token"
 import mongoose from "mongoose"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
+import * as z from 'zod'
+import { idSchema } from "@/schema"
 
 interface Decoded extends JwtPayload {
     id: string
 }
+
+interface audioUrl {
+    _id: string,
+    url: string,
+    title: string,
+    date: string,
+}
+
 
 async function connectToMongo() {
     if (mongoose.connection.readyState === 0) {
@@ -59,11 +69,27 @@ export const getAudioUrl = async () => {
             return { error: 'Please log in' };
         }
 
-        const video = await Audio.find();
+        const aud = await Audio.find();
         await closeConnection();
-        return {success: video};
+        return {success: aud};
     }
     catch(err){
         return {error: 'Server error'}
+    }
+}
+
+
+export const getAudioById = async (value: z.infer<typeof idSchema>) => {
+
+    try {
+        await connectToMongo();
+
+        const audio: audioUrl | null = await Audio.findById(value.id);
+
+        await closeConnection();
+        return { success: audio }
+    }
+    catch (err) {
+        return { error: 'Server error' }
     }
 }

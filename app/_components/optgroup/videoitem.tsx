@@ -49,6 +49,12 @@ const VideoItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
     }
 
+    useEffect(() => {
+        if(props.ulRef.current) {
+
+        }
+    },[props.ulRef.current])
+
     const handleClick = (s: string) => {
         props.setOptInput(s);
         props.setVideoId(props.item._id)
@@ -65,14 +71,19 @@ const VideoItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
     const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>, s: string) => {
         if (e.code === 'Enter' || e.code === 'Space') handleClick(s);
-        if (e.key === 'Tab' && e.shiftKey) { props.setOptClass(`h-0`); handleMouseLeave() }
+        if (e.key === 'Tab' && e.shiftKey) { 
+            props.setOptClass(`h-0`); 
+            play();
+            setVideoUrl('');
+            setShowVideo(false);
+        }
     }
 
     const handleMouseLeave = () => {
         play();
         setVideoUrl('');
         setShowVideo(false);
-        if(props.optClass === 'h-52') props.optRef.current?.focus();
+        if (props.optClass === 'h-52') props.optRef.current?.focus();
     }
 
     const play = () => {
@@ -127,7 +138,9 @@ const VideoItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
     const volumeKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Tab' && !e.shiftKey) {
-            handleMouseLeave();
+            play();
+            setVideoUrl('');
+            setShowVideo(false);
             props.setOptClass(`h-0`);
 
         }
@@ -154,21 +167,22 @@ const VideoItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
 
     return (
-        <li ref={liRef} onMouseEnter={() => handleMouseEnter(props.item.url)} onMouseLeave={handleMouseLeave} className='cursor-pointer hover:bg-slate-400 input-bordered border-b-2 p-1 pl-2'>
+        <li ref={liRef} onMouseEnter={() => handleMouseEnter(props.item.url)} onMouseLeave={handleMouseLeave} className='cursor-pointer hover:bg-slate-400 dark:hover:text-white input-bordered border-b-2 p-1 pl-2'>
             <div ref={liDivRef} tabIndex={0} onFocus={() => { liOnFocus(props.item.url) }} onClick={() => handleClick(props.item.title)} onKeyDown={(e) => handleKeyDown(e, props.item.title)} >
                 {props.item.title}
             </div>
-            {showVideo &&
+            {showVideo  &&
                 <div className=' bg-black p-2 fixed z-50 block w-[600px] pb-6 rounded cursor-default' style={{ top: liTop, left: liLeft - 600 }}>
+                    
                     <video autoPlay={false} muted={false} ref={videoRef} preload="auto" width={600} height={337.5}>
                         <source ref={sourceRef} type='video/mp4' />
                         Your browser does not support the video tag.
                     </video>
 
 
-                    <div onFocus={() => props.setOptClass(`h-52`)} tabIndex={0}>
+                    <div onFocus={() => {props.setOptClass(`h-52`);}} tabIndex={0} onKeyDown={(e) => {if(e.code === 'Space') e.preventDefault();}}>
                         <div className='flex  mb-4 gap-5 items-center'>
-                            <label className="swap " >
+                            <label className="swap " onKeyDown={(e) => {if(e.code === 'Space' || e.code === 'Enter') play()}}>
                                 <input type="checkbox" onChange={play} checked={isPlaying} />
 
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className=" size-8 swap-off">
@@ -189,10 +203,10 @@ const VideoItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
                             }
 
                             <input type="range" name="volume2" min={0} max={1} step={0.02} className='h-1 block cursor-pointer' defaultValue={1} onChange={e => { if (videoRef.current) videoRef.current.volume = Number(e.target.value) }} onKeyDown={(e) => volumeKeyDown(e)} />
-                            
+
                         </div>
                         <div className='w-full text-white'>{videoTitle}</div>
-                        
+
                     </div>
                 </div>
             }

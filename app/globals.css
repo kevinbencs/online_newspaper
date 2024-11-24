@@ -81,8 +81,8 @@ main .category {
 }
 
 main a {
-  @apply hover:text-stone-500;
-  @apply dark:hover:text-stone-400;
+  @apply hover:text-gray-500;
+  @apply dark:hover:text-white;
 }
 
 main a article {

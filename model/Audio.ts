@@ -11,6 +11,10 @@ const AudioSchema = new Schema({
         type: String,
         require: "Title is required",
     },
+    date: {
+        type: String,
+        require: "Date is required",
+    },
 
 }, {timestamps: true})
 

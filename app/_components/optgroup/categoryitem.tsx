@@ -31,7 +31,7 @@ const CategoryItem = (props: { setImageId:Dispatcher<string>,    setOptClass: Di
     return (
         <li ref={liRef} tabIndex={0} onFocus={() => props.setOptClass(`h-40`)} onBlur={() => props.setOptClass(`h-0`)}
              onClick={() => handleClick(props.item.name)} onKeyDown={(e) => handleKeyDown(e, props.item.name)}
-            className='cursor-pointer hover:bg-slate-400 input-bordered border-b-2 p-1 pl-2'>
+            className='cursor-pointer hover:bg-slate-400 input-bordered border-b-2 p-1 pl-2 dark:hover:text-white'>
             {props.item.name}
         </li>)
 }

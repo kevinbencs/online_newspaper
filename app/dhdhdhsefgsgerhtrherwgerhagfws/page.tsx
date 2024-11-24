@@ -57,7 +57,7 @@ const Page = () => {
               <input type="password" disabled={isPending} name='password' minLength={8} maxLength={16} required className='block w-[100%] focus-within:outline-none pl-2 mt-1 rounded-md pt-1 pb-1' value={password} onChange={(e) => setPassword(e.target.value)} />
             </label>
           </div>
-          <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg bg-base-300 dark:bg-gray-400 p-2 cursor-pointer hover:bg-base-100 dark:hover:bg-gray-500' />
+          <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg   p-2 cursor-pointer  dark:bg-base-300 bg-slate-400 hover:bg-slate-100  dark:hover:bg-base-100' />
         </form>
       </div>
       <section className='max-w-[600px] mt-20 mb-32 flex flex-col items-start gap-5'>

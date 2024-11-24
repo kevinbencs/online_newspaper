@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import type { Viewport } from 'next'
 import "./globals.css";
 
 //components
@@ -10,9 +11,24 @@ import Providers from "./_components/themeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "World Times",
+  title: {
+    template: '%s | World Times',
+    default: "World Times",
+  },
   description: "News of the world",
+
 };
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'emerald' },
+    { media: '(prefers-color-scheme: dark)', color: 'dracula' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export default function RootLayout({
   children,
@@ -24,10 +40,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-          <Providers>
-            <Main_header_container Children={children} />
-            <Footer />
-          </Providers>
+        <Providers>
+          <Main_header_container Children={children} />
+          <Footer />
+        </Providers>
 
       </body>
     </html>

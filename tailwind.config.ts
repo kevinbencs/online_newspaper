@@ -64,9 +64,9 @@ const config: Config = {
     },
   ],
   daisyui: {
-    themes: ["emerald", "dracula"],
+    themes: ["light", "dark"],
   },
-  darkMode: ['class', '[data-theme="dracula"]'],
+  darkMode: ['class', '[data-theme="dark"]'],
   
 };
 

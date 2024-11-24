@@ -1,28 +1,16 @@
-import {Dispatch, SetStateAction, useRef, useState, KeyboardEvent, ChangeEvent} from 'react'
+import {Dispatch, SetStateAction, useRef, useState} from 'react'
+import OptItem from './optitemwithoutfilter';
 
 const OptgroupWithOutFilter = (props: {optElement:{id:string, text:string}[], optInput: string, setOptInput: Dispatch<SetStateAction<string>>, placeHolder: string}) => {
     const [optClass, setOptClass] = useState<string>('h-0')
     const optRef = useRef<null | HTMLInputElement>(null);
-
-    const handleClick = (s: string) => {
-        props.setOptInput(s);
-        setTimeout(() => {
-          optRef.current?.blur();
-        }, 0);
-      };
-
-
-
-      const handleKeyDown = (e: KeyboardEvent<HTMLLIElement>, s: string) => {
-        if(e.code === 'Enter' || e.code === 'Space') handleClick(s);
-      }
-
+    const ulRef = useRef<null | HTMLUListElement>(null);
 
     return (
         <label className='lg:w-[30%] w-full relative block'>
             <input ref={optRef} type="text" name='search_audio' onFocus={() => setOptClass('h-36')} onBlur={() => setOptClass('h-0')} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder={props.placeHolder} readOnly value={props.optInput} />
-            <ul className={`${optClass} overflow-y-scroll sidebar absolute w-[100%] z-10 dark:bg-neutral bg-base-200 duration-100 pl-2`}>
-                {props.optElement.map((item) => <li tabIndex={0} onFocus={() => setOptClass(`h-36`)} onBlur={() => setOptClass(`h-0`)} key={item.id} onClick={() => handleClick(item.text)} onKeyDown={(e) => handleKeyDown(e, item.text)}>{item.text} </li>)}
+            <ul className={`${optClass} overflow-y-scroll sidebar absolute w-[100%] z-10 dark:bg-neutral bg-base-200 duration-100 `} ref={ulRef} onBlur={() => setOptClass(`h-0`)}>
+                {props.optElement.map((item: {id:string, text:string}) => <OptItem item={item} key={item.id} optRef={optRef} ulRef={ulRef} setOptInput={props.setOptInput} setOptClass={setOptClass} />)}
             </ul>
         </label>
     )

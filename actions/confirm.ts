@@ -1,6 +1,5 @@
 'use server'
 import { createClient } from '@/utils/supabase/server';
-import { supabase } from '@/utils/supabase/article';
 
 export const Confirm = async (token_hash: string) => {
 

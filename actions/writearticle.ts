@@ -28,7 +28,7 @@ async function connectToMongo() {
 async function closeConnection() {
     if (mongoose.connection.readyState !== 0) {
         try {
-            await mongoose.connection.close(); 
+            await mongoose.connection.close();
         }
         catch (error) {
             console.error('Failed to close the connection:', error);
@@ -68,12 +68,12 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
         await closeConnection()
 
         const validatedFields = NewArticleSchema.safeParse(value);
-        if(validatedFields.error) return {failed: validatedFields.error.errors};
+        if (validatedFields.error) return { failed: validatedFields.error.errors };
 
         const currentDate: string = new Date().toLocaleDateString();
         const currentTime: string = new Date().toLocaleTimeString();
 
-        const {data, error} = await supabase.from('article').insert({
+        const { data, error } = await supabase.from('article').insert({
             date: currentDate,
             time: currentTime,
             text: value.text,
@@ -84,15 +84,22 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
             category: value.category,
             important: value.important,
             paywall: value.paywall,
+            paywall_text: value.paywall_text,
             sidebar: value.sidebar,
             themes: value.themes,
+            cover_img_id: value.cover_img_id,
+            keyword: value.keyword,
         })
 
-        if(error) return{error: 'Server error'}
+        if (error) {
+            console.log(error);
+            return { error: 'Server error' }
+        }
 
         return { success: 'Success' }
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }

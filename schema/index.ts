@@ -107,7 +107,10 @@ export const NewArticleSchema = z.object({
     important: z.string().min(1, { message: 'Important is required' }),
     paywall: z.boolean({message: 'Paywall is required'}),
     sidebar: z.boolean({message: 'Sidebar is required'}),
-    themes: z.string().min(1, {message: 'Themes is required'})
+    themes: z.string().min(1, {message: 'Themes is required'}),
+    cover_img_id: z.string().min(1, {message: 'Cover image is required'}),
+    keyword: z.array(z.string().min(1, {message:'Keywords are required'})),
+    paywall_text: z.string(),
 })
 
 export const EmailSchema = z.object({
@@ -129,4 +132,8 @@ export const updateUserSchema = z.object({
 
 export const urlSchema = z.object({
     url: z.string().url({message: 'Url error'})
+})
+
+export const idSchema = z.object({
+    id: z.string({message: 'Id error'})
 })

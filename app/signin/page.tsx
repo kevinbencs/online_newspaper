@@ -78,7 +78,7 @@ const Page = () => {
               <input type="password" disabled={isPending} name='password' minLength={8} maxLength={16} required className='block w-[100%] dark:bg-[#121212] focus-within:outline-none pl-2 mt-1 rounded-md pt-1 pb-1' value={password} onChange={(e) => setPassword(e.target.value)} />
             </label>
           </div>
-          <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg bg-base-300 dark:bg-gray-400 p-2 cursor-pointer hover:bg-base-100 dark:hover:bg-gray-500' />
+          <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg dark:bg-base-300 bg-slate-400 hover:bg-slate-100 p-2 cursor-pointer dark:hover:bg-base-100' />
         </form>
         <div className=' text-center text-xs'>New to Word Times? <Link href='/signup' className='text-slate-400' >Create an account</Link></div>
         <div className='mt-10 before:w-full gap-2 after:w-full flex-nowrap items-center before:h-[1px] before:bg-gray-500 before:dark:bg-white before:relative after:h-[1px] after:dark:bg-white after:bg-gray-500 after:relative flex justify-center'><span className=' text-center'>OR</span></div>

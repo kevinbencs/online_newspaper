@@ -13,7 +13,7 @@ interface audUrl {
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, audioCopyMessage: string, setCategoryCopyMessage: Dispatcher<string>, setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string | undefined>>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, changed: boolean }) => {
+const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, audioCopyMessage: string,  setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string | undefined>>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, reset: boolean }) => {
     const [optInput, setOptInput] = useState<string>('');
     const [optElement, setOptElement] = useState<audUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
@@ -22,8 +22,6 @@ const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudio
     const ulRef = useRef<null | HTMLUListElement>(null)
 
     useEffect(() => {
-        setOptInput('');
-        setAudioId('');
         getAudioUrl()
             .then(res => {
                 if (res.success) {
@@ -32,14 +30,13 @@ const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudio
                 props.setError(res.error)
 
             })
-    }, [props.changed])
+    }, [])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOptInput(e.target.value)
         setAudioId('');
         props.setSuccess('');
         props.setImageCopyMessage('Click to copy.');
-        props.setCategoryCopyMessage('Click to copy.');
         props.setAudioCopyMessage('Click to copy.');
         props.setVideoCopyMessage('Click to copy.');
     };
@@ -55,24 +52,25 @@ const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudio
             navigator.clipboard.writeText(audioId)
                 .then(() => {
                     props.setImageCopyMessage('Click to copy.');
-                    props.setCategoryCopyMessage('Click to copy.');
                     props.setAudioCopyMessage('Id is copied.');
                     props.setVideoCopyMessage('Click to copy.');
                 })
                 .catch(err => {
                     props.setImageCopyMessage('Click to copy.');
-                    props.setCategoryCopyMessage('Click to copy.');
                     props.setAudioCopyMessage('Something went wrong.');
                     props.setVideoCopyMessage('Click to copy.');
                     console.error("Error", err);
                 });
         }
     }
-
+    useEffect(() => {
+        setOptInput('');
+        setAudioId('')
+    },[props.reset])
     
 
     return (
-        <>
+        <div className='lg:w-[calc(60%+20px)] w-full'>
             
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => {setOptClass('h-0');}} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Audio' value={optInput} onChange={handleChange} disabled={props.isPending} />
@@ -94,7 +92,7 @@ const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudio
                 </div>
             </div>
 
-        </>
+        </div>
 
     )
 }

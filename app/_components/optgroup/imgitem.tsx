@@ -64,13 +64,13 @@ const ImgItem = (props: {  setImageId: Dispatcher<string>,  setOptClass: Dispatc
 
     return (
         <li ref={liRef}  onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter} 
-            className='cursor-pointer hover:bg-slate-400 input-bordered border-b-2 p-1 pl-2'>
+            className='cursor-pointer hover:bg-slate-400 input-bordered border-b-2 p-1 pl-2 dark:hover:text-white'>
             <div ref={liDivRef} onClick={handleClick} onKeyDown={(e) => handleKeyDown(e)} tabIndex={0} onFocus={liOnFocus} onBlur={handleBlur} >
                 {props.item.detail}
             </div>
 
             {showImage && 
-                <Image src={props.item.url} alt={props.item.alt} width={300} height={100} className={`fixed  w-[600px] z-50 `} style={{ left: liLeft -600, top: liTop }} />
+                <Image src={props.item.url} alt={props.item.alt} width={300} height={100} className={`fixed  w-[600px] z-50 `} style={{ left: liLeft - 600, top: liTop }} />
             }
 
         </li>)

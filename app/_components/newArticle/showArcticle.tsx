@@ -530,7 +530,7 @@ const createLinkedin = (s: string, setTextError: Dispatch<SetStateAction<string>
 const createAudio = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const index1 = s.indexOf('(');
     const index2 = s.indexOf(')');
-    //<Audio url=()>
+    //<Audio id=()>
     const BeginOfText = s.slice(0, index1 + 1);
     const EndOfText = s.slice(index2, s.length);
     if (BeginOfText.length !== 12 || EndOfText.length === 2) {
@@ -538,9 +538,9 @@ const createAudio = (s: string, setTextError: Dispatch<SetStateAction<string>>) 
         return <div key={uuid()}></div>;;
     }
 
-    const url = s.slice(index1+1, index2);
+    const id = s.slice(index1+1, index2);
 
-    return <AudioElement Url={url} key={uuid()}/>
+    return <AudioElement Id={id} key={uuid()}/>
 }
 
 

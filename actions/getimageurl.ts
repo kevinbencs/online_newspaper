@@ -7,7 +7,7 @@ import mongoose from "mongoose"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import * as z from 'zod'
-import { urlSchema } from "@/schema"
+import { idSchema } from "@/schema"
 
 interface Decoded extends JwtPayload {
     id: string
@@ -82,14 +82,12 @@ export const getImageUrls = async () => {
 }
 
 
-export const getImageByUrl = async (value: z.infer<typeof urlSchema>) => {
+export const getImageById = async (value: z.infer<typeof idSchema>) => {
 
     try {
         await connectToMongo();
 
-        const image: img | null = await Image.findOne({
-            url: value.url
-        });
+        const image: img | null = await Image.findById(value.id);
 
         await closeConnection();
         return { success: image }

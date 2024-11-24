@@ -7,7 +7,7 @@ const Footer = () => {
   const copyright: string = ('\u00A9');
   return (
     <footer className='footer pt-10 pb-5 text-base-content bg-base-300 footer-center'>
-      <nav className='border-b-2 block w-full max-h-none'>
+      <nav className='border-b-2 border-base-content block w-full max-h-none'>
         <ul className='flex gap-10 w-full pb-5  justify-center md:pl-30% md:pr-30% pl-1 pr-1 flex-wrap'>
           <li>
             <Link href="/" className='link link-hover'> Imprint</Link> 
@@ -38,10 +38,10 @@ const Footer = () => {
           </li>
         </ul>
       </nav>
-      <nav className='border-b-2 w-full justify-center pb-5 flex'>
+      <nav className='border-b-2 border-base-content w-full justify-center pb-5 flex'>
         <SocialIconsFooter/>
       </nav>
-      <nav className='border-b-2 w-full pb-5'>
+      <nav className='border-b-2 border-base-content w-full pb-5'>
         <Playstore/>
       </nav>
       

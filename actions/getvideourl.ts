@@ -6,9 +6,17 @@ import Token from "@/model/Token"
 import mongoose from "mongoose"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
+import { idSchema } from "@/schema"
+import * as z from 'zod'
 
 interface Decoded extends JwtPayload {
     id: string
+}
+
+interface videoUrl {
+    _id: string,
+    url: string,
+    title: string
 }
 
 async function connectToMongo() {
@@ -65,5 +73,19 @@ export const getVideoUrl = async () => {
     }
     catch(err){
         return {error: 'Server error'}
+    }
+}
+
+export const getVideoById =async (value: z.infer<typeof idSchema>) => {
+    try {
+        await connectToMongo();
+
+        const vid: videoUrl | null = await Video.findById(value.id);
+
+        await closeConnection();
+        return { success: vid }
+    }
+    catch (err) {
+        return { error: 'Server error' }
     }
 }

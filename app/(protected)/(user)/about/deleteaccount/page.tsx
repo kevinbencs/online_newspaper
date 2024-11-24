@@ -46,7 +46,7 @@ const Page = () => {
 
             {showPopup &&
                 <div className='fixed w-[100vw] h-[100vh] flex top-0 left-0 justify-center items-center  bg-[rgba(0,0,0,0.5)] z-[1000]'>
-                    <div className='w-[98%] max-w-[600px]  bg-black rounded-md p-5 h-44'>
+                    <div className='w-[98%] max-w-[600px]  bg-black text-white rounded-md p-5 h-44'>
                         <p className='mb-20'>To confirm, click delete.</p>
                         <div className='flex justify-between'>
                             <button onClick={handleClickHidePopup}>Cancel</button>

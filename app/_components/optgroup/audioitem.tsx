@@ -65,14 +65,19 @@ const AudioItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
     const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>, s: string) => {
         if (e.code === 'Enter' || e.code === 'Space') handleClick(s);
-        if (e.key === 'Tab' && e.shiftKey) { props.setOptClass(`h-0`); handleMouseLeave()}
+        if (e.key === 'Tab' && e.shiftKey) {
+            props.setOptClass(`h-0`);
+            play();
+            setAudioUrl('');
+            setShowAudio(false);
+        }
     }
 
     const handleMouseLeave = () => {
         play();
-        if(props.optClass === 'h-52') props.optRef.current?.focus();
         setAudioUrl('');
         setShowAudio(false);
+        if (props.optClass === 'h-52') props.optRef.current?.focus();
     }
 
     const play = () => {
@@ -127,7 +132,9 @@ const AudioItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
     const volumeKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Tab' && !e.shiftKey) {
-            handleMouseLeave();
+            play();
+            setAudioUrl('');
+            setShowAudio(false);
             props.setOptClass(`h-0`);
 
         }
@@ -154,7 +161,7 @@ const AudioItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
 
 
     return (
-        <li ref={liRef} onMouseEnter={() => handleMouseEnter(props.item.url)} onMouseLeave={handleMouseLeave} className='cursor-pointer hover:bg-slate-400 input-bordered border-b-2 p-1 pl-2'>
+        <li ref={liRef} onMouseEnter={() => handleMouseEnter(props.item.url)} onMouseLeave={handleMouseLeave} className='cursor-pointer hover:bg-slate-400 dark:hover:text-white input-bordered border-b-2 p-1 pl-2'>
             <div ref={liDivRef} tabIndex={0} onFocus={() => { liOnFocus(props.item.url) }} onClick={() => handleClick(props.item.title)} onKeyDown={(e) => handleKeyDown(e, props.item.title)} >
                 {props.item.title}
             </div>
@@ -165,9 +172,9 @@ const AudioItem = (props: { ulRef: MutableRefObject<HTMLUListElement | null>, se
                         Your browser does not support the audio tag.
                     </audio>
 
-                    <div onFocus={() => props.setOptClass(`h-52`)} tabIndex={0}>
+                    <div onFocus={() => props.setOptClass(`h-52`)} tabIndex={0} onKeyDown={(e) => { if (e.code === 'Space') e.preventDefault(); }}>
                         <div className='flex items-center mb-4 gap-5'>
-                            <label className="swap " >
+                            <label className="swap " onKeyDown={(e) => { if (e.code === 'Space' || e.code === 'Enter') play() }} >
                                 <input type="checkbox" onChange={play} checked={isPlaying} />
 
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="sm:size-20 size-12 swap-off">

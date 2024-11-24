@@ -20,7 +20,7 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
     const [optClass, setOptClass] = useState<string>('h-0')
     const [videoId, setVideoId] = useState<string>('');
     const optRef = useRef<null | HTMLInputElement>(null);
-    const ulRef = useRef<null | HTMLUListElement>(null)
+    const ulRef = useRef<null | HTMLUListElement>(null);
 
     useEffect(() => {
         setOptInput('');
@@ -76,7 +76,7 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
         <>
             
             <label className='relative w-full mb-4 block'>
-                <input ref={optRef} type="text" name='search_video' onFocus={() => setOptClass('h-52')} onBlur={() => {setOptClass('h-0');}} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Video url' value={optInput} onChange={handleChange} disabled={props.isPending} />
+                <input ref={optRef} type="text" name='search_video' onFocus={() => setOptClass('h-52')} onBlur={() => {setOptClass('h-0');}} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Video' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul ref={ulRef} className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
                     {optElement.filter(handleFilter).map((item) => <VideoItem ulRef={ulRef} optClass={optClass} setVideoId={setVideoId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
