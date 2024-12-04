@@ -23,6 +23,14 @@ const AdminSchema = new Schema({
         type: String,
         require: "Role is required",
     },
+    image: {
+        type: String,
+        require: 'Image url is required'
+    },
+    importance: {
+        type: Number,
+        require: 'Importance is required'
+    }
 
 }, {timestamps: true})
 

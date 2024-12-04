@@ -1,13 +1,41 @@
+'use client'
+
 import Link from 'next/link';
 import { latestNewsRightSide } from '@/actions/getlatestnews';
 import Img from '../article/img2';
 import { importantNewsRightSide } from '@/actions/getimportantarticle';
+import { useEffect, useState } from 'react';
+
+
+interface DataRightSide {
+    id: string,
+    title: string,
+    cover_img_id: string,
+    category: string,
+    date:string
+}
 
 const Rightsidebar = async () => {
-    
-    const latest = await latestNewsRightSide();
+    const [latestSuccess, setLatestSuccess] = useState<DataRightSide[] | undefined>();
+    const [importantSuccess, setImportantSuccess] = useState<DataRightSide[] | undefined>();
+    const [latestError, setLatestError] = useState<string | undefined>()
+    const [importantError, setImportantError] = useState<string | undefined>()
 
-    const important = await importantNewsRightSide()
+
+    useEffect(() => {
+        latestNewsRightSide()
+        .then(res => {
+            setLatestSuccess(res.success);
+            setLatestError(res.error)
+        })
+        importantNewsRightSide()
+        .then(res => {
+            setImportantError(res.error)
+            setImportantSuccess(res.success)
+        })
+    },[])
+    
+
 
     return (
         <div className='ml-2 lg:ml-0 mr-2 lg:mr-0 '>
@@ -49,9 +77,9 @@ const Rightsidebar = async () => {
                     <h3 className='text-3xl text-slate-400'>Latest</h3>
                 </Link>
                 <div>
-                    {latest.error && <div>{latest.error}</div>}
-                    {latest.success && <>
-                        {latest.success.map(item => <div key={item.id}>
+                    {latestError && <div>{latestError}</div>}
+                    {latestSuccess && <>
+                        {latestSuccess.map(item => <div key={item.id}>
                             <Link href={`/category/${item.category}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
                             <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','-')}`} 
                             className=' flex gap-2 items-start'>
@@ -96,9 +124,9 @@ const Rightsidebar = async () => {
                     <h3 className=' text-3xl text-slate-400'>Important</h3>
                 </Link>
                 <div >
-                {important.error && <div>{important.error}</div>}
-                    {important.success && <>
-                        {important.success.map(item => <div key={item.id}>
+                {importantError && <div>{importantError}</div>}
+                    {importantSuccess && <>
+                        {importantSuccess.map(item => <div key={item.id}>
                             <Link href={`/category/${item.category}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
                             <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','-')}`} 
                             className=' flex gap-2 items-start'>

@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/dark.css';
-import { v4 as uuid } from 'uuid';
 import OptgroupSearch from '../_components/optgroup/optgroup';
+import { getAuthor } from '@/actions/getauthor';
+import { getCategory } from '@/actions/getcategory';
 
 const Search = () => {
     const [textInput, setTextInput] = useState<string>('');
@@ -14,26 +15,48 @@ const Search = () => {
     const [categoryInput, setCategoryInput] = useState<string>('');
     const [fromDate, setFromDate] = useState<string>('');
     const [toDate, setToDate] = useState<string>('');
+    const [Author, setAuthor] = useState<{text: string, id: string}[]>([])
+    const [Category, setCategory] = useState<{text: string, id: string}[]>([])
     const { theme } = useTheme();
 
     const FromRef = useRef<null | HTMLInputElement>(null);
     const ToRef = useRef<null | HTMLInputElement>(null);
     const router = useRouter();
 
-    const table = [
-        {id: 'fvgse', text: 'aaaaa'},
-        {id: 'fsdfxdfs', text: 'cccccc'},
-        {id: 'sefdsfsdfs', text: 'dswaf'},
-        {id: 'dsfxsesffse', text: 'dswaf'},
-        {id: 'dgsdgsdgsd', text: 'dswaf'},
-        {id: 'dsgcxgxdgxdf', text: 'dswaf'},
-        {id: 'dgbxdgxgcx', text: 'dswaf'},
-        {id: 'xvgxcdsee', text: 'dswaf'},
-        {id: 'dddddxs', text: 'dswaf'},
-        {id: 'sdfsdfsd', text: 'dswaf'},
-        {id: 'dfsdfsd', text: 'dswaf'},
-        {id: 'dfsdfdsfsd', text: 'dswaf'},
-    ];
+    useEffect(() => {
+        getAuthor()
+        .then(res => {
+            if(res.success){
+                const arr: {text: string, id: string}[] = []
+                for(let i = 0; i< res.success.length; i++){
+                    const obj: {text: string, id: string} = {text: res.success[i].name, id: res.success[i]._id};
+                    arr.push(obj)
+                }
+                setAuthor(arr)
+            }
+        })
+
+        getCategory()
+        .then(res => {
+            if(res.success){
+                const arr: {text: string, id: string}[] = []
+                for(let i = 0; i< res.success.length; i++){
+                    const obj: {text: string, id: string} = {text: res.success[i].name, id: res.success[i]._id};
+                    arr.push(obj)
+                }
+                setCategory(arr)
+            }
+        })
+    },[])
+
+
+    const formatDateToLocal = (date: undefined | Date) => {
+        if (!date) return "";
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}/${month}/${day}`;
+    };
 
     useEffect(() => {
         const currDate = new Date(new Date().toLocaleDateString());
@@ -41,14 +64,20 @@ const Search = () => {
             flatpickr(FromRef.current, {
                 maxDate: currDate,
                 minDate: "1928-01-01",
-                dateFormat: "Y/m/d"
+                dateFormat: "Y-m-d",
+                onChange: (selectedDates) => {
+                    setFromDate(formatDateToLocal(selectedDates[0]))
+                }
             });
         }
         if (ToRef.current) {
             flatpickr(ToRef.current, {
                 maxDate: currDate,
                 minDate: "1928-01-01",
-                dateFormat: "Y/m/d"
+                dateFormat: "Y-m-d",
+                onChange: (selectedDates) => {
+                    setToDate(formatDateToLocal(selectedDates[0]))
+                }
             });
         }
 
@@ -62,7 +91,7 @@ const Search = () => {
         themeLink.type = 'text/css';
 
         themeLink.href =
-            theme === 'dracula'
+            theme === 'dark'
                 ? 'https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css'
                 : 'https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css';
 
@@ -79,14 +108,14 @@ const Search = () => {
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         if (textInput !== '') {
-            router.push(`/search?text=${textInput.replaceAll(' ', '_')}&date_from=${fromDate}&to_date=${toDate}&category=${categoryInput.replaceAll(' ','_')}&author=${authorInput.replaceAll(' ','_')}`);
+            router.push(`/search?text=${textInput.replaceAll(' ', '_')}&date_from=${fromDate.replaceAll('/','-')}&date_to=${toDate.replaceAll('/','-')}&category=${categoryInput.replaceAll(' ','').replaceAll('&','-').toLowerCase()}&author=${authorInput.replaceAll(' ','_')}`);
         }
     }
 
     return (
         <form action="#" onSubmit={handleSubmit} className='mt-1'>
             <label className="input input-bordered border-2 flex items-center h-16 gap-2 w-[100%] focus-within:outline-none">
-                <input type="text" className="grow text-lg text-base-content border-none focus-within:outline-none" placeholder="Search" value={textInput} onChange={(e) => setTextInput(e.target.value)} />
+                <input type="text" className="grow text-lg text-base-content dark:text-white border-none focus-within:outline-none" placeholder="Search" value={textInput} onChange={(e) => setTextInput(e.target.value)} />
                 <button>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -101,14 +130,14 @@ const Search = () => {
                 </button>
             </label>
             <div className='mt-10  flex gap-5 flex-col lg:flex-row items-start flex-wrap'>
-                <OptgroupSearch optElement={table} optInput={authorInput} setOptInput={setAuthorInput} placeHolder='Author'/>
-                <OptgroupSearch optElement={table} optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
+                <OptgroupSearch optElement={Author} optInput={authorInput} setOptInput={setAuthorInput} placeHolder='Author'/>
+                <OptgroupSearch optElement={Category} optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
 
                 <label className='lg:w-[30%] w-full  block'>
-                    <input type="text" ref={FromRef} value={fromDate} onChange={(e) => setFromDate(e.target.value)} placeholder='From' className='pl-2 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-full ' />
+                    <input type="text" ref={FromRef}  readOnly  placeholder='From' className='pl-2 mb-2 dark:text-white border-b-2 input-bordered focus-within:outline-none bg-transparent w-full ' />
                 </label>
                 <label className='lg:w-[30%] w-full  block'>
-                    <input type="text" ref={ToRef} value={toDate} onChange={(e) => setToDate(e.target.value)} placeholder='To' className='pl-2 mb-2 border-b-2 input-bordered focus-within:outline-none bg-transparent w-full' />
+                    <input type="text" ref={ToRef} readOnly placeholder='To' className='pl-2 mb-2 dark:text-white border-b-2 input-bordered focus-within:outline-none bg-transparent w-full' />
                 </label>
             </div>
         </form >

@@ -1,17 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
-import NewestNews from "./_components/home/latestnews";
+import LatestNews from "./_components/home/latestnews";
 import MainNews from "./_components/home/main";
 import Uk from "./_components/home/uk";
 import Videos from "./_components/home/videos";
+import SectionTwo from "./_components/home/sectionTwo";
 
-export default function Page() {
-
+export default async function Page() {
 
 
   return (
     <>
-
 
       <Link href='/latest' className="mb-3 text-xl font-bold flex gap-1">
         <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 fill-slate-400 text-slate-400" >
@@ -19,41 +17,15 @@ export default function Page() {
         </svg>
         <h3>Latest</h3>
       </Link>
-      <NewestNews />
-
+      
+      <LatestNews />
 
       <MainNews />
-
-
+      <SectionTwo />
 
       <Uk />
 
-
       <Videos />
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
-      <div>kell</div>
 
     </>
   );

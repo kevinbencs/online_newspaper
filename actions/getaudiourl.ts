@@ -3,7 +3,6 @@
 import Audio from "@/model/Audio"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
-import mongoose from "mongoose"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 import * as z from 'zod'
@@ -21,57 +20,33 @@ interface audioUrl {
 }
 
 
-async function connectToMongo() {
-    if (mongoose.connection.readyState === 0) {
-        try {
-            await mongoose.connect(process.env.MONGODB_URI!,); // A Mongoose kapcsolat létrehozása
-        }
-        catch (error) {
-            console.error('Failed to connect to MongoDB:', error);
-            throw new Error('MongoDB connection failed');
-        }
-    }
-}
-
-async function closeConnection() {
-    if (mongoose.connection.readyState !== 0) {
-        try {
-            await mongoose.connection.close(); 
-        }
-        catch (error) {
-            console.error('Failed to close the connection:', error);
-            throw new Error('Failed to close the connection');
-        }
-    }
-}
-
 export const getAudioUrl = async () => {
     const Cookie = cookies().get('admin-log');
     if(!Cookie) return {error: 'Please log in'};
 
     try{
-        await connectToMongo();
         const token = await Token.findOne({token: Cookie.value});
         if(!token) {
-            await closeConnection();
+            
             return { error: 'Please log in' };
         }
 
         const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
         if(!decoded) {
-            await closeConnection();
+            
             return { error: 'Please log in' };
         }
 
         const account = await Admin.findById(decoded.id);
         if(!account) {
-            await closeConnection();
+            
             return { error: 'Please log in' };
         }
 
-        const aud = await Audio.find();
-        await closeConnection();
-        return {success: aud};
+        const aud: audioUrl[] = await Audio.find();
+
+        
+        return {success: JSON.parse(JSON.stringify(aud))};
     }
     catch(err){
         return {error: 'Server error'}
@@ -82,12 +57,9 @@ export const getAudioUrl = async () => {
 export const getAudioById = async (value: z.infer<typeof idSchema>) => {
 
     try {
-        await connectToMongo();
-
         const audio: audioUrl | null = await Audio.findById(value.id);
 
-        await closeConnection();
-        return { success: audio }
+        return { success: JSON.parse(JSON.stringify(audio)) }
     }
     catch (err) {
         return { error: 'Server error' }

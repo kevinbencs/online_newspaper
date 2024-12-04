@@ -1,21 +1,20 @@
 import Link from "next/link"
-import Image from "next/image"
-import Stop from '../../image/stop.png'
+import Img from "../article/img2"
 
-const Latest_important = (props: { imageSrc: string, imageAlt: string, header: string }) => {
+const Latest_important = (props: { imageId: string,  title: string, date: string, author: string, category: string, detail: string, link:string }) => {
   return (
     <section className="border-b mb-6">
-      <Link href='/' className="flex gap-2 mb-4">
-        <div className="max-w-60 min-w-60 overflow-hidden"><Image src={Stop} alt='fd' /></div>
+      <Link href={props.link} className="flex gap-2 mb-4">
+        <div className="max-w-60 min-w-60 overflow-hidden"><Img id={props.imageId} /> </div>
         <section className="text-start">
-          <h2 className="mb-1 font-semibold">{props.header}</h2>
-          <div className="text-xs mb-1">eioewhjiowef</div>
-          <p className="text-sm">awfajwfiojafjsaiofj wawiofsmkopwaejfposkf wakfpowa fwjfapofjkosdpjafaiopw jfpoasjysjfspoifjpwaoj fposajfaowjfpajf jaopsf jpaoijfpawj fpafjwafawf awef awf wa awf awfawfswaf aw s fawe af dsf aw aw poawjf poawf </p>
+          <h2 className="mb-1 font-semibold">{props.title}</h2>
+          <div className="text-xs mb-1">{props.date}</div>
+          <p className="text-sm">{props.detail} </p>
         </section>
       </Link>
-      <div className="mb-2 ml-[35%] flex justify-between text-xs">
-        <div>efgposemgoisegjnmisejg</div>
-        <div>efgposemgoisegjnmisejg</div>
+      <div className="mb-2 ml-[35%] flex justify-between text-sm">
+        <div><Link href={`/category/${props.category.toLowerCase()}`}>{props.category}</Link>  </div>
+        <div><Link href={`/authors/${props.author.replaceAll(' ','-')}`}>{props.author}</Link></div>
       </div>
     </section>
 

@@ -7,7 +7,7 @@ import { chooseTypeOfTextItem } from '../../../_components/newArticle/showArctic
 import Bold_italic from '../../../_components/newArticle/bold_italic';
 import Link_Anchor from '../../../_components/newArticle/link_Anchor';
 import List_embedded from '../../../_components/newArticle/list_embedded';
-import Rightsidebar from '../../../_components/category_menu_search/rightsidebar';
+import Rightsidebar from '@/app/_components/newArticle/rightsidebar';
 import Optgroup from '../../../_components/optgroup/optgroup';
 import OptgroupWithOutFilter from '../../../_components/optgroup/optgroupwithoutfilter';
 import Themes from '../../../_components/newArticle/themes';
@@ -19,6 +19,7 @@ import AudioOptgroup from '@/app/_components/optgroup/articleaudiogroup';
 import VideoOptgroup from '@/app/_components/optgroup/articlevideogroup';
 import Img from '@/app/_components/newArticle/img';
 import Vid from '@/app/_components/newArticle/vid';
+import { getCategory } from '@/actions/getcategory';
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
@@ -28,26 +29,22 @@ const Page = () => {
   const [importantInput, setImportantInput] = useState<string>('');
   const [firstElementInput, setFirstElementInput] = useState<string>('');
   const [coverImageId, setCoverImageId] = useState<string>('');
+  const [Category, setCategory] = useState<{id:string,text:string}[]>([]);
+  const [detail, setDetail] = useState<string>('');
 
-  const [searchVideoInput, setSearchVideoInput] = useState<string>('');
-  const [searchAudioInput, setSearchAudioInput] = useState<string>('');
   const [themes, setThemes] = useState<string[]>([]);
-
   const [Reset1, setReset] = useState<boolean>(false);
 
   const [imageCopyMessage, setImageCopyMessage] = useState<string>('Click to copy');
-  const [categoryCopyMessage, setCategoryCopyMessage] = useState<string>('Click to copy');
   const [audioCopyMessage, setAudioCopyMessage] = useState<string>('Click to copy');
   const [videoCopyMessage, setVideoCopyMessage] = useState<string>('Click to copy');
   const [isPending, startTransition] = useTransition();
-
 
   const [titleInput, setTitleInput] = useState<string>('');
   const [firstElementUrl, setFirstElementUrl] = useState<string>('');
   const [paywall, setPaywall] = useState<string>('Paywall: no');
   const [sidebar, setSidebar] = useState<string>('Sidebar: yes');
 
-  const [imageAltInput, setImageAltInput] = useState<string>('');
   const [paragraphInput, setParagraphInput] = useState<string>('');
   const [paragraphPaywallInput, setParagraphPaywallInput] = useState('');
   const [paragPlaceholder, setParagPlaceholder] = useState<string>('placeholder');
@@ -106,21 +103,19 @@ const Page = () => {
     { id: 'awdsfadwssadasdas', text: 'Youtube' }
   ];
 
-  const table = [
-    { id: 'awdfaw', text: 'aaaaa', },
-    { id: 'wadsd', text: 'cccccc', },
-    { id: 'öaweda', text: 'dswaf', },
-    { id: '9awdawawds', text: 'dswaf', },
-    { id: '8awa', text: 'dswaf', },
-    { id: 'awdsa7', text: 'dswaf', },
-    { id: 'awdass6', text: 'dswaf', },
-    { id: '5awds', text: 'dswaf', },
-    { id: '4awdsa', text: 'dswaf', },
-    { id: '3wwww', text: 'dswaf', },
-    { id: 'aw2', text: 'dswaf', },
-    { id: '1awwa', text: 'dswaf', }
-  ];
 
+
+  useEffect(() => {
+    getCategory()
+    .then(res => {
+      if(res.success) {
+        const values: {id: string, text: string}[] = [];
+        for(let i = 0; i < res.success.length; i++){
+          values.push({id:res.success[i]._id, text:res.success[i].name})
+        }
+        setCategory(values)}
+    })
+  },[])
 
   useEffect(() => {
     const Text = paragraphInput.split('\n').filter(item => item !== '');
@@ -159,7 +154,7 @@ const Page = () => {
         WriteArticle({
           text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
           paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, themes: themes.join('$'), keyword: themes, cover_img_id: coverImageId, 
-          paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$')
+          paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail
 
         })
           .then((res) => {
@@ -168,8 +163,9 @@ const Page = () => {
 
               setText([]);
               reset(
-                setText, setCategoryInput, setImportantInput, setFirstElementInput, setSearchVideoInput, setSearchAudioInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
-                setSidebar, setImageAltInput, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef
+                setText, setCategoryInput, setImportantInput, setFirstElementInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
+                setSidebar,  setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef,
+                setDetail, setCoverImageId
               )
 
             }
@@ -198,7 +194,7 @@ const Page = () => {
           <input type="text" name='first_element_url' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL/Id' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
-          <Optgroup optElement={table} setOptInput={setCategoryInput} optInput={categoryInput} placeHolder='Select category' />
+          <Optgroup optElement={Category} setOptInput={setCategoryInput} optInput={categoryInput} placeHolder='Select category' />
           <Optgroup optElement={Important} setOptInput={setImportantInput} optInput={importantInput} placeHolder='Important?' />
         </div>
 
@@ -216,6 +212,8 @@ const Page = () => {
         <div>
           <Themes themes={themes} setThemes={setThemes} />
         </div>
+
+        <input type='text' value={detail} onChange={(e) => setDetail(e.target.value)} className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mt-10 mb-8 bg-transparent pl-2' placeholder='Detail'/>
 
         <p contentEditable="true" className={`mt-10 focus-within:outline-none border p-3 rounded min-h-24 ${paragPlaceholder}`} onInput={handleParagraphChange} tabIndex={0} ref={TextEnterRef}></p>
         {paywall === 'Paywall: yes' &&
@@ -313,39 +311,34 @@ const reset = (
   setCategoryInput: Dispatcher<string>,
   setImportantInput: Dispatcher<string>,
   setFirstElementInput: Dispatcher<string>,
-  setSearchVideoInput: Dispatcher<string>,
-  setSearchAudioInput: Dispatcher<string>,
   setThemes: Dispatcher<string[]>,
 
   setTitleInput: Dispatcher<string>,
   setFirstElementUrl: Dispatcher<string>,
   setPaywall: Dispatcher<string>,
   setSidebar: Dispatcher<string>,
-
-  setImageAltInput: Dispatcher<string>,
   setParagraphInput: Dispatcher<string>,
   setParagraphPaywallInput: Dispatcher<string>,
   setParagPlaceholder: Dispatcher<string>,
   setReset: Dispatcher<boolean>,
   Reset1: boolean,
-
+  
   setPaywallText: Dispatch<(string | JSX.Element)[]>,
   setParagPaywallPlaceholder: Dispatcher<string>,
   setTextError: Dispatcher<string>,
-  TextEnterRef: RefObject<HTMLParagraphElement>
+  TextEnterRef: RefObject<HTMLParagraphElement>,
+  setDetail: Dispatcher<string>,
+  setCoverImageId: Dispatcher<string>
 ) => {
   setText([]);
   setCategoryInput('');
   setImportantInput('');
   setFirstElementInput('');
   setFirstElementUrl('');
-  setSearchAudioInput('');
-  setSearchVideoInput('');
   setThemes([]);
   setTitleInput('');
   setPaywall('Paywall: no')
   setSidebar('Sidebar: yes');
-  setImageAltInput('');
   setParagraphInput('');
   setParagPaywallPlaceholder('placeholder');
   setParagPlaceholder('placeholder');
@@ -353,46 +346,7 @@ const reset = (
   setPaywallText(['']);
   setTextError('');
   setReset(!Reset1)
+  setDetail(''),
+  setCoverImageId('');
   if (TextEnterRef.current) TextEnterRef.current.innerText = '';
 }
-
-
-
-
-/* <div className='max-w-[550px]'>
-        <FacebookEmbed url='https://www.facebook.com/peter.konok/posts/8361474520575249' width={'100%'} />
-      </div>
-
-      <div >
-        <Tweet id="1629307668568633344" />
-      </div>
-
-      <div className='max-w-[328px]'>
-        <InstagramEmbed url='https://www.instagram.com/p/C9692HUIQtU/' width={`100%`} captioned />
-      </div>
-
-
-      <div className=' mt-10 max-w-[328px]'>
-        <PinterestEmbed url='https://hu.pinterest.com/pin/770256342549487715/'
-          width={`100%`}
-          height={`100%`}
-        />
-      </div>
-
-
-
-      <div className=' mt-10 max-w-[500px]'>
-        <YouTubeEmbed url='https://www.youtube.com/watch?v=5QmLOfz1L5M' width={`100%`} height={`100%`} />
-      </div>
-
-      <div className='mt-10 max-w-[500px]'>
-        <LinkedInEmbed url='https://www.linkedin.com/embed/feed/update/urn:li:share:7240254513041842176'
-          width={`100%`} />
-      </div>
-
-      <Image src={Stop} alt='swfaw' className='mt-10 mb-10' />
-      <Image src={'https://drive.usercontent.google.com/uc?id=1tzXMb5L46xtEjI1Z91CO9m9ggW_bwEMD'} alt='fesaesf' width={600} height={400} />
-
-      <AudioElement />
-
-      <Tiktok url='https://www.tiktok.com/@scout2015/video/6718335390845095173' />*/

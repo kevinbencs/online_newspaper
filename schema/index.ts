@@ -36,7 +36,10 @@ export const AdminRegisterShcema = z.object({
 
         }, { message: "Password must be at least 8 characters and contain 1 lowercase, 1 uppercase, 1 number and 1 special character." }),
     name: z.string().min(1, { message: 'Name is required' }),
-    role: z.string().min(1, { message: 'Role is required' }),
+    role: z.string().min(1, { message: 'Role is required' }).refine((val) => {
+        return val === 'Admin' || val === 'Editor' || val === 'Author'
+    }, {message: 'Role can be Admin, Editor or Author'}),
+    imageUrl: z.string().min(1, {message: 'Image url is required.'})
 })
 
 export const NewPasswordSchema = z.object({
@@ -111,6 +114,7 @@ export const NewArticleSchema = z.object({
     cover_img_id: z.string().min(1, {message: 'Cover image is required'}),
     keyword: z.array(z.string().min(1, {message:'Keywords are required'})),
     paywall_text: z.string(),
+    detail: z.string().min(1, {message:'Detail is required'})
 })
 
 export const EmailSchema = z.object({

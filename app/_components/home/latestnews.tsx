@@ -2,10 +2,11 @@
 
 import { useState, MouseEvent, useRef, useEffect, TouchEvent } from "react";
 import LatestNewsLink from "./latestnewslink";
+import { latestNewsMainPage } from "@/actions/getlatestnews";
 
 
 interface DataGet {
-  header: string,
+  title: string,
   date: string,
   id: string
 }
@@ -16,75 +17,6 @@ const LatestNews = () => {
   const [startX, setStartX] = useState<number>(0);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [isDragging, setDragging] = useState<boolean>(false);
-
-  const adadad: DataGet[] = [
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyseT ysg ysg se gsg',
-      date: '2024-08-22T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvspaewfsaefgseagfvwsservde'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgwegwegposydjviosgjiesgksegjvwqefwegfsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjwegfwegwegwegvfdsvregergsaEWAEGWpsoegjspoejgposydjviosgjiesgksegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvspasefpojsegjsepokgvsepojgvisoerojfpoasej'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgkawélfjawoipfjawpofjaifhioawefjaopwefsegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgafjaioewfjapowfwifhnaoiuwfguiwfgfeposydjviosgjiesgksegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgpoalkwefiowfjapowfjpoawjfawiojfawwfawfwasydjviosgjiesgksegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvsawfjaiwoefjaiwofjapowfjioawjioawioahfwhhhhhhhhp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgpoawjfioawfjaoipwfjpoyclyxjfciofhuwefzhweafaweffesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgwafawfscyfcefgregthztzuhdhgdhgdfposydjviosgjiesgksegjvsp'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgposydjviosgjiesgksegjvspafjoaiowpfjsxyxfyfysdxcyycyxcyxyxyxy'
-    },
-    {
-      header: 'asefsefgesfgsgsegsesgse gsegs gsegseg segsegyse ysg ysg se gsg',
-      date: '2024-08-20T14:30:00Z',
-      id: 'asfeasgfesjoesiogegjpsoegjspoejgpoysjkfsjjfjjjjjjjysícgbfhzygfhszagfhsfsydjviosgjiesgksegjvsp'
-    },
-    
-  ]
 
   const [Articles, setArticles] = useState<DataGet[]>();
   const [err, setErr] = useState<string>('')
@@ -143,17 +75,13 @@ const LatestNews = () => {
 
 
 
-  /*useEffect(() => {
-    fetch('lateastnews')
-      .then(data => data.json())
-      .then(res => {
-        if (res.status === 'success') setArticles(res.data);
-        else setErr(res.error);
+  useEffect(() => {
+    latestNewsMainPage()
+      .then((res) => {
+        if(res.data) setArticles(res.data)
+        if(res.error) setErr('Server error')
       })
-      .catch(err => {
-        setErr('Something has gone wrong');
-      })
-  }, [])*/
+  }, [])
 
   return (
     <div>
@@ -172,7 +100,7 @@ const LatestNews = () => {
       onTouchEnd={handleTouchEnd}
       ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {adadad.map(ads => <LatestNewsLink Article={{header: ads.header,date: ads.date, link:`/uk/2020/01/01/${ads.header.replaceAll(' ','-')}`}} key={ads.id} isDragging={isDragging}/>)}
+          {Articles?.map(ads => <LatestNewsLink Article={{header: ads.title,date: ads.date, link:`/uk/2020/01/01/${ads.title.replaceAll(' ','-')}`}} key={ads.id} isDragging={isDragging}/>)}
         </section>
       </div>
     </div>

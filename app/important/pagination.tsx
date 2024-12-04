@@ -18,10 +18,11 @@ const Pagination = (props: {searchParams: { page: number}, lastPage: number}) =>
             </svg>
           </Link>
         }
-
+        {props.lastPage > 1 && <>
         <Link href={`/important?page=${props.searchParams.page < 3 ? 1 : props.searchParams.page == props.lastPage ? props.searchParams.page - 2 : props.searchParams.page - 1}`} className="join-item btn btn-square">{props.searchParams.page < 3 ? 1 : props.searchParams.page == props.lastPage ? props.searchParams.page - 2 : props.searchParams.page - 1}</Link>
         <Link href={`/important?page=${props.searchParams.page != 1 ? props.searchParams.page != props.lastPage ? props.searchParams.page : props.searchParams.page - 1 : 2}`} className="join-item btn btn-square">{props.searchParams.page != 1 ? props.searchParams.page != props.lastPage ? props.searchParams.page : props.searchParams.page - 1 : 2}</Link>
-        <Link href={`/important?page=${props.searchParams.page < props.lastPage ? props.searchParams.page == 1 ? 3 : Number(props.searchParams.page) + 1 : props.lastPage}`} className="join-item btn btn-square">{props.searchParams.page < props.lastPage ? props.searchParams.page == 1 ? 3 : Number(props.searchParams.page) + 1 : props.lastPage}</Link>
+        </>}
+        {props.lastPage > 2 && <Link href={`/important?page=${props.searchParams.page < props.lastPage ? props.searchParams.page == 1 ? 3 : Number(props.searchParams.page) + 1 : props.lastPage}`} className="join-item btn btn-square">{props.searchParams.page < props.lastPage ? props.searchParams.page == 1 ? 3 : Number(props.searchParams.page) + 1 : props.lastPage}</Link>}
         {props.searchParams.page < props.lastPage &&
           <Link href={`/search?page=${Number(props.searchParams.page) + 1}`} className="join-item btn btn-square">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">

@@ -16,6 +16,7 @@ const Page = () => {
     const roleRef = useRef<null | HTMLInputElement>(null);
     const [isPending, startTransition] = useTransition();
     const [failed, setFailed] = useState<ZodIssue[] | undefined>([]);
+    const [imageUrl, setImageUrl] = useState<string>('')
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
@@ -23,7 +24,7 @@ const Page = () => {
         setError('');
         setFailed([]);
         startTransition(() => {
-            adminSignUp({ name, password, email, role })
+            adminSignUp({ name, password, email, role, imageUrl })
                 .then(res => {
                     setError(res.error);
                     setFailed(res.failed)
@@ -76,6 +77,9 @@ const Page = () => {
                 }
                 <label className='mb-8'>
                     <input disabled={isPending} type="text" name='name' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none ' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
+                </label>
+                <label className='mb-8'>
+                    <input disabled={isPending} type="text" name='image_url' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none ' placeholder='Name' value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                 </label>
                 <label className='mb-8'>
                     <input disabled={isPending} type="email" name='email' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />

@@ -7,9 +7,27 @@ import Token from "@/model/Token";
 import Admin from "@/model/Admin";
 import mongoose from "mongoose";
 import { supabase } from "@/utils/supabase/article";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 interface Decoded extends JwtPayload {
     id: string
+}
+
+interface Art {
+    title: string,
+    date: string,
+    text: string,
+    first_element: string,
+    first_element_url: string,
+    author: string,
+    category: string,
+    paywall: boolean,
+    sidebar: boolean,
+    cover_img_id: string,
+    keyword: string[],
+    time: string,
+    id: string,
+    paywall_text: string
 }
 
 async function connectToMongo() {
@@ -39,7 +57,7 @@ async function closeConnection() {
 
 export const getArticle = async (Article: string, date: string) => {
 
-    const article = await supabase.from('article').select().eq('title', Article).eq('date',date)
+    const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', Article).eq('date', date)
 
     if (!article.data || article.data.length === 0) { return { error: 'No article' } }
 
@@ -55,10 +73,10 @@ export const getArticle = async (Article: string, date: string) => {
                 category: article.data[0].category,
                 paywall: false,
                 sidebar: article.data[0].sidebar,
-                themes: article.data[0].themes,
                 cover_img_id: article.data[0].cover_img_id,
                 keyword: article.data[0].keyword,
                 time: article.data[0].time,
+                id: article.data[0].id,
             }
         }
     }
@@ -78,10 +96,10 @@ export const getArticle = async (Article: string, date: string) => {
             category: article.data[0].category,
             paywall: false,
             sidebar: article.data[0].sidebar,
-            themes: article.data[0].themes,
             cover_img_id: article.data[0].cover_img_id,
             keyword: article.data[0].keyword,
-            time: article.data[0].time
+            time: article.data[0].time,
+            id: article.data[0].id
         }
     };
 
@@ -107,10 +125,10 @@ export const getArticle = async (Article: string, date: string) => {
                         category: article.data[0].category,
                         paywall: true,
                         sidebar: article.data[0].sidebar,
-                        themes: article.data[0].themes,
                         cover_img_id: article.data[0].cover_img_id,
                         keyword: article.data[0].keyword,
-                        time: article.data[0].time
+                        time: article.data[0].time,
+                        id: article.data[0].id
                     }
                 };
             }
@@ -129,10 +147,10 @@ export const getArticle = async (Article: string, date: string) => {
                         category: article.data[0].category,
                         paywall: true,
                         sidebar: article.data[0].sidebar,
-                        themes: article.data[0].themes,
                         cover_img_id: article.data[0].cover_img_id,
                         keyword: article.data[0].keyword,
-                        time: article.data[0].time
+                        time: article.data[0].time,
+                        id: article.data[0].id
                     }
                 };
             }
@@ -152,10 +170,10 @@ export const getArticle = async (Article: string, date: string) => {
                     category: article.data[0].category,
                     paywall: true,
                     sidebar: article.data[0].sidebar,
-                    themes: article.data[0].themes,
                     cover_img_id: article.data[0].cover_img_id,
                     keyword: article.data[0].keyword,
-                    time: article.data[0].time
+                    time: article.data[0].time,
+                    id: article.data[0].id
                 }
             };
 
@@ -170,10 +188,10 @@ export const getArticle = async (Article: string, date: string) => {
                     category: article.data[0].category,
                     paywall: false,
                     sidebar: article.data[0].sidebar,
-                    themes: article.data[0].themes,
                     cover_img_id: article.data[0].cover_img_id,
                     keyword: article.data[0].keyword,
-                    time: article.data[0].time
+                    time: article.data[0].time,
+                    id: article.data[0].id
                 }
             };
         }
@@ -189,10 +207,10 @@ export const getArticle = async (Article: string, date: string) => {
                     category: article.data[0].category,
                     paywall: true,
                     sidebar: article.data[0].sidebar,
-                    themes: article.data[0].themes,
                     cover_img_id: article.data[0].cover_img_id,
                     keyword: article.data[0].keyword,
-                    time: article.data[0].time
+                    time: article.data[0].time,
+                    id: article.data[0].id
                 }
             }
         }
@@ -209,10 +227,10 @@ export const getArticle = async (Article: string, date: string) => {
             category: article.data[0].category,
             paywall: true,
             sidebar: article.data[0].sidebar,
-            themes: article.data[0].themes,
             cover_img_id: article.data[0].cover_img_id,
             keyword: article.data[0].keyword,
-            time: article.data[0].time
+            time: article.data[0].time,
+            id: article.data[0].id
         }
     };
 }

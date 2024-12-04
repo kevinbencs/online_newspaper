@@ -32,10 +32,13 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
       const dateTime = new Date(props.Article.date);
       const now = new Date();
       const secondsPast = Math.floor((Number(now) - Number(dateTime)) / 1000);
-      if (secondsPast < 60) setTime(`${secondsPast} seconds ago`);
-      else if (secondsPast < 3600) setTime(`${Math.floor(secondsPast / 60)} minutes ago`)
-      else if (dateTime.getDay() === now.getDay()) setTime(`Today ${dateTime.getHours()}:${dateTime.getMinutes()}`)
+      console.log(now)
+      console.log(new Date())
+      if (secondsPast < 60) {setTime(`${secondsPast} seconds ago`);}
+      else if (secondsPast < 3600) {setTime(`${Math.floor(secondsPast / 60)} minutes ago`)}
+      else if (dateTime.getDay() === now.getDay()) {setTime(`Today ${dateTime.getHours()}:${dateTime.getMinutes()}`)}
       else {
+        
         let month: number | string = dateTime.getMonth();
         let day: number | string = dateTime.getDay();
         month = Month[month];
