@@ -50,6 +50,10 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
         return { failed: validatedFields.error.errors };
       }
 
+      if(values.role !== 'Admin' && values.role !== 'Author' && values.role !== 'Editor') {
+        return {error: 'Role must be Admin, Author or Editor.'}
+      }
+
       const email = values.email;
       const password = values.password;
       const name = values.name;

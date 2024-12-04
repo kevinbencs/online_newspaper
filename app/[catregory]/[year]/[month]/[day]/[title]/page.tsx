@@ -70,7 +70,7 @@ const Page = async ({ params }: { params: { category: string, year: string, mont
               <Paywall />
             }
             <section className='flex gap-3'>
-              {res.data.keyword.map(item => <li className='list-none dark:bg-white bg-slate-950 pl-2 pr-2 pt-1 pb-1'>
+              {res.data.keyword.map(item => <li className='list-none dark:bg-white bg-slate-950 pl-2 pr-2 pt-1 pb-1' key={uuid()}>
                 <Link className=' dark:text-gray-950  text-gray-50 hover:text-gray-300 dark:hover:text-stone-400' href={`/search?text=${item.replaceAll(' ','-')}&filter=theme`}>{item}</Link>
               </li>)}
             </section>

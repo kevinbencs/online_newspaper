@@ -36,9 +36,7 @@ export const AdminRegisterShcema = z.object({
 
         }, { message: "Password must be at least 8 characters and contain 1 lowercase, 1 uppercase, 1 number and 1 special character." }),
     name: z.string().min(1, { message: 'Name is required' }),
-    role: z.string().min(1, { message: 'Role is required' }).refine((val) => {
-        return val === 'Admin' || val === 'Editor' || val === 'Author'
-    }, {message: 'Role can be Admin, Editor or Author'}),
+    role: z.string().min(1, { message: 'Role is required' }),
     imageUrl: z.string().min(1, {message: 'Image url is required.'})
 })
 
