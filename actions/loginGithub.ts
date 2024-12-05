@@ -6,9 +6,7 @@ import { redirect } from 'next/navigation';
 export const loginGithub = async () => {
   const supabase = createClient();
 
-  const redirectUrl = process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000/auth/callback'
-    : 'https://online-newspaper.vercel.app/auth/callback';
+  const redirectUrl = 'https://online-newspaper.vercel.app/auth/callback';
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
@@ -22,6 +20,6 @@ export const loginGithub = async () => {
   })
 
   if (data.url) {
-    redirect(data.url) // use the redirect API for your server framework
+    redirect(data.url) 
   }
 }
