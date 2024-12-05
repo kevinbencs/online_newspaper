@@ -15,11 +15,12 @@ interface DataMainPage {
     id: string,
     title: string,
     date: string,
-    time: string
+    time: string,
+    category: string
 }
 
 export const latestNewsMainPage = async () => {
-    const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, date, time, id').eq('important', 'Not important').limit(6)
+    const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id').eq('important', 'Not important').limit(6)
 
     if (article.error) return { error: 'Server error' };
     //2024-08-20T14:30:00Z

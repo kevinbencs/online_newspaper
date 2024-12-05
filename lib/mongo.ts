@@ -4,13 +4,13 @@ declare global {
     var mongooseConnection: mongoose.Mongoose | undefined;
 }
 
-if (process.env.NODE_ENV === 'development') {
-    if (!global.mongooseConnection) {
-        global.mongooseConnection = mongoose;
-    }
+
+if (!global.mongooseConnection) {
+     global.mongooseConnection = mongoose;
 }
 
-export const mongooseInstance = global.mongooseConnection || mongoose
+
+export const mongooseInstance = process.env.NODE_ENV === 'development' ? global.mongooseConnection : mongoose
 
 export async function connectToMongo() {
     if (mongooseInstance.connection.readyState === 1) {
@@ -24,7 +24,7 @@ export async function connectToMongo() {
     }
 
     try {
-        await mongooseInstance.connect(process.env.MONGODB_URI!);
+        await mongooseInstance.connect(process.env.MONGODB_URI!, { serverSelectionTimeoutMS: 30000, socketTimeoutMS: 45000 });
         console.log('MongoDB connected');
     } catch (error) {
         console.error('Failed to connect to MongoDB:', error);

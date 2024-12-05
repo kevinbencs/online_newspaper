@@ -8,7 +8,8 @@ import { latestNewsMainPage } from "@/actions/getlatestnews";
 interface DataGet {
   title: string,
   date: string,
-  id: string
+  id: string,
+  category: string
 }
 
 const LatestNews = () => {
@@ -100,7 +101,7 @@ const LatestNews = () => {
       onTouchEnd={handleTouchEnd}
       ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {Articles?.map(ads => <LatestNewsLink Article={{header: ads.title,date: ads.date, link:`/uk/2020/01/01/${ads.title.replaceAll(' ','-')}`}} key={ads.id} isDragging={isDragging}/>)}
+          {Articles?.map(item => <LatestNewsLink Article={{header: item.title,date: item.date, link:`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(5,7)}/ ${item.date.slice(8,10)}/${item.title.replaceAll(' ','-')}`}} key={item.id} isDragging={isDragging}/>)}
         </section>
       </div>
     </div>

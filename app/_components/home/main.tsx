@@ -13,13 +13,14 @@ const MainNews = async () => {
     <div>{res.error}</div>
   )
 
+
   //const res = deleteArticle();
   if (res.data) return (
 
     <div className='md:flex md:gap-4 mb-20 lg:flex-nowrap md:flex-wrap'>
       <div className='lg:w-[584px] md:w-[100%]'>
-        <div className='mb-5 '>
-          <Link href={`/${res.data[0].category}`} className='category uppercase text-[10px] category-picture'>{res.data[0].category}</Link>
+        {/*<div className='mb-5 '>
+          <Link href={`/${res.data[0].category.toLowerCase()}`} className='category uppercase text-[10px] category-picture'>{res.data[0].category}</Link>
           <Link href={`/${res.data[0].category.toLowerCase()}/${res.data[0].date.slice(0, 4)}/${res.data[0].date.slice(6, 8)}/${res.data[0].date.slice(10, 12)}/${res.data[0].title.replaceAll(' ', '-')}`}>
             <div className='overflow-hidden'>
               <Img id={res.data[0].cover_img_id} />
@@ -29,7 +30,7 @@ const MainNews = async () => {
               <p>{res.data[0].detail}</p>
             </article>
           </Link>
-        </div>
+        </div>*/}
 
         <div className='mb-5 '>
           <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>

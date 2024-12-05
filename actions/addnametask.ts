@@ -27,7 +27,6 @@ export const AddName = async (id: string) => {
         if (!account) return { error: 'Token error' };
 
         const task = await Task.findById(id);
-        console.log(id)
         if (!task) return { error: 'Server errors' };
 
         if (!task.name) {

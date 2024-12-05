@@ -6,12 +6,12 @@ import Img from '../article/img2';
 import { deleteArticle } from '@/actions/deletearticels';
 
 const SectionTwo = async () => {
-    const res = await sectionTwo()
+    /*const res = await sectionTwo()
     if (res.error) return (
         <div>{res.error}</div>
     )
 
-    if (res.data) return (
+    if (res.data)*/ return (
         <div className='md:flex md:gap-4 mb-12'>
             <div>
                 <div className='mb-5 '>
