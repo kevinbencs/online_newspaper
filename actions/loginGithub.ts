@@ -6,6 +6,10 @@ import { redirect } from 'next/navigation';
 export const loginGithub = async () => {
   const supabase = createClient();
 
+  const redirectUrl = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000/auth/callback'
+    : 'https://online-newspaper.vercel.app/auth/callback';
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
@@ -13,7 +17,7 @@ export const loginGithub = async () => {
         access_type: 'offline',
         prompt: 'consent',
       },
-      redirectTo: 'http://localhost:3000/auth/callback',
+      redirectTo: redirectUrl,
     },
   })
 

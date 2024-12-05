@@ -13,6 +13,12 @@ if (!global.mongooseConnection) {
 export const mongooseInstance = process.env.NODE_ENV === 'development' ? global.mongooseConnection : mongoose
 
 export async function connectToMongo() {
+
+    if(!process.env.MONGODB_URI) {
+        console.error('Missing process.env.MONGODB_URI');
+        throw new Error('Missing process.env.MONGODB_URI');
+    }
+
     if (mongooseInstance.connection.readyState === 1) {
         console.log('Using existing MongoDB connection');
         return mongooseInstance;
