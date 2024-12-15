@@ -41,14 +41,13 @@ export const updateImageUrl = async (imageData: z.infer<typeof ImageUrlUpdateSch
             return { failed: validatedFields.error.errors };
         }
 
-        if (!imageData.detail && !imageData.url && !imageData.alt) {
+        if (!imageData.detail && !imageData.url) {
             
             return { error: 'One information is required for update' };
         }
 
         if (imageData.detail) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.detail });
         if (imageData.url) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.url });
-        if (imageData.alt) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.alt })
         
         return { success: 'Success' }
     }

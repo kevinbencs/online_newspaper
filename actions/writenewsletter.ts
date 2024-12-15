@@ -1,6 +1,5 @@
 'use server'
 
-import mongoose from "mongoose"
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import { cookies } from 'next/headers';
@@ -11,9 +10,7 @@ import sgMail from '@sendgrid/mail';
 import { supabase } from "@/utils/supabase/article";
 import fs from 'fs';
 import path from 'path';
-
-
-
+import { getImageById } from "./getimageurl";
 
 
 interface Decoded extends JwtPayload {
@@ -27,13 +24,13 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
     try {
         const token = await Token.findOne({ token: cookie.value });
         if (!token) {
-            
+
             return { error: 'Please log in' };
         }
 
         const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
         if (!decoded) {
-            
+
             return { error: 'Please log in' };
         }
 
@@ -41,7 +38,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
         const admin = await Admin.findById(decoded.id);
         if (!admin) {
-            
+
             return { error: 'Please log in' };
         }
 
@@ -67,8 +64,20 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
         const dayArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDate: string = new Date().toLocaleDateString();
         const day: number = new Date().getDay();
+        
+        const emailTextArray = newsletter.text.split('\n').filter(item => item !== '')
+        const emailNewTextArr: string[] = [];
+        for(let i= 0; i < emailTextArray.length; i++){
+            emailNewTextArr[i] = await chooseTypeOfTextItem(emailTextArray[i]);
+            if(emailNewTextArr[i] === "Error in Italic" || emailNewTextArr[i]  === "Error in Bold" || 
+                emailNewTextArr[i]  === "Error in Anchor" || emailNewTextArr[i]  === "Error in Text" || 
+                emailNewTextArr[i]  === "Error in Image" || emailNewTextArr[i]  === "Error in Highlight" || 
+                emailNewTextArr[i]  === "Error: id is not in database or error in connection") {
+                return{error: emailNewTextArr[i]}
+            }
+        }
 
-        const emailTextArray = newsletter.text.split('\n').filter(item => item !== '').map(item => chooseTypeOfTextItem(item))
+
 
         for (let i = 0; i < data.data.length && err === ''; i++) {
             const token = jwt.sign({ email: data.data[i].email }, process.env.SECRET_CODE!)
@@ -93,7 +102,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                                 <div style="padding-left:8px;margin-bottom:40px"> ${currentDate} ${dayArray[day]}</div>
                                 <div style="margin-bottom:40px; font-size:30px; line-height: 36px; font-weight: 700; padding-left: 8px">${newsletter.title}</div>
                                 <div style="margin-bottom:20px; padding-left: 8px;">Dear ${data.data[i].name},</div>
-                                ${emailTextArray.join('')}
+                                ${emailNewTextArr.join('')}
                                 <footer style="background:black; margin-top:20px; color:white; padding: 8px;">
                                      <ul style="display:flex; gap:10px; list-style:none; margin-bottom:40px;margin-top:8px; padding-left:0">
                                          <li>
@@ -209,9 +218,9 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
 
 
-const chooseTypeOfTextItem = (s: string) => {
+const chooseTypeOfTextItem = async (s: string) => {
     let TextArray: string = '';
-    if (s.indexOf('<Image') === 0) { TextArray = createImg(s) }
+    if (s.indexOf('<Image') === 0) { TextArray = await createImg(s) }
     else if (s.indexOf('<highlight>') === 0) { TextArray = createHighlight(s) }
     else { TextArray = createParagh(s); }
 
@@ -221,10 +230,12 @@ const chooseTypeOfTextItem = (s: string) => {
 
 
 const createParagh = (s: string) => {
+    const res = jsxInText(s);
+    if (res === "Error in Italic" || res === "Error in Bold" || res === "Error in Anchor" || res === "Error in Text") return res
     return (
-        `<p  style="margin-bottom:40px;padding-left:8px" >
-            ${jsxInText(s)}
-            </p>`
+        `<p style="margin-bottom:40px;padding-left:8px" >
+            ${res}
+        </p>`
     )
 }
 
@@ -235,8 +246,7 @@ const jsxInText = (s: string) => {
 
     let index1: number = 0
     let index2: number | string = s.indexOf('<')
-    let error: string = '';
-    let result: number | string = '';
+    let result: string = '';
 
 
     while (index2 > -1) {
@@ -244,7 +254,8 @@ const jsxInText = (s: string) => {
         if (s.indexOf('<anchor', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
             result = createAnchor(s.slice(index2, s.indexOf('</anchor_link>', index2) + 14));
-            if (typeof (result) !== 'number') {
+            if (result === "Error in Italic" || result === "Error in Bold" || result === "Error in Anchor") return result
+            else {
                 textArray.push(result);
                 index1 = s.indexOf('</anchor_link>', index2) + 14;
                 index2 = s.indexOf('<', index1);
@@ -254,7 +265,8 @@ const jsxInText = (s: string) => {
         else if (s.indexOf('<bold', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
             result = createStrong(s.slice(index2, s.indexOf('</bold>', index2) + 7));
-            if (typeof (result) !== 'number') {
+            if (result === "Error in Italic" || result === "Error in Bold") return result
+            else {
                 textArray.push(result);
                 index1 = s.indexOf('</bold>', index2) + 7;
                 index2 = s.indexOf('<', index1);
@@ -264,7 +276,8 @@ const jsxInText = (s: string) => {
         else if (s.indexOf('<italic', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
             result = createEm(s.slice(index2, s.indexOf('</italic', index2) + 9));
-            if (typeof (result) !== 'number') {
+            if (result === "Error in Italic" || result === "Error in Bold") return result
+            else {
                 textArray.push(result);
                 index1 = s.indexOf('</italic', index2) + 9;
                 index2 = s.indexOf('<', index1);
@@ -272,16 +285,11 @@ const jsxInText = (s: string) => {
 
         }
         else {
-            error = 'error';
-            index2 = -1;
-        }
-        if (typeof (result) === 'number') {
-            error = 'error';
-            index2 = -1;
+            return "Error in Text"
         }
     }
 
-    if (error === '') textArray.push(s.slice(index1, s.length));
+    textArray.push(s.slice(index1, s.length));
 
     return textArray.join('');
 }
@@ -294,15 +302,11 @@ const createAnchor = (s: string) => {
     const emIndex: number = s.indexOf('<italic');
     const strongIndex: number = s.indexOf('<bold');
     const index: number = s.indexOf('<', 1);
-    if (indexHref === -1 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
+    if (indexHref !== 17 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
 
-        return -1;
+        return "Error in Anchor";
     }
-    ///Fixed the +2 error link kinézet miatt {} >///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const text = s.slice(indexHrefEnd + 2, indexTextEnd);
     const textArray: (string)[] = [];
     let index1: number = 0
@@ -332,16 +336,16 @@ const createAnchor = (s: string) => {
 
         }
         else {
-            return -1;
+            return "Error in Anchor"
         }
-        if (typeof (result) === 'number') {
-            return -1;
+        if (result === "Error in Italic" || result === "Error in Bold") {
+            return result;
         }
     }
     textArray.push(text.slice(index1, text.length))
 
     return (
-        `<a target='_blank' href = ${ s.slice(indexHref + 1, indexHrefEnd) } style="color:black"> ${textArray.join('')} </a>`
+        `<a target='_blank' href=${s.slice(indexHref + 1, indexHrefEnd)} style="color:black;text-decoration:underline">${textArray.join('')}</a>`
     )
 }
 
@@ -351,8 +355,8 @@ const createStrong = (s: string,) => {
     const indexTextEnd = s.indexOf('</bold', 1);
     const index = s.indexOf('<', 1);
     const emIndex = s.indexOf('<italic');
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || (index !== indexTextEnd && index !== emIndex)) {
-        return -1;
+    if (indexHrefEnd !== 5 || indexTextEnd === -1 || (index !== indexTextEnd && index !== emIndex)) {
+        return "Error in Bold";
     }
 
     const text = s.slice(indexHrefEnd + 1, indexTextEnd);
@@ -373,16 +377,16 @@ const createStrong = (s: string,) => {
             }
         }
         else {
-            return -1;
+            return "Error in Bold";
         }
-        if (typeof (result) === 'number') {
-            return -1;
+        if (result === "Error in Italic") {
+            return "Error in Italic";
         }
     }
     textArray.push(text.slice(index1, text.length))
 
     return (
-        `<strong> ${textArray.join('')} </strong>`
+        `<strong>${textArray.join('')}</strong>`
     )
 }
 
@@ -390,14 +394,14 @@ const createStrongText = (s: string) => {
     const indexHrefEnd = s.indexOf('>');
     const indexTextEnd = s.indexOf('</bold', 1);
     const index = s.indexOf('<', 1);
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd) {
-        return -1;
+    if (indexHrefEnd !== 5 || indexTextEnd === -1 || index !== indexTextEnd) {
+        return "Error in Bold";
     }
 
     const text = s.slice(indexHrefEnd + 1, indexTextEnd);
 
     return (
-        `<strong > ${text} </strong>`
+        `<strong >${text}</strong>`
     )
 }
 
@@ -409,8 +413,8 @@ const createEm = (s: string) => {
     const index = s.indexOf('<', 1);
     const strongIndex = s.indexOf('<bold');
 
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || (index !== indexTextEnd && index !== strongIndex)) {
-        return -1;
+    if (indexHrefEnd !== 7 || indexTextEnd === -1 || (index !== indexTextEnd && index !== strongIndex)) {
+        return "Error in Italic";
     }
     const text = s.slice(indexHrefEnd + 1, indexTextEnd);
 
@@ -431,15 +435,15 @@ const createEm = (s: string) => {
             }
         }
         else {
-            return -1;
+            return "Error in Italic";
         }
-        if (typeof (result) === 'number') {
-            return -1;
+        if (result === "Error in Bold") {
+            return result;
         }
     }
     textArray.push(text.slice(index1, text.length))
     return (
-        `<em > ${textArray.join('')} </em>`
+        `<em >${textArray.join('')}</em>`
     )
 }
 
@@ -449,42 +453,41 @@ const createEmText = (s: string) => {
     const indexTextEnd = s.indexOf('</italic');
     const index = s.indexOf('<', 1);
 
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd) {
-        return -1;
+    if (indexHrefEnd !== 7 || indexTextEnd === -1 || index !== indexTextEnd) {
+        return "Error in Italic";
     }
     const text = s.slice(indexHrefEnd + 1, indexTextEnd);
     return (
-        `<em> ${text} </em>`
+        `<em>${text}</em>`
     )
 }
 
 
-/************************************************************************************************
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
 
-
-const createImg = (s: string) => {
+const createImg = async (s: string) => {
     const index1: number = s.indexOf('(');
     const index2: number = s.indexOf(')');
     const BeginOfText = s.slice(0, index1 + 1);
     const EndOfText = s.slice(index2, s.length);
 
-    if (BeginOfText.length !== 12 || EndOfText.length !== 3) {
+    if (BeginOfText.length !== 11 || EndOfText.length !== 3) {
 
-        return '';
+        return 'Error in Image';
     }
 
-    return `<div><img src=${ s.slice(index1 + 1, index2) } alt = 'edfeff' style="display:block; max-width:550px; margin:0 auto 40px;"  width = { 600} height = { 337.5} /> </div>`
+    const id = s.slice(index1 + 1, index2);
+
+    if (id.includes('<') || id.includes('>')) {
+        return 'Error in Image';
+    }
+
+
+    const res = await getImageById({ id });
+
+    if (res.error || res.success === null) return "Error: id is not in database or error in connection"
+
+
+    return `<div><img src=${res.success.url} alt =${res.success.detail} style="display:block; max-width:550px; margin:0 auto 40px;"  width = { 600} height = { 337.5} /> </div>`
 }
 
 
@@ -494,12 +497,12 @@ const createHighlight = (s: string) => {
 
     if (index1 !== 0 || index2 === -1 || s.length !== index2 + 12) {
 
-        return '';
+        return 'Error in Highlight';
     }
 
     const text = s.slice(11, index2);
 
     return (
-        `<div style="margin-left:2px;border-color: black;border-left: 4px solid;padding-left: 1rem;margin-bottom: 2.5rem"><span style="color: white;background-color: black; display: inline-block;padding: 0.25rem;font-weight: 700;"> ${text} </span></div >`
+        `<div style="margin-left:2px;border-color: black;border-left: 4px solid;padding-left: 1rem;margin-bottom: 2.5rem"><span style="color: white;background-color: black; display: inline-block;padding: 0.25rem;font-weight: 700;">${text}</span></div >`
     )
 }

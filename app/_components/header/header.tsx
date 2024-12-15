@@ -123,10 +123,10 @@ const Header = (props: { mainPos: number }) => {
         </div>
 
       </div>
-      {showSearch &&
-        <div className=' absolute p-10 lg:pl-[20%] lg:pr-[20%]  w-[100%] bg-base-300'>
+
+        <div className={`absolute p-10 lg:pl-[20%] lg:pr-[20%]  w-[100%] bg-base-300 ${showSearch ? '' : 'hidden'}`} >
           <Search setShowSearch={setShowSearch} />
-        </div>}
+        </div>
 
 
 

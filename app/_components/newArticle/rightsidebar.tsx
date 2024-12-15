@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { latestNewsRightSide } from '@/actions/getlatestnews';
-import Img from '../article/img2';
+import Img2 from '../article/img2';
 import { importantNewsRightSide } from '@/actions/getimportantarticle';
 import { useEffect, useState } from 'react';
 
@@ -15,7 +15,7 @@ interface DataRightSide {
     date:string
 }
 
-const Rightsidebar = async () => {
+const Rightsidebar = () => {
     const [latestSuccess, setLatestSuccess] = useState<DataRightSide[] | undefined>();
     const [importantSuccess, setImportantSuccess] = useState<DataRightSide[] | undefined>();
     const [latestError, setLatestError] = useState<string | undefined>()
@@ -81,11 +81,11 @@ const Rightsidebar = async () => {
                     {latestSuccess && <>
                         {latestSuccess.map(item => <div key={item.id}>
                             <Link href={`/category/${item.category}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
-                            <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','-')}`} 
+                            <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`} 
                             className=' flex gap-2 items-start'>
                                 <div className='overflow-hidden max-h-[73px] min-h-[73px] min-w-[130px] max-w-[130px]'>
                                     <div className='max-w-[130px] min-w-[130px]'>
-                                        <Img id={item.cover_img_id}/>
+                                        <Img2 id={item.cover_img_id}/>
                                     </div>
                                 </div>
                                 <h4 className=' text-sm'>{item.title}</h4>
@@ -128,10 +128,10 @@ const Rightsidebar = async () => {
                     {importantSuccess && <>
                         {importantSuccess.map(item => <div key={item.id}>
                             <Link href={`/category/${item.category}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
-                            <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','-')}`} 
+                            <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`} 
                             className=' flex gap-2 items-start'>
                                 <div className='overflow-hidden max-h-[73px] min-h-[73px] min-w-[130px] max-w-[130px]'>
-                                        <Img id={item.cover_img_id}/>
+                                        <Img2 id={item.cover_img_id}/>
                                 </div>
                                 <h4 className=' text-lg'>{item.title}</h4>
                             </Link>

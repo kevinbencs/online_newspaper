@@ -4,7 +4,6 @@ import * as z from 'zod'
 import { AdminRegisterShcema } from '@/schema'
 import Admin from '@/model/Admin'
 import { hash } from 'bcrypt'
-import mongoose from 'mongoose'
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 import Token from '@/model/Token'
@@ -35,13 +34,13 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
       return { error: "PLease log in" };
     }
 
-    const account = await Admin.findById(decoded.id)
+    const account = await Admin.findById(decoded.id,{role: 1})
     if (!account) {
       
       return { error: "PLease log in" };
     }
 
-    if (account.role === 'admin') {
+    if (account.role === 'Admin') {
 
       const validatedFields = AdminRegisterShcema.safeParse(values)
 

@@ -29,7 +29,7 @@ const Themes = (props: { themes: string[], setThemes: Dispatch<SetStateAction<st
     return (
         <>
             <div className=' flex-wrap mb-8'>
-                <input type="text" placeholder='Add themes' value={theme} onChange={(e) => setTheme(e.target.value)} className='focus-within:outline-none input-bordered border-b-2 inline-block bg-transparent pl-2 lg:w-[30%] w-full mr-5' onKeyDown={handleKeyDown}/>
+                <input type="text" placeholder='Add themes' value={theme} onChange={(e) => setTheme(e.target.value)} className='focus-within:outline-none dark:text-white input-bordered border-b-2 inline-block bg-transparent pl-2 lg:w-[30%] w-full mr-5' onKeyDown={handleKeyDown}/>
                 <h3 className='inline-block pl-2'>
                     Themes:
                 </h3>

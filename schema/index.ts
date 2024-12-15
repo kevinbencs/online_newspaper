@@ -56,7 +56,6 @@ export const NewPasswordSchema = z.object({
 
 
 export const ImageUrlSchema = z.object({
-    alt: z.string().min(1, { message: 'Alt is required' }),
     url: z.string().min(1, { message: 'Url is required' }),
     detail: z.string().min(1, { message: 'Detail is required' })
 })
@@ -69,7 +68,6 @@ export const AudioVideoUrlSchema = z.object({
 
 export const ImageUrlUpdateSchema = z.object({
     id: z.string().min(1, { message: 'Id is required' }),
-    alt: z.string(),
     url: z.string(),
     detail: z.string()
 })
@@ -96,7 +94,7 @@ export const CategorySchema = z.object({
 export const NewsletterSchema = z.object({
     text: z.string().min(1, { message: 'Text is required' }),
     subject: z.string().min(1, {message: 'Subject is required'}),
-    title: z.string()
+    title: z.string().min(1, {message: 'Title is required'})
 })
 
 export const NewArticleSchema = z.object({
@@ -108,9 +106,8 @@ export const NewArticleSchema = z.object({
     important: z.string().min(1, { message: 'Important is required' }),
     paywall: z.boolean({message: 'Paywall is required'}),
     sidebar: z.boolean({message: 'Sidebar is required'}),
-    themes: z.string().min(1, {message: 'Themes is required'}),
     cover_img_id: z.string().min(1, {message: 'Cover image is required'}),
-    keyword: z.array(z.string().min(1, {message:'Keywords are required'})),
+    keyword: z.array(z.string().min(1, {message:'Themes are required'})),
     paywall_text: z.string(),
     detail: z.string().min(1, {message:'Detail is required'})
 })

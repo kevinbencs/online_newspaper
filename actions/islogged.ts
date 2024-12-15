@@ -36,7 +36,7 @@ export const isLogged = async () => {
                 return { role: '', name: '' };
             }
 
-            const account = await Admin.findById(decoded.id)
+            const account = await Admin.findById(decoded.id,{role: 1, name: 1})
 
             
 

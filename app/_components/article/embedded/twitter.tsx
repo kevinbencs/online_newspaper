@@ -1,5 +1,3 @@
-'use client'
-
 import { Tweet } from 'react-tweet';
 
 const Twitter = (props: { id: string }) => {

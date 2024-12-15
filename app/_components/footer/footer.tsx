@@ -13,7 +13,7 @@ const Footer = () => {
             <Link href="/" className='link link-hover'> Imprint</Link> 
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Newsletter</Link>
+            <Link href="/newsletter" className='link link-hover'> Newsletter</Link>
           </li>
           <li>
             <Link href="/" className='link link-hover'> Privacy Policy</Link>

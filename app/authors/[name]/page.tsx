@@ -8,7 +8,7 @@ const Page = async ({params, searchParams}: {params:{name: string}, searchParams
 
     const lastPage = await numberOfAuthorArticle(params.name)
 
-    const res = await authorArticle(params.name.replaceAll('-',' '), searchParams.page)
+    const res = await authorArticle(params.name.replaceAll('_',' '), searchParams.page)
 
     if(res.error) return(
       <div className="relative">
@@ -34,14 +34,14 @@ const Page = async ({params, searchParams}: {params:{name: string}, searchParams
     <div className="relative">
 
 
-      <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name}</h2>
+      <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name.replaceAll('_',' ')}</h2>
 
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
           <div className="mb-10">
-             {res.success.map(item => <Category_menu_articles imageId={item.cover_img_id} title={item.title} 
+             {res.success.map(item => <Category_menu_articles imageId={item.cover_img_id} title={item.title} paywall={item.paywall}
              detail={item.detail} category_name={item.category} category_name_link={`/category/${item.category.toLowerCase().replaceAll(' ','').replace('&','_')}`} date={item.date} 
-             link={`/${item.category.toLowerCase().replaceAll(' ','').replace('&','_')}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','-')}`}   key={item.id}/>)}
+             link={`/${item.category.toLowerCase().replaceAll(' ','').replace('&','_')}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`}   key={item.id}/>)}
           </div>
            {lastPage.success && <Pagination searchParams={searchParams} lastPage={lastPage.success} params={params}/> }
         </div>

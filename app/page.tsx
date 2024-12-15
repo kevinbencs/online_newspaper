@@ -5,6 +5,9 @@ import Uk from "./_components/home/uk";
 import Videos from "./_components/home/videos";
 import SectionTwo from "./_components/home/sectionTwo";
 
+
+//export const revalidate = 86400
+
 export default async function Page() {
 
 

@@ -2,6 +2,7 @@
 
 import { supabase } from "@/utils/supabase/article"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { cookies } from "next/headers"
 
 interface Data {
     id: string,
@@ -11,6 +12,7 @@ interface Data {
     cover_img_id: string
     author: string,
     category: string,
+    paywall: boolean
 }
 
 interface DataRightSide {
@@ -18,18 +20,22 @@ interface DataRightSide {
     title: string,
     cover_img_id: string,
     category: string,
-    date:string
+    date:string,
+
 }
 
 export const importantArticle = async (page: number | undefined) => {
+    // disable cache for this server action
+    const _cookie = cookies()
+
     if (typeof page !== 'undefined') {
-        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category').neq('important', 'Not important').range((page-1)*20,page*20)
+        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall, important').neq('important', 'Not important').range((page-1)*20,page*20).order('id',{ ascending: false })
 
         if (res.error) return { error: 'Server error' }
         return { success: res.data }
     }
 
-    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category').neq('important', 'Not important').limit(20);
+    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall, important').neq('important', 'Not important').limit(20).order('id',{ ascending: false });
 
     if (res.error) return { error: 'Server error' }
     return { success: res.data }
@@ -45,9 +51,14 @@ export const numberOfImportantArticle = async () => {
 
 
 export const importantNewsRightSide = async () => {
-    const res: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date').neq('important', 'Not important').limit(5);
+    // disable cache for this server action
+    const _cookie = cookies()
+    
+    const res: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Most important'); 
+    const res2: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Second most important').order('id',{ ascending: false });
+    const res3: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'important').limit(2);
 
-    if(res.error) return {error: 'Server error'};
+    if(res.error || res2.error) return {error: 'Server error'};
 
-    return {success: res.data}
+    return {success: [...res.data,...res2.data]}
 }

@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const ImageSchema = new Schema({
-    alt: {
-        type: String,
-        require: "Name is require",
-    },
     url: {
         type: String,
         required: "Url is required",

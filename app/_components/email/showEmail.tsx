@@ -1,15 +1,15 @@
 'use client'
 
-import Image from 'next/image';
+import Img from "./img";
 import { v4 as uuid } from "uuid";
-import {Dispatch, SetStateAction} from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import React from 'react'
 
-export function chooseTypeOfTextItem (s: string, setTextError: Dispatch<SetStateAction<string>>) {
-    let TextArray: (string | JSX.Element) ='';
+export function chooseTypeOfTextItem(s: string, setTextError: Dispatch<SetStateAction<string>>) {
+    let TextArray: (string | JSX.Element) = '';
     if (s.indexOf('<Image') === 0) { TextArray = createImg(s, setTextError) }
     else if (s.indexOf('<highlight>') === 0) { TextArray = createHighlight(s, setTextError) }
-    else { TextArray = createParagh(s, setTextError);}
+    else { TextArray = createParagh(s, setTextError); }
 
     return TextArray;
 }
@@ -37,7 +37,7 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
 
         if (s.indexOf('<anchor_link', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
-            result = createAnchor(s.slice(index2, s.indexOf('</anchor_link>', index2) + 14), setTextError, index2);
+            result = createAnchor(s.slice(index2, s.indexOf('</anchor_link>', index2) + 14), setTextError);
             if (typeof (result) !== 'number') {
                 textArray.push(result);
                 index1 = s.indexOf('</anchor_link>', index2) + 14;
@@ -47,7 +47,7 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
         }
         else if (s.indexOf('<bold>', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
-            result = createStrong(s.slice(index2, s.indexOf('</bold>', index2) + 7), setTextError, index2);
+            result = createStrong(s.slice(index2, s.indexOf('</bold>', index2) + 7), setTextError);
             if (typeof (result) !== 'number') {
                 textArray.push(result);
                 index1 = s.indexOf('</bold>', index2) + 7;
@@ -57,7 +57,7 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
         }
         else if (s.indexOf('<italic>', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
-            result = createEm(s.slice(index2, s.indexOf('</italic>', index2) + 9), setTextError, index2);
+            result = createEm(s.slice(index2, s.indexOf('</italic>', index2) + 9), setTextError);
             if (typeof (result) !== 'number') {
                 textArray.push(result);
                 index1 = s.indexOf('</italic>', index2) + 9;
@@ -67,12 +67,11 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
         }
         else {
             error = 'error';
-            setTextError(`Text error ${s}`);
+            setTextError(`Text error `);
             index2 = -1;
         }
         if (typeof (result) === 'number') {
             error = 'error';
-            setTextError(`Text error ${s}`);
             index2 = -1;
         }
     }
@@ -83,22 +82,18 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
 }
 
 
-const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>, index2: number) => {
+const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const indexHref: number = s.indexOf('(');
     const indexHrefEnd: number = s.indexOf(')');
     const indexTextEnd: number = s.indexOf('</anchor', 1);
     const emIndex: number = s.indexOf('<italic');
     const strongIndex: number = s.indexOf('<bold');
     const index: number = s.indexOf('<', 1);
-    if (indexHref === -1 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
-        setTextError(`Anchor error: ${s}`);
+    if (indexHref !== 17 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
+        setTextError(`Anchor error`);
         return -1;
     }
-    ///Fixed the +2 error link kinézet miatt {} >///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const text = s.slice(indexHrefEnd + 2, indexTextEnd);
     const textArray: (string | JSX.Element)[] = [];
     let index1: number = 0
@@ -109,7 +104,7 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
         if (text.indexOf('<italic') === index3 && index3 > -1) {
 
             textArray.push(text.slice(index1, index3));
-            result = createEm(text.slice(index3, text.indexOf('</italic>', index3) + 9), setTextError, index2);
+            result = createEm(text.slice(index3, text.indexOf('</italic>', index3) + 9), setTextError);
             if (typeof (result) !== 'number') {
                 textArray.push(result);
                 index1 = text.indexOf('</italic', index3) + 9;
@@ -119,7 +114,7 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
         }
         else if (text.indexOf('<bold') === index3 && index3 > -1) {
             textArray.push(text.slice(index1, index3));
-            result = createStrong(text.slice(index3, text.indexOf('</bold>', index3) + 7), setTextError, index2);
+            result = createStrong(text.slice(index3, text.indexOf('</bold>', index3) + 7), setTextError);
             if (typeof (result) !== 'number') {
                 textArray.push(result);
                 index1 = text.indexOf('</bold>', index3) + 7;
@@ -128,11 +123,10 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
 
         }
         else {
-            setTextError(`Anchor error: ${s}`);
+            setTextError(`Anchor error`);
             return -1;
         }
         if (typeof (result) === 'number') {
-            setTextError(`Anchor error: ${s}`);
             return -1;
         }
     }
@@ -144,13 +138,13 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>,
 }
 
 
-const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>, index2: number) => {
+const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const indexHrefEnd = s.indexOf('>');
     const indexTextEnd = s.indexOf('</bold', 1);
     const index = s.indexOf('<', 1);
     const emIndex = s.indexOf('<italic');
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || (index !== indexTextEnd && index !== emIndex)) {
-        setTextError(`Bold error: ${s}`);
+    if (indexHrefEnd !== 5 || indexTextEnd === -1 || (index !== indexTextEnd && index !== emIndex)) {
+        setTextError(`Bold error`);
         return -1;
     }
 
@@ -164,7 +158,7 @@ const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>,
         if (text.indexOf('<italic') === index3 && index3 > -1) {
 
             textArray.push(text.slice(index1, index3));
-            result = createEmText(text.slice(index3, text.indexOf('</italic>', index3) + 9), setTextError, index2);
+            result = createEmText(text.slice(index3, text.indexOf('</italic>', index3) + 9), setTextError);
             if (typeof (result) !== 'number') {
                 textArray.push(result);
                 index1 = text.indexOf('</italic>', index3) + 9;
@@ -172,11 +166,10 @@ const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>,
             }
         }
         else {
-            setTextError(`Bold error: ${s}`);
+            setTextError(`Bold error`);
             return -1;
         }
         if (typeof (result) === 'number') {
-            setTextError(`Bold error: ${s}`);
             return -1;
         }
     }
@@ -187,12 +180,12 @@ const createStrong = (s: string, setTextError: Dispatch<SetStateAction<string>>,
     )
 }
 
-const createStrongText = (s: string, setTextError: Dispatch<SetStateAction<string>>, index2: number) => {
+const createStrongText = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const indexHrefEnd = s.indexOf('>');
     const indexTextEnd = s.indexOf('</bold', 1);
     const index = s.indexOf('<', 1);
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd) {
-        setTextError(`Bold error: ${s}`);
+    if (indexHrefEnd !== 5 || indexTextEnd === -1 || index !== indexTextEnd) {
+        setTextError(`Bold error`);
         return -1;
     }
 
@@ -205,14 +198,14 @@ const createStrongText = (s: string, setTextError: Dispatch<SetStateAction<strin
 
 
 
-const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>, index2: number) => {
+const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const indexHrefEnd = s.indexOf('>');
     const indexTextEnd = s.indexOf('</italic');
     const index = s.indexOf('<', 1);
     const strongIndex = s.indexOf('<bold');
 
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || (index !== indexTextEnd && index !== strongIndex)) {
-        setTextError(`Italic error: ${s}`);
+    if (indexHrefEnd !== 7 || indexTextEnd === -1 || (index !== indexTextEnd && index !== strongIndex)) {
+        setTextError(`Italic text error`);
         return -1;
     }
     const text = s.slice(indexHrefEnd + 1, indexTextEnd);
@@ -225,7 +218,7 @@ const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>, ind
     while (index3 > -1) {
         if (text.indexOf('<bold') === index3 && index3 > -1) {
             textArray.push(text.slice(index1, index3));
-            result = createStrongText(text.slice(index3, text.indexOf('</bold>', index3) + 7), setTextError, index2);
+            result = createStrongText(text.slice(index3, text.indexOf('</bold>', index3) + 7), setTextError);
 
             if (typeof (result) !== 'number') {
                 textArray.push(result);
@@ -234,11 +227,10 @@ const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>, ind
             }
         }
         else {
-            setTextError(`Italic error: ${s}`);
+            setTextError(`Italic error`);
             return -1;
         }
         if (typeof (result) === 'number') {
-            setTextError(`Italic error: ${s}`);
             return -1;
         }
     }
@@ -249,13 +241,13 @@ const createEm = (s: string, setTextError: Dispatch<SetStateAction<string>>, ind
 }
 
 
-const createEmText = (s: string, setTextError: Dispatch<SetStateAction<string>>, index2: number) => {
+const createEmText = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const indexHrefEnd = s.indexOf('>');
     const indexTextEnd = s.indexOf('</italic');
     const index = s.indexOf('<', 1);
 
-    if (indexHrefEnd === -1 || indexTextEnd === -1 || index !== indexTextEnd) {
-        setTextError(`Italic text error: ${s}`);
+    if (indexHrefEnd !== 7 || indexTextEnd === -1 || index !== indexTextEnd) {
+        setTextError(`Italic text error`);
         return -1;
     }
     const text = s.slice(indexHrefEnd + 1, indexTextEnd);
@@ -265,19 +257,6 @@ const createEmText = (s: string, setTextError: Dispatch<SetStateAction<string>>,
 }
 
 
-/************************************************************************************************
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
-
 
 const createImg = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const index1: number = s.indexOf('(');
@@ -285,30 +264,46 @@ const createImg = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
     const BeginOfText = s.slice(0, index1 + 1);
     const EndOfText = s.slice(index2, s.length);
 
-    if (BeginOfText.length !== 12 || EndOfText.length !== 3) {
-        setTextError(`Image error: ${s}`);
+    if (BeginOfText.length !== 11 || EndOfText.length !== 3) {
+        console.log(s)
+        setTextError('Error in Image');
         return <div key={uuid()}></div>;;
     }
 
-    return <div><Image src={s.slice(index1 + 1, index2)} alt='edfeff' key={uuid()} className='w-[550px] block mb-10 mx-auto' width={600} height={337.5}/></div>
+    const id = s.slice(index1 + 1, index2)
+
+    if(id.includes('<') || id.includes('>')) {
+        setTextError(`Error in Image`);
+        return <div key={uuid()}></div>;
+    }
+
+    return (
+        <div key={uuid()} className='flex justify-center mb-10 '>
+            <Img id={id} />
+        </div>
+    )
 }
 
 
 
 
-
-const createHighlight = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>{
+const createHighlight = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
     const index1 = s.indexOf('<highlight>');
     const index2 = s.indexOf('</highlight>');
 
-    if (index1 !== 0 || index2 === -1 || s.length !== index2+12) {
-        setTextError(`Highlight error: ${s}`);
+    if (index1 !== 0 || index2 === -1 || s.length !== index2 + 12) {
+        setTextError(`Highlight error`);
         return <div key={uuid()}></div>;
     }
 
     const text = s.slice(11, index2);
 
-    return(
+    if(text.includes('<') || text.includes('>')) {
+        setTextError(`Highlight error`);
+        return <div key={uuid()}></div>;
+    }
+
+    return (
         <p className="mb-10 pl-4 border-l-4  border-zinc-800" key={uuid()}><span className="bg-zinc-800 text-white inline-block p-1 font-bold">{text}</span></p>
     )
 }

@@ -44,7 +44,6 @@ export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) =>
         if(data) return {error: `Url is in database. Detail: ${data.detail}`}
 
         const NewImageUrl = new Image({
-            alt: imageoData.alt,
             url: imageoData.url,
             detail: imageoData.detail
         })

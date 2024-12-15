@@ -9,7 +9,8 @@ interface DataGet {
   title: string,
   date: string,
   id: string,
-  category: string
+  category: string,
+  paywall: boolean
 }
 
 const LatestNews = () => {
@@ -101,7 +102,7 @@ const LatestNews = () => {
       onTouchEnd={handleTouchEnd}
       ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {Articles?.map(item => <LatestNewsLink Article={{header: item.title,date: item.date, link:`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(5,7)}/ ${item.date.slice(8,10)}/${item.title.replaceAll(' ','-')}`}} key={item.id} isDragging={isDragging}/>)}
+          {Articles?.map(item => <LatestNewsLink Article={{header: item.title, paywall: item.paywall, date: item.date, link:`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(5,7)}/ ${item.date.slice(8,10)}/${item.title.replaceAll(' ','_')}`}} key={item.id} isDragging={isDragging}/>)}
         </section>
       </div>
     </div>

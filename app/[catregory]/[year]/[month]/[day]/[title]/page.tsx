@@ -10,15 +10,17 @@ import ChooseTypeOfTextItem from '@/app/_components/article/showArticle';
 import { v4 as uuid } from 'uuid';
 import ShareFacebook from '@/app/_components/article/shareFacebook';
 import ShareX from '@/app/_components/article/embedded/shareX';
+import CopyLink from '@/app/_components/article/copylink';
+import EditSave from '@/app/_components/article/editSave';
 
 
+//export const revalidate = 86400
 
-const Page = async ({ params }: { params: { category: string, year: string, month: string, day: string, title: string } }) => {
+const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams:{ source: string} }) => {
 
-  
 
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-  const res = await getArticle(params.title.replaceAll('-', ' '), date);
+  const res = await getArticle(params.title.replaceAll('_', ' '), date);
 
   if (res.error) notFound();
 
@@ -38,31 +40,31 @@ const Page = async ({ params }: { params: { category: string, year: string, mont
             <Youtube url={res.data.first_element_url} />
           </div>
         }
-        <h2 className='mt-20 text-4xl mb-8 font-bold'>{params.title.replaceAll('-', ' ')}</h2>
+        <h2 className='mt-20 text-4xl mb-8 font-bold'>{params.title.replaceAll('_', ' ')}</h2>
 
-        <Link href={`/category/${res.data.category.toLowerCase()}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >
-          {res.data.category}
-        </Link>
-
-        <span className='ml-3'>
-          {res.data.date.replaceAll(' ', '')}
-        </span>
-        <span className='ml-2'>
-          {res.data.time}
-        </span>
-
-
-
+        <div>
+          <Link href={`/category/${res.data.category.toLowerCase()}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >
+            {res.data.category}
+          </Link>
+          <span className='ml-3'>
+            {res.data.date.replaceAll(' ', '')}
+          </span>
+          <span className='ml-2'>
+            {res.data.time}
+          </span>
+        </div>
 
         <div className="lg:flex mt-12 mb-10 lg:gap-32 lg:flex-wrap">
           <div className="lg:w-[calc(100%-450px)] mb-8">
             <div className='mb-5 flex justify-between items-center'>
-              <Link href={`/authors/${res.data.author.replaceAll(' ', '-')}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1'>{res.data.author}</Link>
+              <Link href={`/authors/${res.data.author.replaceAll(' ', '_')}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1'>{res.data.author}</Link>
               <div className='flex gap-3 items-center'>
-                <ShareFacebook url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`}
-                title={params.title.replaceAll('-', ' ')}/>
-                <ShareX url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`}
-                title={params.title.replaceAll('-', ' ')} />
+                <EditSave name={res.data.author} url={`/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`}/>
+                <CopyLink url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
+                <ShareFacebook url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=facebook`}
+                  title={params.title.replaceAll('-', ' ')} />
+                <ShareX url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=x`}
+                  title={params.title.replaceAll('-', ' ')} />
               </div>
             </div>
             {res.data.text.split('$').map((s: string) => <ChooseTypeOfTextItem key={res.data.id} s={s} />)}
@@ -71,7 +73,7 @@ const Page = async ({ params }: { params: { category: string, year: string, mont
             }
             <section className='flex gap-3'>
               {res.data.keyword.map(item => <li className='list-none dark:bg-white bg-slate-950 pl-2 pr-2 pt-1 pb-1' key={uuid()}>
-                <Link className=' dark:text-gray-950  text-gray-50 hover:text-gray-300 dark:hover:text-stone-400' href={`/search?text=${item.replaceAll(' ','-')}&filter=theme`}>{item}</Link>
+                <Link className=' dark:text-gray-950  text-gray-50 hover:text-gray-300 dark:hover:text-stone-400' href={`/search?text=${item.replaceAll(' ', '_')}&filter=theme`}>{item}</Link>
               </li>)}
             </section>
           </div>

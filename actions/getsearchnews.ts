@@ -2,6 +2,7 @@
 
 import { supabase } from "@/utils/supabase/article"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { cookies } from "next/headers"
 
 interface Data {
     id: string,
@@ -11,15 +12,17 @@ interface Data {
     cover_img_id: string
     author: string,
     category: string,
+    paywall: boolean
 }
 
 export const searchNews = async (
-    category: string | undefined |null, text: string, date_from: string | undefined | null, date_to: string | undefined | null, author: string | undefined | null, page: number | undefined | null, filter: string | undefined | null
+    category: string | undefined | null, text: string, date_from: string | undefined | null, date_to: string | undefined | null, author: string | undefined | null, page: number | undefined | null, filter: string | undefined | null
 ) => {
+    // disable cache for this server action
+    const _cookie = cookies()
 
-
-    let queryTitle = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category', {count: 'exact'}).like('title', `%${text}%`);
-    let queryTheme = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category', {count: 'exact'}).contains('keyword', [text]).not('title', 'like', `%${text}%`);
+    let queryTitle = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).ilike('title', `%${text}%`);
+    let queryTheme = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).contains('keyword', [text]).not('title', 'like', `%${text}%`);
 
     if (category) {
         queryTitle = queryTitle.eq('category', category.replaceAll('-', ' & ').slice(0, 1).toUpperCase() + category.slice(1, category.length));
@@ -83,7 +86,7 @@ export const searchNews = async (
 
     const resTitle: PostgrestSingleResponse<Data[]> = await queryTitle;
     const resTheme: PostgrestSingleResponse<Data[]> = await queryTheme;
-    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text13', params)
+    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text16', params)
 
     if (resText.error || resTheme.error || resTitle.error) return { error: 'Server error', filt: 'none', lastPage: 0 }
 

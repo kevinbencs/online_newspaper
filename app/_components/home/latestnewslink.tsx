@@ -1,12 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useEffect, useState, MouseEvent } from 'react'
+import React, { useEffect, useState, MouseEvent } from 'react';
+import { IoLockClosed } from 'react-icons/io5';
 
 interface Data {
   header: string,
   date: string,
-  link: string
+  link: string,
+  paywall: boolean
 }
 
 const Month: string[] =[
@@ -76,6 +78,7 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
 
 
       <h2 className='text-sm font-bold'>{props.Article.header.slice(0, 56)}</h2>
+      <div> <IoLockClosed/> </div>
       <div className='w-[60%] h-4 relative bg-gradient-to-r from-transparent via-base-100 to-base-100   -top-4 left-[25%]'></div>
     </Link>
   )

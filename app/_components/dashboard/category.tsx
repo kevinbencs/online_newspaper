@@ -106,7 +106,7 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
             }
             <form onSubmit={handleAdd}>
                 
-                <input type="text" required value={addCategory} onChange={(e) => {setAddCategory(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Category' disabled={props.isPending} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+                <input type="text" required value={addCategory} onChange={(e) => {setAddCategory(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Category' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
                 <div className='text-end mb-20'>
                     <input type="submit" value="Add" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>
@@ -136,7 +136,7 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
             }
 
             <form onSubmit={handleDelete} className='mb-20'>
-            <input type="text" value={deleteCategoryId} required onChange={(e) => {setDeleteCategoryId(e.target.value);props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Category id' disabled={props.isPending} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+            <input type="text" value={deleteCategoryId} required onChange={(e) => {setDeleteCategoryId(e.target.value);props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Category id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
             <div className='text-end mb-20'>
                     <input type="submit" value="Delete" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>
@@ -161,8 +161,8 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
                 </div>
             }
             <form onSubmit={handleUpdate}>
-                <input type="text" value={updateIdCategory} onChange={(e) => {setUpdateIdCategory(e.target.value); props.setSuccess('');;props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.')}} required placeholder='Id' disabled={props.isPending} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
-                <input type="text" value={updateCategory} onChange={(e) => {setUpdateCategory(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='New category' disabled={props.isPending} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+                <input type="text" value={updateIdCategory} onChange={(e) => {setUpdateIdCategory(e.target.value); props.setSuccess('');;props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.')}} required placeholder='Id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
+                <input type="text" value={updateCategory} onChange={(e) => {setUpdateCategory(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='New category' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
                 <div className='text-end mb-20'>
                     <input type="submit" value="Update" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>

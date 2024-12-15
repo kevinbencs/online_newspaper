@@ -9,8 +9,8 @@ const ShareFacebook = (props: {url: string, title: string}) => {
         window.open(facebookShareUrl, '_blank','noopener,noreferrer')
     }
   return (
-    <button>
-        <FaFacebook size={25} className='dark:hover:text-white hover:text-gray-500' onClick={handleClick}/>
+    <button onClick={handleClick}>
+        <FaFacebook size={25} className='dark:hover:text-gray-500 hover:text-gray-300 dark:text-white' />
     </button>
   )
 }

@@ -2,28 +2,17 @@
 import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useAudio } from './audioprovider';
-import { getAudioById } from '@/actions/getaudiourl';
 
 
-const AudioElement = (props: { Id: string }) => {
+const AudioElement2 = (props: { Id: string }) => {
     const { Title, SetTitle, setAudioSource, setShowAudio, showAudio, src, isPlaying, togglePlay, analyser, volumeHandleClick, audioTime, currentTime, muted, handleRangeChange, volume, setVolume, setDisplay } = useAudio();
     const displayAudiRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-    const [url, setUrl] = useState<string>('');
-    const [title, setTitle] = useState<string>('');
-    const [date, setDate] = useState<string>('');
+    const [url, setUrl] = useState<string>(props.Id.split(';')[0]);
+    const [title, setTitle] = useState<string>(props.Id.split(';')[2]);
+    const [date, setDate] = useState<string>(props.Id.split(';')[3]);
 
-    useEffect(() => {
-        getAudioById({id: props.Id})
-        .then((res) => {
-            if(res.success){
-                setUrl(res.success.url);
-                setTitle(res.success.title);
-                setDate(res.success.date);
-            }
-        })
-    },[])
 
 
     useEffect(() => {
@@ -228,4 +217,4 @@ const AudioElement = (props: { Id: string }) => {
     )
 }
 
-export default AudioElement
+export default AudioElement2

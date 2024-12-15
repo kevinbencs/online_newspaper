@@ -25,7 +25,6 @@ const Vid = (props: { id: string }) => {
             <source src={Video.url} type='video/mp4'/>
             Your browser does not support the video tag.
           </video>
-          <div className='mb-10 text-xs'>{Video.title}</div>
         </>
         }
         {!Video &&

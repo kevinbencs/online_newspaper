@@ -15,7 +15,7 @@ const Optgroup = (props: {optElement:{id:string, text:string}[], optInput: strin
 
 
       const selectFilter = (arrayItem: { id: string, text: string }) => {
-        return arrayItem.text.toLocaleLowerCase().indexOf(props.optInput.toLocaleLowerCase()) > -1;
+        return arrayItem.text.toLowerCase().indexOf(props.optInput.toLowerCase()) > -1;
       }
 
     return (

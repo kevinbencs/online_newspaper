@@ -9,8 +9,8 @@ const ShareX = (props: {url: string, title: string}) => {
         window.open(xShareUrl, '_blank','noopener,noreferrer')
     }
   return (
-    <button>
-        <FaXTwitter size={25} className='dark:hover:text-white hover:text-gray-500' onClick={handleClick}/>
+    <button onClick={handleClick}>
+        <FaXTwitter size={25} className='dark:hover:text-gray-500 hover:text-gray-300 dark:text-white' />
     </button>
   )
 }

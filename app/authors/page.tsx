@@ -21,7 +21,7 @@ const Page = async () => {
         {authors.error &&
           <div>{authors.error}</div>
         }
-        {authors.success?.map((item: author) => <Link href={`/authors/${item.name.replaceAll(' ', '-')}`} className='block' key={item._id}>
+        {authors.success?.map((item: author) => <Link href={`/authors/${item.name.replaceAll(' ', '_')}`} className='block' key={item._id}>
           <div className='mb-2'><Image src={item.image} alt={'photo of '+item.name} className='max-h-40 max-w-40' width={160} height={160}/></div>
           <h3 className='text-center'>{item.name}</h3>
           <p className='text-center text-sm'>{item.role}</p>

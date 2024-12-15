@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, RefObject, useTransition } from 'react';
 import { YouTubeEmbed, } from 'react-social-media-embed';
-import Image from 'next/image';
 import { v4 as uuid } from 'uuid';
 import { chooseTypeOfTextItem } from '../../../_components/newArticle/showArcticle'
 import Bold_italic from '../../../_components/newArticle/bold_italic';
@@ -20,6 +19,8 @@ import VideoOptgroup from '@/app/_components/optgroup/articlevideogroup';
 import Img from '@/app/_components/newArticle/img';
 import Vid from '@/app/_components/newArticle/vid';
 import { getCategory } from '@/actions/getcategory';
+import Rules from '@/app/_components/newArticle/rules';
+import Img2 from '@/app/_components/newArticle/img2';
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
@@ -29,8 +30,11 @@ const Page = () => {
   const [importantInput, setImportantInput] = useState<string>('');
   const [firstElementInput, setFirstElementInput] = useState<string>('');
   const [coverImageId, setCoverImageId] = useState<string>('');
-  const [Category, setCategory] = useState<{id:string,text:string}[]>([]);
+  const [Category, setCategory] = useState<{ id: string, text: string }[]>([]);
   const [detail, setDetail] = useState<string>('');
+
+  const [lastText, setLastText] = useState<string[]>([])
+  const [lastPaywallText, setLastPaywallText] = useState<string[]>([])
 
   const [themes, setThemes] = useState<string[]>([]);
   const [Reset1, setReset] = useState<boolean>(false);
@@ -107,26 +111,51 @@ const Page = () => {
 
   useEffect(() => {
     getCategory()
-    .then(res => {
-      if(res.success) {
-        const values: {id: string, text: string}[] = [];
-        for(let i = 0; i < res.success.length; i++){
-          values.push({id:res.success[i]._id, text:res.success[i].name})
+      .then(res => {
+        if (res.success) {
+          const values: { id: string, text: string }[] = [];
+          for (let i = 0; i < res.success.length; i++) {
+            values.push({ id: res.success[i]._id, text: res.success[i].name })
+          }
+          setCategory(values)
         }
-        setCategory(values)}
-    })
-  },[])
+      })
+  }, [])
+
+
 
   useEffect(() => {
     const Text = paragraphInput.split('\n').filter(item => item !== '');
+    const Text2: (string | JSX.Element)[] = [];
     setTextError('');
-    setText(Text.map(item => chooseTypeOfTextItem(item, setTextError)));
+    for (let i = 0; i < Text.length; i++) {
+      if (Text[i] !== lastText[i]) {
+        Text2[i] = chooseTypeOfTextItem(Text[i], setTextError)
+
+      }
+      else {
+        Text2[i] = text[i];
+      }
+    }
+    setText(Text2);
+    setLastText(paragraphInput.split('\n').filter(item => item !== ''))
   }, [paragraphInput])
 
   useEffect(() => {
     const Text = paragraphPaywallInput.split('\n').filter(item => item !== '');
+    const Text2: (string | JSX.Element)[] = [];
     setTextError('');
-    setPaywallText(Text.map(item => chooseTypeOfTextItem(item, setTextError)));
+    for (let i = 0; i < Text.length; i++) {
+      if (Text[i] !== lastPaywallText[i]) {
+        Text2[i] = chooseTypeOfTextItem(Text[i], setTextError)
+      }
+      else {
+        Text2[i] = paywallText[i];
+      }
+    }
+
+    setPaywallText(Text2);
+    setLastPaywallText(paragraphInput.split('\n').filter(item => item !== ''))
   }, [paragraphPaywallInput])
 
   const handleParagraphChange = (e: React.ChangeEvent<HTMLParagraphElement>) => {
@@ -142,18 +171,18 @@ const Page = () => {
   }
 
   const handleSubmit = (e: SyntheticEvent) => {
-    setSuccess('');
-    setError('');
-    setFailed([]);
     e.preventDefault();
   }
 
   const saveTheArticle = () => {
-    if (titleInput !== '' && categoryInput !== '' && importantInput !== '' && paywall !== '' && sidebar !== '' && themes.length !== 0) {
+    setSuccess('');
+    setError('');
+    setFailed([]);
+    if (titleInput !== '' && categoryInput !== '' && importantInput !== '' && paywall !== '' && sidebar !== '' && themes.length !== 0 && text.join('$') !== '' && detail !== '') {
       startTransition(() => {
         WriteArticle({
           text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
-          paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, themes: themes.join('$'), keyword: themes, cover_img_id: coverImageId, 
+          paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
           paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail
 
         })
@@ -164,7 +193,7 @@ const Page = () => {
               setText([]);
               reset(
                 setText, setCategoryInput, setImportantInput, setFirstElementInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
-                setSidebar,  setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef,
+                setSidebar, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef,
                 setDetail, setCoverImageId
               )
 
@@ -175,23 +204,29 @@ const Page = () => {
 
       })
     }
+    else {
+      setError('Title, detail,  category, important, paywall, sidebar, themes and text must be filled');
+    }
   }
 
 
   return (
     <div className='mb-20'>
-      <section className='flex gap-2 mb-20 flex-wrap'>
-        {bold_italic.map((item: string) => <Bold_italic text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
-        {link_anchor.map((item: string) => <Link_Anchor text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
-        {list_embedded.map(item => <List_embedded TextEnterRef={TextEnterRef} text={item.text} textElem={item.textElem} key={uuid()} />)}
-      </section>
+      <Rules />
 
-      <form action="" className='mb-60' onSubmit={handleSubmit}>
-        <input type="text" name='title' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2' placeholder='Article title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
-        <input type="text" name='cover_image_id' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2' placeholder='Cover image id' value={coverImageId} onChange={(e) => setCoverImageId(e.target.value)} />
+
+      <form action="" className='mb-20 mt-10' onSubmit={handleSubmit}>
+        <input type="text" name='title' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2 dark:text-white' placeholder='Article title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
+        <input type="text" name='cover_image_id' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2 dark:text-white' placeholder='Cover image id' value={coverImageId} onChange={(e) => setCoverImageId(e.target.value)} />
+        <div className='max-w-96 mb-10'>
+          <Img2 id={coverImageId} />
+        </div>
+
+
+
         <div className='flex gap-5 flex-wrap mb-8'>
           <OptgroupWithOutFilter optElement={FirstElement} setOptInput={setFirstElementInput} optInput={firstElementInput} placeHolder='Choose first element' />
-          <input type="text" name='first_element_url' className='focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL/Id' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
+          <input type="text" name='first_element_url' className='dark:text-white focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL/Id' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
           <Optgroup optElement={Category} setOptInput={setCategoryInput} optInput={categoryInput} placeHolder='Select category' />
@@ -213,11 +248,17 @@ const Page = () => {
           <Themes themes={themes} setThemes={setThemes} />
         </div>
 
-        <input type='text' value={detail} onChange={(e) => setDetail(e.target.value)} className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mt-10 mb-8 bg-transparent pl-2' placeholder='Detail'/>
+        <input type='text' value={detail} onChange={(e) => setDetail(e.target.value)} className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mt-10 mb-10 bg-transparent pl-2 dark:text-white' placeholder='Detail' />
 
-        <p contentEditable="true" className={`mt-10 focus-within:outline-none border p-3 rounded min-h-24 ${paragPlaceholder}`} onInput={handleParagraphChange} tabIndex={0} ref={TextEnterRef}></p>
+        <section className='flex gap-2 mb-10 flex-wrap'>
+          {bold_italic.map((item: string) => <Bold_italic text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
+          {link_anchor.map((item: string) => <Link_Anchor text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
+          {list_embedded.map(item => <List_embedded TextEnterRef={TextEnterRef} text={item.text} textElem={item.textElem} key={uuid()} />)}
+        </section>
+
+        <p contentEditable="true" className={`mt-10 focus-within:outline-none border p-3 rounded min-h-24 dark:text-white ${paragPlaceholder}`} onInput={handleParagraphChange} tabIndex={0} ref={TextEnterRef}></p>
         {paywall === 'Paywall: yes' &&
-          <p contentEditable="true" className={`mt-10 focus-within:outline-none border p-3 rounded min-h-24 ${paragPaywallPlaceholder}`} onInput={handleParagraphPaywallChange} tabIndex={0} ref={PaywallParagRef}></p>
+          <p contentEditable="true" className={`mt-10 focus-within:outline-none border p-3 rounded min-h-24 dark:text-white ${paragPaywallPlaceholder}`} onInput={handleParagraphPaywallChange} tabIndex={0} ref={PaywallParagRef}></p>
         }
         <div className='text-end'>
           <input type="submit" value='Save' onClick={saveTheArticle} className='bg-slate-600 text-white cursor-pointer hover:bg-slate-400 rounded p-2 mt-10' />
@@ -226,20 +267,20 @@ const Page = () => {
       </form>
 
       {textError !== '' &&
-        <div className='text-5xl text-red-500'>{textError}</div>
+        <div className='text-5xl text-red-500 mb-40'>{textError}</div>
       }
 
       {success &&
-        <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>{success}</div>
+        <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-40 font-bold'>{success}</div>
       }
 
       {error &&
-        <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 text-center bg-red-700/25 rounded-lg mb-5  p-2'>
+        <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 text-center bg-red-700/25 rounded-lg mb-40  p-2'>
           {error}
         </div>
       }
       {(failed && failed.length > 0) &&
-        <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 text-center rounded-lg mb-5  p-2'>
+        <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 text-center rounded-lg mb-40  p-2'>
           {failed.map(e => <p key={uuid()}>{e.message}</p>)}
         </div>
       }
@@ -271,13 +312,10 @@ const Page = () => {
       {paywall === 'Paywall: yes' &&
         <div >
           {(firstElementInput === 'Image' && firstElementUrl !== '') &&
-            <Image src={firstElementUrl} alt='fesaesf' className='w-[100%] block mb-10' width={600} height={337.5} />
+            <Img id={firstElementUrl} />
           }
           {(firstElementInput === 'Video' && firstElementUrl !== '') &&
-            <video controls width={600} height={337.5} className='w-full mb-10'>
-              <source src={firstElementUrl} />
-              Your browser does not support the video tag.
-            </video>
+            <Vid id={firstElementUrl} />
           }
           {(firstElementInput === 'Youtube') &&
             <div className=' mb-10'>
@@ -322,7 +360,7 @@ const reset = (
   setParagPlaceholder: Dispatcher<string>,
   setReset: Dispatcher<boolean>,
   Reset1: boolean,
-  
+
   setPaywallText: Dispatch<(string | JSX.Element)[]>,
   setParagPaywallPlaceholder: Dispatcher<string>,
   setTextError: Dispatcher<string>,
@@ -347,6 +385,6 @@ const reset = (
   setTextError('');
   setReset(!Reset1)
   setDetail(''),
-  setCoverImageId('');
+    setCoverImageId('');
   if (TextEnterRef.current) TextEnterRef.current.innerText = '';
 }

@@ -2,7 +2,7 @@
 
 import { getImageById } from '@/actions/getimageurl'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 
 interface imageUrl {
@@ -21,11 +21,10 @@ const Img = (props: { id: string }) => {
             })
     }, [])
     return (
-        <div>
+        <div className='w-[550px]'>
             {image &&
                 <>
-                    <Image src={image.url} unoptimized={true} alt={image.alt} className='w-[100%] block mb-1' width={600} height={337.5} />
-                    <div className='mb-10 text-xs'>{image.detail}</div>
+                    <Image src={image.url} alt={image.alt} className='w-[100%] block mb-1' width={600} height={337.5} />
                 </>
             }
             {!image &&

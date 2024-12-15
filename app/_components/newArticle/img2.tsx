@@ -12,20 +12,19 @@ interface imageUrl {
     _id: string
 }
 
-const Img = (props: { id: string }) => {
+const Img2 = (props: { id: string }) => {
     const [image, setImage] = useState<imageUrl | null | undefined>(null)
     useEffect(() => {
         getImageById({ id: props.id })
             .then((res) => {
                 setImage(res.success)
             })
-    }, [])
+    }, [props.id])
     return (
         <div>
             {image &&
                 <>
-                    <Image src={image.url} unoptimized={true} alt={image.alt} className='w-[100%] block mb-1' width={600} height={337.5} />
-                    <div className='mb-10 text-xs'>{image.detail}</div>
+                    <Image unoptimized={true} src={image.url} alt={image.alt} className='w-[100%] block mb-1' width={600} height={337.5} />
                 </>
             }
             {!image &&
@@ -38,4 +37,4 @@ const Img = (props: { id: string }) => {
     )
 }
 
-export default Img
+export default Img2

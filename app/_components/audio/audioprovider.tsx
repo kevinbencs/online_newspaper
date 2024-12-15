@@ -44,27 +44,29 @@ export const AudioProvider = ({ children }: { children: ReactNode }) => {
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sourceRef = useRef<HTMLSourceElement | null>(null);
-  const mediaElementSourceRef = useRef<MediaElementAudioSourceNode | null>(null); // Ref a MediaElementSource-hoz
+  const mediaElementSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
 
 
   useEffect(() => {
-    if (!audioContext && audioRef.current) {
+    if (audioRef.current) {
       const context = new window.AudioContext();
+      const source = context.createMediaElementSource(audioRef.current);
+      const analyserNode = context.createAnalyser();
 
-      // Ellenőrizzük, hogy már van-e MediaElementSourceNode
-      if (!mediaElementSourceRef.current) {
-        const source = context.createMediaElementSource(audioRef.current);
-        const analyserNode = context.createAnalyser();
+      source.connect(analyserNode);
+      analyserNode.connect(context.destination);
 
-        source.connect(analyserNode);
-        analyserNode.connect(context.destination);
+      mediaElementSourceRef.current = source;
+      setAudioContext(context);
+      setAnalyser(analyserNode);
 
-        mediaElementSourceRef.current = source; // Tároljuk a source node-ot
-        setAudioContext(context);
-        setAnalyser(analyserNode);
-      }
     }
-  }, [audioContext, showAudio]);
+    else{
+      setAudioContext(null);
+      setAnalyser(null);
+      mediaElementSourceRef.current = null;
+    }
+  }, [showAudio]);
 
   const togglePlay = () => {
     if (audioRef.current) {
