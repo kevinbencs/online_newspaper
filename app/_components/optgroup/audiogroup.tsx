@@ -2,7 +2,6 @@
 
 import { useRef, useState, ChangeEvent, useEffect, Dispatch, SetStateAction } from 'react';
 import AudioItem from './audioitem';
-import { getAudioUrl } from '@/actions/getaudiourl';
 
 
 interface audUrl {
@@ -13,9 +12,8 @@ interface audUrl {
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, audioCopyMessage: string, setCategoryCopyMessage: Dispatcher<string>, setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string | undefined>>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, changed: boolean }) => {
+const AudioOptgroup = (props: {changed: boolean ,isLoading: boolean,error: Error | undefined, data: audUrl[] | undefined, setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, audioCopyMessage: string, setCategoryCopyMessage: Dispatcher<string>, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean }) => {
     const [optInput, setOptInput] = useState<string>('');
-    const [optElement, setOptElement] = useState<audUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
     const [audioId, setAudioId] = useState<string>('');
     const optRef = useRef<null | HTMLInputElement>(null);
@@ -24,15 +22,7 @@ const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudio
     useEffect(() => {
         setOptInput('');
         setAudioId('');
-        getAudioUrl()
-            .then(res => {
-                if (res.success) {
-                    setOptElement(res.success)
-                }
-                props.setError(res.error)
-
-            })
-    }, [props.changed])
+    },[props.changed])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOptInput(e.target.value)
@@ -77,7 +67,9 @@ const AudioOptgroup = (props: {setVideoCopyMessage: Dispatcher<string>, setAudio
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => {setOptClass('h-0');}} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Audio' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul ref={ulRef} className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
-                    {optElement.filter(handleFilter).map((item) => <AudioItem ulRef={ulRef} optClass={optClass} setAudioId={setAudioId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
+                    {props.error && <li className='text-red-700'>{props.error.message}</li>}
+                    {props.isLoading && <li>...Loading</li>}
+                    {props.data && props.data.filter(handleFilter).map((item) => <AudioItem ulRef={ulRef} optClass={optClass} setAudioId={setAudioId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
                 </ul>
             </label>

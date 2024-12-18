@@ -20,12 +20,12 @@ export const getCategoryArticle = async (page: number | undefined, name: string)
     const _cookie = cookies()
 
     if (typeof page !== 'undefined') {
-        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id,date,title,detail,cover_img_id,author, paywall').eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).range((page - 1) * 20, page * 20);
+        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id,date,title,detail,cover_img_id,author, paywall').eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).range((page - 1) * 20, page * 20).order('id',{ascending: false});
         if (res.error) return { error: 'Server error' }
         return { success: res }
     }
 
-    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id,date,title,detail,cover_img_id,author, paywall').eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).limit(20);
+    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id,date,title,detail,cover_img_id,author, paywall').eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).limit(20).order('id', {ascending: false});
     if (res.error) return { error: 'Server error' }
 
     return { success: res }

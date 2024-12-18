@@ -1,38 +1,40 @@
 'use client'
 
 import { useRef, useState, ChangeEvent, useEffect, Dispatch, SetStateAction, MutableRefObject } from 'react';
-import { getVideoUrl } from '@/actions/getvideourl';
 import VideoItem from './videoitem';
+import useSWR from 'swr'
 
 
 
-interface audUrl {
+interface videoUrl {
+    _id: string,
     url: string,
-    title: string,
-    _id: string
+    title: string
+}
+
+const fetcher = async (url: string): Promise<{success: videoUrl[]}> => {
+    const res = await fetch(url);
+
+    if(!res.ok){
+        const error = new Error('An error occurred while fetching the data.');
+        error.cause = await res.json().then((data: {error: string}) => data.error)
+        console.log(error.cause)
+
+        throw error;
+    }
+    return res.json()
 }
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
 const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, videoCopyMessage: string,  setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string | undefined>>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, reset: boolean }) => {
     const [optInput, setOptInput] = useState<string>('');
-    const [optElement, setOptElement] = useState<audUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
     const [videoId, setVideoId] = useState<string>('');
     const optRef = useRef<null | HTMLInputElement>(null);
     const ulRef = useRef<null | HTMLUListElement>(null)
 
-    useEffect(() => {
-
-        getVideoUrl()
-            .then(res => {
-                if (res.success) {
-                    setOptElement(res.success)
-                }
-                props.setError(res.error)
-
-            })
-    }, [])
+    const {data, error, isLoading} = useSWR<{success: videoUrl[]},Error>('/api/video',fetcher)
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOptInput(e.target.value)
@@ -45,7 +47,7 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
 
 
 
-    const handleFilter = (arrayItem: audUrl) => {
+    const handleFilter = (arrayItem: videoUrl) => {
         return arrayItem.title.toLowerCase().indexOf(optInput.toLowerCase()) > -1;
     }
 
@@ -71,13 +73,17 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
         setVideoId('')
     },[props.reset])
 
+    if(error) props.setError(error.message)
+
     return (
         <div className='lg:w-[calc(60%+20px)] w-full'>
             
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_video' onFocus={() => setOptClass('h-52')} onBlur={() => {setOptClass('h-0');}} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Video' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul ref={ulRef} className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
-                    {optElement.filter(handleFilter).map((item) => <VideoItem ulRef={ulRef} optClass={optClass} setVideoId={setVideoId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
+                    {error && <div className='text-red-700'>{error.message}</div>}
+                    {isLoading && <div>...Loading</div>}
+                    {data && data.success.filter(handleFilter).map((item) => <VideoItem ulRef={ulRef} optClass={optClass} setVideoId={setVideoId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
                 </ul>
             </label>

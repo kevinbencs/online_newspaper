@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useRef, useState, ChangeEvent, KeyboardEvent} from 'react'
+import {Dispatch, SetStateAction, useRef, useState, ChangeEvent,} from 'react'
 import OptItem from './optitemwithoutfilter';
 
 const Optgroup = (props: {optElement:{id:string, text:string}[], optInput: string, setOptInput: Dispatch<SetStateAction<string>>, placeHolder: string}) => {

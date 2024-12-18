@@ -14,7 +14,7 @@ import CopyLink from '@/app/_components/article/copylink';
 import EditSave from '@/app/_components/article/editSave';
 
 
-//export const revalidate = 86400
+export const revalidate = 60
 
 const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams:{ source: string} }) => {
 

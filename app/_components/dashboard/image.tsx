@@ -1,15 +1,34 @@
 'use client'
-import { addImageUrl } from '@/actions/addimageurl';
+
 import React, { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
 import { ZodIssue } from 'zod';
 import ImgOptgroup from '../optgroup/imgoptgropu';
-import { deleteImageUrl } from '@/actions/deleteimageurl';
-import { updateImageUrl } from '@/actions/updateimgeurl';
 import { v4 as uuid } from 'uuid';
+import useSWR from 'swr'
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[], setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string> ,imageCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {
+interface imageUrl {
+    url: string,
+    _id: string,
+    detail: string
+}
+
+const fetcher = async (url: string): Promise<{ success: imageUrl[] }> => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        const error = new Error('An error occurred while fetching the data.')
+        error.cause = res.json().then((data: { error: string }) => data.error)
+        console.log(error.cause)
+
+        throw error;
+    }
+
+    return res.json();
+}
+
+const ImageUrl = (props: { place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[], setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string>, imageCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {
 
     const [addUrlImg, setAddUrlImg] = useState<string>('');
     const [addDetailImg, setAddDetailImg] = useState<string>('');
@@ -19,25 +38,46 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
     const [updateUrlImg, setUpdateUrlImg] = useState<string>('');
     const [updateDetailImg, setUpdateDetailImg] = useState<string>('');
 
+    const { data, error, isLoading, mutate } = useSWR<{ success: imageUrl[] }, Error>('/api/img', fetcher)
+
+    if (error) props.setError(error.message)
+
     const handleAdd = (e: SyntheticEvent) => {
         props.setSuccess('');
         props.setError('');
         props.setFailed([]);
         e.preventDefault()
-        props.startTransition(() => {
-            addImageUrl({ detail: addDetailImg, url: addUrlImg })
-                .then(res => {
-                    props.setPlace('imageAdd');
-                    if (res.success) {
-                        props.setSuccess(res.success);
-                        setAddUrlImg('');
-                        setAddDetailImg('');
-                        setChanged(!changed);
-                    }
+        props.startTransition(async () => {
+            props.setPlace('imageAdd');
 
-                    props.setError(res.error);
-                    props.setFailed(res.failed)
+            try {
+                const res = await fetch('/api/img', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ detail: addDetailImg, url: addUrlImg })
                 })
+
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 200) {
+                    props.setSuccess(resJson.success);
+                    setAddUrlImg('');
+                    setAddDetailImg('');
+                    setChanged(!changed);
+                    mutate();
+                }
+                else if (res.status === 400) {
+                    if (resJson.failed) props.setFailed(resJson.failed);
+                    else props.setError(resJson.error);
+                }
+                else if (res.status === 401 || res.status === 500) {
+                    props.setError(resJson.error);
+                }
+            }
+            catch (err) {
+                console.error('Error ', err);
+                props.setError('Failed to connect to the server.');
+            }
         })
 
     }
@@ -47,18 +87,35 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
         props.setSuccess('');
         props.setError('');
         props.setFailed([]);
-        props.startTransition(() => {
-            deleteImageUrl({ Id: deleteImgId })
-                .then(res => {
-                    props.setPlace('imageDelete');
-                    if (res.success) {
-                        props.setSuccess(res.success);
-                        setDeleteImgId('');
-                        setChanged(!changed);
-                    }
-                    props.setError(res.error);
-                    props.setFailed(res.failed)
+        props.startTransition(async () => {
+            props.setPlace('imageDelete');
+
+            try {
+                const res = await fetch('/api/img', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Id: deleteImgId })
                 })
+
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 200) {
+                    props.setSuccess(resJson.success);
+                    setDeleteImgId('');
+                    setChanged(!changed);
+                    mutate();
+                }
+                else if (res.status === 400) {
+                    if (resJson.failed) props.setFailed(resJson.failed);
+                }
+                else if (res.status === 401 || res.status === 500) {
+                    props.setError(resJson.error);
+                }
+            }
+            catch (err) {
+                console.error('Error ', err);
+                props.setError('Failed to connect to the server.');
+            }
         })
     }
 
@@ -67,20 +124,37 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
         props.setSuccess('');
         props.setError('');
         props.setFailed([]);
-        props.startTransition(() => {
-            updateImageUrl({id: updateIdImg,  detail: updateDetailImg, url: updateUrlImg})
-            .then(res => {
-                props.setPlace('imageUpdate');
-                if(res.success){
-                    props.setSuccess(res.success);
+        props.startTransition(async () => {
+            props.setPlace('imageUpdate');
+            try {
+                const res = await fetch('/api/img', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: updateIdImg, detail: updateDetailImg, url: updateUrlImg })
+                })
+
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 200) {
+                    props.setSuccess(resJson.success);
                     setUpdateDetailImg('');
                     setUpdateIdImg('');
                     setUpdateUrlImg('');
                     setChanged(!changed);
+                    mutate();
                 }
-                props.setFailed(res.failed);
-                props.setError(res.error)
-            })
+                else if (res.status === 400) {
+                    if (resJson.failed) props.setFailed(resJson.failed);
+                    else props.setError(resJson.error);
+                }
+                else if (res.status === 401 || res.status === 500) {
+                    props.setError(resJson.error);
+                }
+            }
+            catch (err) {
+                console.error('Error ', err);
+                props.setError('Failed to connect to the server.');
+            }
         })
     }
 
@@ -106,9 +180,9 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
                 </div>
             }
             <form onSubmit={handleAdd}>
-                
-                <input type="text" required value={addUrlImg} onChange={(e) => {setAddUrlImg(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Url' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
-                <input type="text" required value={addDetailImg} onChange={(e) => {setAddDetailImg(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');props.setCategoryCopyMessage('Click to copy');}} placeholder='Detail' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+
+                <input type="text" required value={addUrlImg} onChange={(e) => { setAddUrlImg(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='Url' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
+                <input type="text" required value={addDetailImg} onChange={(e) => { setAddDetailImg(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); props.setCategoryCopyMessage('Click to copy'); }} placeholder='Detail' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
                 <div className='text-end mb-20'>
                     <input type="submit" value="Add" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>
@@ -116,7 +190,7 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
             </form>
 
             <h3 className='mb-5 text-xl pl-2'>Search image id</h3>
-            <ImgOptgroup setAudioCopyMessage={props.setAudioCopyMessage} setVideoCopyMessage={props.setVideoCopyMessage} setCategoryCopyMessage={props.setCategoryCopyMessage} setError={props.setError} setImageCopyMessage={props.setImageCopyMessage} isPending={props.isPending} imageCopyMessage={props.imageCopyMessage} setSuccess={props.setSuccess} changed={changed}/>
+            <ImgOptgroup error={error} isLoading={isLoading} data={data?.success} setAudioCopyMessage={props.setAudioCopyMessage} setVideoCopyMessage={props.setVideoCopyMessage} setCategoryCopyMessage={props.setCategoryCopyMessage} setImageCopyMessage={props.setImageCopyMessage} isPending={props.isPending} imageCopyMessage={props.imageCopyMessage} setSuccess={props.setSuccess} changed={changed} />
 
             <h3 className='mb-5 text-xl pl-2'>Delete image by id</h3>
             {props.place === 'imageDelete' &&
@@ -138,8 +212,8 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
             }
 
             <form onSubmit={handleDelete} className='mb-20'>
-            <input type="text" value={deleteImgId} required onChange={(e) => {setDeleteImgId(e.target.value);props.setImageCopyMessage('Click to copy');props.setSuccess(''); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Image id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
-            <div className='text-end mb-20'>
+                <input type="text" value={deleteImgId} required onChange={(e) => { setDeleteImgId(e.target.value); props.setImageCopyMessage('Click to copy'); props.setSuccess(''); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='Image id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+                <div className='text-end mb-20'>
                     <input type="submit" value="Delete" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>
             </form>
@@ -163,9 +237,9 @@ const ImageUrl = (props: {place: string, setPlace: Dispatcher<string>, success: 
                 </div>
             }
             <form onSubmit={handleUpdate}>
-                <input type="text" value={updateIdImg} onChange={(e) => {setUpdateIdImg(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} required placeholder='Id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
-                <input type="text" value={updateUrlImg} onChange={(e) => {setUpdateUrlImg(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Url' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
-                <input type="text" value={updateDetailImg} onChange={(e) => {setUpdateDetailImg(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Detail' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+                <input type="text" value={updateIdImg} onChange={(e) => { setUpdateIdImg(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} required placeholder='Id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
+                <input type="text" value={updateUrlImg} onChange={(e) => { setUpdateUrlImg(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='Url' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
+                <input type="text" value={updateDetailImg} onChange={(e) => { setUpdateDetailImg(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='Detail' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
                 <div className='text-end mb-20'>
                     <input type="submit" value="Update" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>

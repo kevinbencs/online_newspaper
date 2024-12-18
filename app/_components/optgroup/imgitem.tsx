@@ -6,7 +6,6 @@ type Dispatcher<T> = Dispatch<SetStateAction<T>>;
 
 interface imageUrl {
     url: string,
-    alt: string,
     detail: string,
     _id: string
 }
@@ -70,7 +69,7 @@ const ImgItem = (props: {  setImageId: Dispatcher<string>,  setOptClass: Dispatc
             </div>
 
             {showImage && 
-                <Image src={props.item.url} unoptimized={true} alt={props.item.alt} width={300} height={100} className={`fixed  w-[600px] z-50 `} style={{ left: liLeft - 600, top: liTop }} />
+                <Image src={props.item.url} unoptimized={true} alt={props.item.detail} width={300} height={100} className={`fixed  w-[600px] z-50 `} style={{ left: liLeft - 600, top: liTop }} />
             }
 
         </li>)

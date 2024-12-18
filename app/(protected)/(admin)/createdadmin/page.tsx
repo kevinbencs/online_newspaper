@@ -76,16 +76,16 @@ const Page = () => {
                     <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>{success}</div>
                 }
                 <label className='mb-8'>
-                    <input disabled={isPending} type="text" name='name' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none ' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
+                    <input disabled={isPending} type="text" name='name' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
                 </label>
                 <label className='mb-8'>
-                    <input disabled={isPending} type="text" name='image_url' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none ' placeholder='Name' value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+                    <input disabled={isPending} type="text" name='image_url' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Name' value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                 </label>
                 <label className='mb-8'>
-                    <input disabled={isPending} type="email" name='email' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input disabled={isPending} type="email" name='email' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
                 </label>
                 <label className='mb-8 flex justify-end'>
-                    <input disabled={isPending} type={showPassword} required name='password' maxLength={16} className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input disabled={isPending} type={showPassword} required name='password' maxLength={16} className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
                     <label className={`swap swap-rotate absolute `}>
                         <input type="checkbox" name="showPassword" onChange={handlePassword} />
 
@@ -100,12 +100,12 @@ const Page = () => {
                     </label>
                 </label>
                 <label className='mb-8'>
-                    <input type="text" disabled={isPending} ref={roleRef} required name='role' onFocus={() => setOptClass('h-36')} onBlur={() => setOptClass('h-0')} className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none' placeholder='Role' value={role} readOnly />
+                    <input type="text" disabled={isPending} ref={roleRef} required name='role' onFocus={() => setOptClass('h-36')} onBlur={() => setOptClass('h-0')} className='dark:text-white border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none' placeholder='Role' value={role} readOnly />
                     <ul className={`${optClass} overflow-y-scroll sidebar absolute md:w-[80%] max-w-[600px] lg:w-[50%] w-[95%] dark:bg-neutral bg-base-200 duration-100 pl-2`}>
                         {Role.map((item) => <li tabIndex={0} onFocus={() => setOptClass(`h-36`)} onBlur={() => setOptClass(`h-0`)} key={item} onClick={() => handleClick(item)} onKeyDown={(e) => handleKeyDown(e, item)}>{item} </li>)}
                     </ul>
                 </label>
-                <input type="submit" disabled={isPending} value="Sign up" className='p-1 border-2 border-base-content w-28 cursor-pointer bg-base-300 dark:bg-gray-400 hover:bg-base-100 dark:hover:bg-gray-500' />
+                <input type="submit" disabled={isPending} value="Sign up" className='p-1 border-2 border-base-content w-28 cursor-pointer bg-base-300 dark:bg-gray-400 hover:bg-base-100 dark:hover:bg-gray-500 dark:text-white' />
             </form>
         </div>
     )

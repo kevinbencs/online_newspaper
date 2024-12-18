@@ -35,14 +35,26 @@ interface Res {
   }
 }
 
-const fetcher = (url: string): Promise<Res> => fetch(url).then((res) => res.json())
+const fetcher = async (url: string): Promise<Res> => {
+  const res = await fetch(url)
+
+  if(!res.ok){
+    const error = new Error()
+    error.cause = res.json().then((data: {error: string}) => data.error)
+    console.log(error.cause)
+
+    throw error;
+  }
+
+  return await res.json()
+}
 
 const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => {
   const [Input, setInput] = useState<string>('');
   const [focus, setFocus] = useState<boolean>(false);
   const router = useRouter();
 
-  const { data, error, isLoading } = useSWR<Res, { error: string }>('/api/search', fetcher);
+  const { data, error, isLoading } = useSWR<Res, Error>('/api/search', fetcher);
 
   const categoryFilter = (arrayItem: Cat) => {
     const arr = arrayItem.name.toLowerCase().split(' ')
@@ -106,7 +118,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
       </form >
       {Input !== ''  &&
         <div className={` ${focus ? 'h-64' : 'h-0'} bg-white border-l-2 border-r-2 border-b-2 border-gray-600 dark:bg-neutral absolute lg:w-[59.3%] w-[calc(100%-92px)] m-10 lg:ml-[20.3%] lg:mr-[20%] left-[6px] lg:left-0  top-16 overflow-y-scroll overflow-x-hidden text-base-content dark:text-neutral-content sidebar`}>
-          {error && <div>{error.error}</div>}
+          {error && <div>{error.message}</div>}
           {isLoading && <div>...Loading</div>}
           {data &&
             <>

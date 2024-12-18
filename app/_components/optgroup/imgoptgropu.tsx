@@ -6,16 +6,14 @@ import ImgItem from './imgitem';
 
 interface imageUrl {
     url: string,
-    alt: string,
     detail: string,
     _id: string
 }
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const ImgOptgroup = (props: { setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string>, imageCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string | undefined>>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, changed: boolean }) => {
+const ImgOptgroup = (props: { data: imageUrl[] | undefined, error:Error | undefined, isLoading: boolean, setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string>, imageCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, changed: boolean }) => {
     const [optInput, setOptInput] = useState<string>('');
-    const [optElement, setOptElement] = useState<imageUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
     const [imageId, setImageId] = useState<string>('');
 
@@ -24,14 +22,6 @@ const ImgOptgroup = (props: { setVideoCopyMessage: Dispatcher<string>, setAudioC
     useEffect(() => {
         setOptInput('');
         setImageId('');
-        getImageUrls()
-            .then(res => {
-                if (res.success) {
-                    setOptElement(res.success)
-                }
-                props.setError(res.error)
-
-            })
     }, [props.changed])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +67,9 @@ const ImgOptgroup = (props: { setVideoCopyMessage: Dispatcher<string>, setAudioC
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => setOptClass('h-0')} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Image' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
-                    {optElement.filter(handleFilter).map((item) => <ImgItem setImageId={setImageId}  key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
+                    {props.error && <li className='text-red-700'>{props.error.message}</li>}
+                    {props.isLoading && <li>...Lodaing</li>}
+                    {props.data && props.data.filter(handleFilter).map((item) => <ImgItem setImageId={setImageId}  key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
                 </ul>
             </label>

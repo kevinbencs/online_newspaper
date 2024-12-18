@@ -10,13 +10,13 @@ interface Category {
     _id: string
 }
 
-const CategoryItem = (props: { setImageId:Dispatcher<string>,    setOptClass: Dispatcher<string>, item: Category, setOptInput: Dispatcher<string>, optRef:MutableRefObject<HTMLInputElement | null> }) => {
+const CategoryItem = (props: { setCategoryId:Dispatcher<string>,    setOptClass: Dispatcher<string>, item: Category, setOptInput: Dispatcher<string>, optRef:MutableRefObject<HTMLInputElement | null> }) => {
     const liRef = useRef<null | HTMLLIElement>(null);
 
 
     const handleClick = (s: string) => {
         props.setOptInput(s);
-        props.setImageId(props.item._id)
+        props.setCategoryId(props.item._id)
         setTimeout(() => {
             props.optRef.current?.blur();
             liRef.current?.blur();

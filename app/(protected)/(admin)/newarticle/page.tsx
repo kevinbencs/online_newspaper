@@ -18,9 +18,10 @@ import AudioOptgroup from '@/app/_components/optgroup/articleaudiogroup';
 import VideoOptgroup from '@/app/_components/optgroup/articlevideogroup';
 import Img from '@/app/_components/newArticle/img';
 import Vid from '@/app/_components/newArticle/vid';
-import { getCategory } from '@/actions/getcategory';
 import Rules from '@/app/_components/newArticle/rules';
 import Img2 from '@/app/_components/newArticle/img2';
+import ArticleCategoryGroup from '@/app/_components/optgroup/articlecategory';
+
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
@@ -30,7 +31,6 @@ const Page = () => {
   const [importantInput, setImportantInput] = useState<string>('');
   const [firstElementInput, setFirstElementInput] = useState<string>('');
   const [coverImageId, setCoverImageId] = useState<string>('');
-  const [Category, setCategory] = useState<{ id: string, text: string }[]>([]);
   const [detail, setDetail] = useState<string>('');
 
   const [lastText, setLastText] = useState<string[]>([])
@@ -106,22 +106,6 @@ const Page = () => {
     { id: 'awdwssaw', text: 'Video', },
     { id: 'awdsfadwssadasdas', text: 'Youtube' }
   ];
-
-
-
-  useEffect(() => {
-    getCategory()
-      .then(res => {
-        if (res.success) {
-          const values: { id: string, text: string }[] = [];
-          for (let i = 0; i < res.success.length; i++) {
-            values.push({ id: res.success[i]._id, text: res.success[i].name })
-          }
-          setCategory(values)
-        }
-      })
-  }, [])
-
 
 
   useEffect(() => {
@@ -214,7 +198,6 @@ const Page = () => {
     <div className='mb-20'>
       <Rules />
 
-
       <form action="" className='mb-20 mt-10' onSubmit={handleSubmit}>
         <input type="text" name='title' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2 dark:text-white' placeholder='Article title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
         <input type="text" name='cover_image_id' className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2 dark:text-white' placeholder='Cover image id' value={coverImageId} onChange={(e) => setCoverImageId(e.target.value)} />
@@ -222,27 +205,23 @@ const Page = () => {
           <Img2 id={coverImageId} />
         </div>
 
-
-
         <div className='flex gap-5 flex-wrap mb-8'>
           <OptgroupWithOutFilter optElement={FirstElement} setOptInput={setFirstElementInput} optInput={firstElementInput} placeHolder='Choose first element' />
           <input type="text" name='first_element_url' className='dark:text-white focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL/Id' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
-          <Optgroup optElement={Category} setOptInput={setCategoryInput} optInput={categoryInput} placeHolder='Select category' />
+          <ArticleCategoryGroup setOptInput={setImportantInput} optInput={importantInput} />
           <Optgroup optElement={Important} setOptInput={setImportantInput} optInput={importantInput} placeHolder='Important?' />
         </div>
 
         <div className='flex gap-5 flex-wrap mb-20'>
           <OptgroupWithOutFilter optElement={paywallTable} setOptInput={setPaywall} optInput={paywall} placeHolder='Paywall' />
-
           <OptgroupWithOutFilter optElement={sidebarTable} setOptInput={setSidebar} optInput={sidebar} placeHolder='Right sidebar' />
         </div>
 
         <ImgOptgroup reset={Reset1} setAudioCopyMessage={setAudioCopyMessage} setVideoCopyMessage={setVideoCopyMessage} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} imageCopyMessage={imageCopyMessage} setSuccess={setSuccess} />
         <VideoOptgroup reset={Reset1} setAudioCopyMessage={setAudioCopyMessage} setVideoCopyMessage={setVideoCopyMessage} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} videoCopyMessage={videoCopyMessage} setSuccess={setSuccess} />
         <AudioOptgroup reset={Reset1} setAudioCopyMessage={setAudioCopyMessage} setVideoCopyMessage={setVideoCopyMessage} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} audioCopyMessage={audioCopyMessage} setSuccess={setSuccess} />
-
 
         <div>
           <Themes themes={themes} setThemes={setThemes} />

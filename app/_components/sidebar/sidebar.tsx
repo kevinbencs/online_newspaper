@@ -1,35 +1,33 @@
 'use client'
 import Link from "next/link";
 import CurrentDate from "../date/currentdate";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import UserElement from "./userelement";
-import { getCategory } from "@/actions/getcategory";
+import useSWR from 'swr';
 
 interface Cat {
-  _id: string, 
-  name: string 
+  _id: string,
+  name: string
+}
+
+const fetcher = async (url: string): Promise<{ success: Cat[] | undefined }> => {
+  const res = await fetch(url)
+  
+  if(!res.ok){
+    const error = new Error('An error occurred while fetching the data.')
+    error.cause = await res.json().then((res:{error: string})=> res.error)
+    console.error(error.cause)
+
+    throw error
+  }
+  
+  return res.json()
 }
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
-  const [Category, setCategory] = useState< Cat[] | undefined>([])
-  const [error, setError] = useState<string | undefined>('')
 
-  useEffect(() => {
-    getCategory()
-      .then(res => {
-        if (res.error) {setError(res.error);}
-        if (res.success) {
-          
-          setCategory(res.success);
-        }
-      })
-
-    
-  },[])
-
-
-
+  const { data, error, isLoading } = useSWR<{ success: Cat[] | undefined }, Error>('/api/category', fetcher);
 
   const checked = () => {
     props.setCheckboxValue(false);
@@ -61,10 +59,11 @@ const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
         <nav className="pl-5 border-b pt-2 border-gray-500">
           <ul className="menu text-lg marker:text-green-600 text-base-content pr-0 list-inside list-disc">
             <li className="menu-title  pl-0 pb-2"><h3 className=" text-base-content md:text-2xl text-lg">Category</h3></li>
-            {error !== '' && <li className="text-red-400"> {error}</li>}
-            {(Category && Category.length > 0) &&
+            {error  && <li className="text-red-700"> {error.message}</li>}
+            {isLoading && <li>...Loading</li>}
+            {(data && data.success && data.success.length > 0) &&
               <>
-                {Category.map(item => <li key={item._id}>
+                {data.success.map(item => <li key={item._id}>
                   <Link onClick={checked}
                     className="border-t rounded-none  dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3"
                     href={`/category/${item.name.toLowerCase().replaceAll(' ', '').replaceAll('&', '_')}`}>

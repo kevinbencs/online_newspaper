@@ -3,21 +3,41 @@
 import React, { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
 import { ZodIssue } from 'zod';
 import CategoryOptgroup from '../optgroup/categoryoptgroup';
-import { addNewCategory } from '@/actions/addcategory';
-import { deleteCategory } from '@/actions/deletecategory';
-import { updateCategoryDetail } from '@/actions/updatecategory';
 import { v4 as uuid } from 'uuid';
+import useSWR from 'swr'
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[],setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string> ,categoryCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {
+interface Category {
+    name: string,
+    _id: string
+}
 
+const fetcher = async (url: string): Promise<{success: Category[]}> => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        const error = new Error('An error occurred while fetching the data.')
+        error.cause = res.json().then((data: { error: string }) => data.error)
+        console.log(error.cause)
+
+        throw error;
+    }
+
+    return res.json();
+}
+
+const CategoryUrl = (props: { place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[], setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string>, categoryCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {
 
     const [addCategory, setAddCategory] = useState<string>('');
     const [deleteCategoryId, setDeleteCategoryId] = useState<string>('');
-    const [changed, setChanged] = useState<boolean>(false);
     const [updateIdCategory, setUpdateIdCategory] = useState<string>('');
     const [updateCategory, setUpdateCategory] = useState<string>('');
+    const [changed, setChanged] = useState<boolean>(false);
+
+    const { data, error, isLoading, mutate } = useSWR<{success: Category[]}, Error>('/api/category', fetcher)
+
+    if (error) props.setError(error.message)
 
     const handleAdd = (e: SyntheticEvent) => {
         props.setImageCopyMessage('Click to copy');
@@ -25,21 +45,36 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
         props.setError('');
         props.setFailed([]);
         e.preventDefault()
-        props.startTransition(() => {
-            addNewCategory ({  name: addCategory,  })
-                .then(res => {
-                    props.setPlace('categoryAdd');
-                    if (res.success) {
-                        props.setSuccess(res.success);
-                        setAddCategory('');
-                        setChanged(!changed);
-                    }
-
-                    props.setError(res.error);
-                    props.setFailed(res.failed)
+        props.startTransition(async () => {
+            props.setPlace('categoryAdd');
+            try {
+                const res = await fetch('/api/category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: addCategory })
                 })
-        })
 
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 200) {
+                    props.setSuccess(resJson.success);
+                    setAddCategory('');
+                    setChanged(!changed);
+                    mutate();
+                }
+                else if (res.status === 400) {
+                    if (resJson.failed) props.setFailed(resJson.failed);
+                    else props.setError(resJson.error);
+                }
+                else if (res.status === 401 || res.status === 500) {
+                    props.setError(resJson.error);
+                }
+            }
+            catch (err) {
+                console.error('Error ', err);
+                props.setError('Failed to connect to the server.');
+            }
+        })
     }
 
     const handleDelete = (e: SyntheticEvent) => {
@@ -47,18 +82,35 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
         props.setSuccess('');
         props.setError('');
         props.setFailed([]);
-        props.startTransition(() => {
-            deleteCategory({ Id: deleteCategoryId })
-                .then(res => {
-                    props.setPlace('categoryDelete');
-                    if (res.success) {
-                        props.setSuccess(res.success);
-                        setDeleteCategoryId('');
-                        setChanged(!changed);
-                    }
-                    props.setError(res.error);
-                    props.setFailed(res.failed)
+        props.startTransition(async () => {
+            props.setPlace('categoryDelete');
+
+            try {
+                const res = await fetch('/api/category', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Id: deleteCategoryId })
                 })
+
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 200) {
+                    props.setSuccess(resJson.success);
+                    setDeleteCategoryId('');
+                    setChanged(!changed);
+                    mutate();
+                }
+                else if (res.status === 400) {
+                    if (resJson.failed) props.setFailed(resJson.failed);
+                }
+                else if (res.status === 401 || res.status === 500) {
+                    props.setError(resJson.error);
+                }
+            }
+            catch (err) {
+                console.error('Error ', err);
+                props.setError('Failed to connect to the server.');
+            }
         })
     }
 
@@ -67,19 +119,36 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
         props.setSuccess('');
         props.setError('');
         props.setFailed([]);
-        props.startTransition(() => {
-            updateCategoryDetail({id: updateIdCategory,  name: updateCategory, })
-            .then(res => {
-                props.setPlace('categoryUpdate');
-                if(res.success){
-                    props.setSuccess(res.success);
+        props.startTransition(async () => {
+            props.setPlace('categoryUpdate');
+            try {
+                const res = await fetch('/api/category', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: updateIdCategory, name: updateCategory, })
+                })
+
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 200) {
+                    props.setSuccess(resJson.success);
                     setUpdateCategory('');
                     setUpdateIdCategory('');
                     setChanged(!changed);
+                    mutate();
                 }
-                props.setFailed(res.failed);
-                props.setError(res.error)
-            })
+                else if (res.status === 400) {
+                    if (resJson.failed) props.setFailed(resJson.failed);
+                    else props.setError(resJson.error);
+                }
+                else if (res.status === 401 || res.status === 500) {
+                    props.setError(resJson.error);
+                }
+            }
+            catch (err) {
+                console.error('Error ', err);
+                props.setError('Failed to connect to the server.');
+            }
         })
     }
 
@@ -105,8 +174,8 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
                 </div>
             }
             <form onSubmit={handleAdd}>
-                
-                <input type="text" required value={addCategory} onChange={(e) => {setAddCategory(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Category' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+
+                <input type="text" required value={addCategory} onChange={(e) => { setAddCategory(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='Category' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
                 <div className='text-end mb-20'>
                     <input type="submit" value="Add" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>
@@ -114,7 +183,7 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
             </form>
 
             <h3 className='mb-5 text-xl pl-2'>Search category</h3>
-            <CategoryOptgroup setAudioCopyMessage={props.setAudioCopyMessage} setVideoCopyMessage={props.setVideoCopyMessage} setCategoryCopyMessage={props.setCategoryCopyMessage} setError={props.setError} setImageCopyMessage={props.setImageCopyMessage} isPending={props.isPending} categoryCopyMessage={props.categoryCopyMessage} setSuccess={props.setSuccess} changed={changed}/>
+            <CategoryOptgroup changed={changed} isLoading={isLoading} data={data?.success} error={error} setAudioCopyMessage={props.setAudioCopyMessage} setVideoCopyMessage={props.setVideoCopyMessage} setCategoryCopyMessage={props.setCategoryCopyMessage} setImageCopyMessage={props.setImageCopyMessage} isPending={props.isPending} categoryCopyMessage={props.categoryCopyMessage} setSuccess={props.setSuccess} />
 
             <h3 className='mb-5 text-xl pl-2'>Delete category by id</h3>
             {props.place === 'categoryDelete' &&
@@ -136,8 +205,8 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
             }
 
             <form onSubmit={handleDelete} className='mb-20'>
-            <input type="text" value={deleteCategoryId} required onChange={(e) => {setDeleteCategoryId(e.target.value);props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='Category id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
-            <div className='text-end mb-20'>
+                <input type="text" value={deleteCategoryId} required onChange={(e) => { setDeleteCategoryId(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='Category id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+                <div className='text-end mb-20'>
                     <input type="submit" value="Delete" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>
             </form>
@@ -161,8 +230,8 @@ const CategoryUrl = (props: {place: string, setPlace: Dispatcher<string>, succes
                 </div>
             }
             <form onSubmit={handleUpdate}>
-                <input type="text" value={updateIdCategory} onChange={(e) => {setUpdateIdCategory(e.target.value); props.setSuccess('');;props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.')}} required placeholder='Id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
-                <input type="text" value={updateCategory} onChange={(e) => {setUpdateCategory(e.target.value); props.setSuccess('');props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.');props.setAudioCopyMessage('Click to copy.');}} placeholder='New category' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
+                <input type="text" value={updateIdCategory} onChange={(e) => { setUpdateIdCategory(e.target.value); props.setSuccess('');; props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.') }} required placeholder='Id' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
+                <input type="text" value={updateCategory} onChange={(e) => { setUpdateCategory(e.target.value); props.setSuccess(''); props.setImageCopyMessage('Click to copy'); props.setCategoryCopyMessage('Click to copy'); props.setVideoCopyMessage('Click to copy.'); props.setAudioCopyMessage('Click to copy.'); }} placeholder='New category' disabled={props.isPending} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-5 pb-2' />
                 <div className='text-end mb-20'>
                     <input type="submit" value="Update" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
                 </div>

@@ -6,7 +6,7 @@ import VideoItem from './videoitem';
 
 
 
-interface audUrl {
+interface videoUrl {
     url: string,
     title: string,
     _id: string
@@ -14,9 +14,8 @@ interface audUrl {
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, videoCopyMessage: string, setCategoryCopyMessage: Dispatcher<string>, setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string | undefined>>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, changed: boolean }) => {
+const VideoOptgroup = (props: { data: videoUrl[] | undefined, error:Error | undefined, isLoading: boolean,setVideoCopyMessage:Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, videoCopyMessage: string, setCategoryCopyMessage: Dispatcher<string>, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, changed: boolean }) => {
     const [optInput, setOptInput] = useState<string>('');
-    const [optElement, setOptElement] = useState<audUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
     const [videoId, setVideoId] = useState<string>('');
     const optRef = useRef<null | HTMLInputElement>(null);
@@ -25,14 +24,6 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
     useEffect(() => {
         setOptInput('');
         setVideoId('');
-        getVideoUrl()
-            .then(res => {
-                if (res.success) {
-                    setOptElement(res.success)
-                }
-                props.setError(res.error)
-
-            })
     }, [props.changed])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +38,7 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
 
 
 
-    const handleFilter = (arrayItem: audUrl) => {
+    const handleFilter = (arrayItem: videoUrl) => {
         return arrayItem.title.toLowerCase().indexOf(optInput.toLowerCase()) > -1;
     }
 
@@ -78,7 +69,9 @@ const VideoOptgroup = (props: {setVideoCopyMessage:Dispatcher<string>, setAudioC
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_video' onFocus={() => setOptClass('h-52')} onBlur={() => {setOptClass('h-0');}} className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Video' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul ref={ulRef} className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
-                    {optElement.filter(handleFilter).map((item) => <VideoItem ulRef={ulRef} optClass={optClass} setVideoId={setVideoId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
+                    {props.error && <li className='text-red-700'>{props.error.message}</li>}
+                    {props.isLoading && <li>...Loading</li>}
+                    {props.data && props.data.filter(handleFilter).map((item) => <VideoItem ulRef={ulRef} optClass={optClass} setVideoId={setVideoId} key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
                 </ul>
             </label>

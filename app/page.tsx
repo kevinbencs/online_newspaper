@@ -6,7 +6,7 @@ import Videos from "./_components/home/videos";
 import SectionTwo from "./_components/home/sectionTwo";
 
 
-//export const revalidate = 86400
+export const revalidate = 60
 
 export default async function Page() {
 
