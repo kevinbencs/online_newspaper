@@ -342,7 +342,7 @@ const createImg = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
     const index2: number = s.indexOf(')');
     const BeginOfText = s.slice(0, index1 + 1);
     const EndOfText = s.slice(index2, s.length);
-
+    
     if (BeginOfText.length !== 11 || EndOfText.length !== 3) {
         setTextError('Error in Image');
         return <div key={uuid()}></div>;;
@@ -422,14 +422,14 @@ const createX = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
         setTextError('Error in X');
         return <div key={uuid()}></div>;;
     }
-
+    
     const id = s.slice(index1 + 1, index2)
 
     if (id.includes('<') || id.includes('>')) {
         setTextError(`Error in X`);
         return <div key={uuid()}></div>;
     }
-
+    
     return (
         <div key={uuid()} >
             <Tweet id={id} />

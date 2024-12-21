@@ -32,11 +32,21 @@ interface Art {
 
 
 
-export const getArticle = async (Article: string, date: string) => {
+export const getArticle = async (Article: string, date: string, source: string) => {
 
     const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', Article).eq('date', date)
 
     if (!article.data || article.data.length === 0) { return { error: 'No article' } }
+
+    const currentDate = new Date().toLocaleDateString();
+
+    const res = await supabase.from('numberClickArticle').insert({
+        title: article.data[0].title,
+        source: source,
+        date: currentDate
+    })
+
+    console.log(res.error)
 
     if (!article.data[0].paywall) {
         return {

@@ -24,7 +24,7 @@ const Img2 = (props: { id: string }) => {
         <div>
             {image &&
                 <>
-                    <Image unoptimized={true} src={image.url} alt={image.alt} className='w-[100%] block mb-1' width={600} height={337.5} />
+                    <Image unoptimized={true} src={image.url} alt={image.detail} className='w-[100%] block mb-1' width={600} height={337.5} />
                 </>
             }
             {!image &&

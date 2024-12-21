@@ -136,3 +136,20 @@ export const urlSchema = z.object({
 export const idSchema = z.object({
     id: z.string({message: 'Id error'})
 })
+
+
+export const EditArticleSchema = z.object({
+    lastTitle: z.string().min(1, { message: 'Last title is required' }),
+    text: z.string().min(1, { message: 'Text is required' }),
+    title: z.string().min(1, { message: 'Title is required' }),
+    first_element: z.string(),
+    first_element_url: z.string(),
+    category: z.string().min(1, { message: 'Category is required' }),
+    important: z.string().min(1, { message: 'Important is required' }),
+    paywall: z.boolean({message: 'Paywall is required'}),
+    sidebar: z.boolean({message: 'Sidebar is required'}),
+    cover_img_id: z.string().min(1, {message: 'Cover image is required'}),
+    keyword: z.array(z.string().min(1, {message:'Themes are required'})),
+    paywall_text: z.string(),
+    detail: z.string().min(1, {message:'Detail is required'})
+})

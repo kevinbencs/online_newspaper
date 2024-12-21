@@ -7,7 +7,7 @@ import { FaStar } from "react-icons/fa6";
 
 const EditSave = (props: { name: string, url: string }) => {
     const { WhoLogged, RoleLogged } = useLogged();
-
+    
     const handleClick = () => {
 
     }
