@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { cookies } from 'next/headers'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -46,14 +47,59 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  const Cookie = cookies().get('user-log-2fa')
+  const TWOFA = cookies().get('singTwoFA')
+
+  if(user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true'){
+    await supabase.auth.signOut()
+  }
+
   if (
-    user &&
+    user && (user.app_metadata.twofa === 'false' || !user.app_metadata.twofa) &&
     (
       request.nextUrl.pathname.startsWith('/signin') ||
       request.nextUrl.pathname.startsWith('/signup') ||
       request.nextUrl.pathname === '/dhdhdhsefgsgerhtrherwgerhagfws'
     )
   ) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
+    return NextResponse.redirect(url)
+  }
+
+  
+
+  if (user && user.app_metadata.twofa === 'true' && !Cookie &&
+    (
+      request.nextUrl.pathname.startsWith('/about')
+    )) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
+    return NextResponse.redirect(url)
+  }
+
+  if((!user || !TWOFA || user.app_metadata.twofa === 'false')  &&
+    request.nextUrl.pathname === '/signin/twofa'
+  ){
+    const url = request.nextUrl.clone()
+    url.pathname = '/signin'
+    return NextResponse.redirect(url)
+  }
+
+  if (user && user.app_metadata.twofa === 'true' && TWOFA &&
+    (
+      request.nextUrl.pathname === '/signin'
+    )) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/signin/twofa'
+    return NextResponse.redirect(url)
+  }
+
+  if (user && user.app_metadata.twofa === 'true' && Cookie && (
+    request.nextUrl.pathname.startsWith('/signin') ||
+    request.nextUrl.pathname.startsWith('/signup') ||
+    request.nextUrl.pathname === '/dhdhdhsefgsgerhtrherwgerhagfws'
+  )) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
     return NextResponse.redirect(url)

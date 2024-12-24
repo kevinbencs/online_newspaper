@@ -80,7 +80,7 @@ const Rightsidebar = () => {
                     {latestError && <div>{latestError}</div>}
                     {latestSuccess && <>
                         {latestSuccess.map(item => <div key={item.id}>
-                            <Link href={`/category/${item.category}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
+                            <Link href={`/category/${item.category.toLowerCase()}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
                             <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`} 
                             className=' flex gap-2 items-start'>
                                 <div className='overflow-hidden max-h-[73px] min-h-[73px] min-w-[130px] max-w-[130px]'>
@@ -127,7 +127,7 @@ const Rightsidebar = () => {
                 {importantError && <div>{importantError}</div>}
                     {importantSuccess && <>
                         {importantSuccess.map(item => <div key={item.id}>
-                            <Link href={`/category/${item.category}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
+                            <Link href={`/category/${item.category.toLowerCase()}`} className='category top-3 uppercase text-[10px] '>{item.category}</Link>
                             <Link href={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`} 
                             className=' flex gap-2 items-start'>
                                 <div className='overflow-hidden max-h-[73px] min-h-[73px] min-w-[130px] max-w-[130px]'>

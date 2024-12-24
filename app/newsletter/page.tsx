@@ -55,8 +55,8 @@ const Page = () => {
       }
       <p className="mb-10">If you would like to be informed the valuable news, subscribe for our newsletters.</p>
       <form action="#" onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" value={email} onChange={(e) => {setEmail(e.target.value), setSuccess('')}} required className="block w-[100%] mb-3 border border-gray-400 dark:border-current p-2 pt-1 pb-1 rounded-sm focus-within:outline-none" />
-        <input type="text" name="name" placeholder="Name" value={name} onChange={(e) => {setName(e.target.value), setSuccess('')}} required className="block w-[100%] mb-4 border border-gray-400 dark:border-current p-2 pb-1 pt-1 rounded-sm focus-within:outline-none" />
+        <input type="email" name="email" placeholder="Email" value={email} onChange={(e) => {setEmail(e.target.value), setSuccess('')}} required className="dark:text-white block w-[100%] mb-3 border border-gray-400 dark:border-current p-2 pt-1 pb-1 rounded-sm focus-within:outline-none" />
+        <input type="text" name="name" placeholder="Name" value={name} onChange={(e) => {setName(e.target.value), setSuccess('')}} required className="dark:text-white block w-[100%] mb-4 border border-gray-400 dark:border-current p-2 pb-1 pt-1 rounded-sm focus-within:outline-none" />
 
         <div className="checkbox-wrapper-62 mb-4" >
           <input type="checkbox" className="check" id="check1-63" checked={checkBoxValue} readOnly required />
@@ -71,10 +71,10 @@ const Page = () => {
             <span>By subscribing for newsletters, you agree to privacy notice.</span>
           </label>
         </div>
-        <input type="submit" value="Subscribe" className="border p-2 cursor-pointer border-gray-400 dark:border-current font-semibold bg-gray-100 hover:bg-gray-50 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-sm" />
+        <input type="submit" value="Subscribe" className="dark:text-slate-100 border p-2 cursor-pointer border-gray-400 dark:border-current font-semibold bg-gray-100 hover:bg-gray-50 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-sm" />
       </form>
       <div>
-        <div className="mt-10 text-xs text-center lg:text-start">Would not you like to get letters? <Link href='/newsletter/unsubscribe' className='text-slate-400'>Unsubscribe</Link></div>
+        <div className="mt-10 text-xs text-center lg:text-start">Would not you like to get letters? <Link href='/newsletter/unsubscribe' className='text-slate-400 dark:text-gray-200'>Unsubscribe</Link></div>
       </div>
     </div>
   )

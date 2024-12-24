@@ -1,24 +1,53 @@
 "use server"
 
 import * as z from 'zod'
-import { LoginShcema } from '@/schema'
+import { LoginShcema } from '@/schema';
+import { cookies } from 'next/headers';
+import Token from '@/model/Token';
+import jwt from 'jsonwebtoken';
 
 import { createClient } from '@/utils/supabase/server'
 
 export const login = async (values: z.infer<typeof LoginShcema>) => {
-  const validatedFields = LoginShcema.safeParse(values)
-  
-  const supabase = createClient();
+  try {
+    const validatedFields = LoginShcema.safeParse(values)
 
-  if(!validatedFields.success) return {error: 'Invalid fields'}
+    const supabase = createClient();
 
-  const {data, error } = await supabase.auth.signInWithPassword({email: values.email, password: values.password})
+    if (!validatedFields.success) return { error: 'Invalid fields' }
 
-  if (error) {
-    return {error: error.message}
+    const { data, error } = await supabase.auth.signInWithPassword({ email: values.email, password: values.password })
+
+    if (error) {
+      return { error: error.message }
+    }
+
+    if (data.user?.app_metadata.twofa === 'true') {
+
+      if (!process.env.TwoFA_URI) return { error: 'Missing process.env.TwoFA_URI' }
+
+      const token = jwt.sign({
+        id: data.user.id.toString(),
+      },
+        process.env.TwoFA_URI!,
+        { expiresIn: '2m' }
+      )
+
+      const newToken =  new Token({token})
+
+      await newToken.save()
+
+      cookies().set({ name: 'singTwoFA', value: token, httpOnly: true, sameSite: 'strict', path: '/', secure: true, maxAge: 2 * 60 })
+      return { redirect: '2FA' };
+    }
+
+    return { success: 'Success' }
+  }
+  catch (err) {
+    console.log(err);
+    return { error: 'Server error' }
   }
 
-  return {success: 'Sent email.'}
 
 }
 

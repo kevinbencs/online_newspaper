@@ -17,7 +17,11 @@ export const isLogged = async () => {
 
     const { data, error } = await supabase.auth.getUser();
 
-    if (data.user) return { role: 'user', name: '' };
+    const TwoFA = cookies().get('user-log-2fa');
+
+    if(data.user?.app_metadata.twofa === 'true' && TwoFA) return { role: 'user', name: '' };
+
+    if (data.user && (data.user?.app_metadata.twofa === 'false' || !data.user?.app_metadata.twofa )) return { role: 'user', name: '' };
 
     const Cookie = cookies().get('admin-log');
 
