@@ -50,9 +50,9 @@ export async function updateSession(request: NextRequest) {
   const Cookie = cookies().get('user-log-2fa')
   const TWOFA = cookies().get('singTwoFA')
 
-  if(user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true'){
+  /*if(user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true'){
     await supabase.auth.signOut()
-  }
+  }*/
 
   if (
     user && (user.app_metadata.twofa === 'false' || !user.app_metadata.twofa) &&
