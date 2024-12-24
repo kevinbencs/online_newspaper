@@ -12,6 +12,7 @@ interface Decoded extends JwtPayload {
 }
 
 export const registry = async () => {
+    const Cookie = cookies();
     try {
         const supabase = createClient();
         const { data, error } = await supabase.auth.getUser();
