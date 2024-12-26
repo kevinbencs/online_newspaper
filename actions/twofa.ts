@@ -232,6 +232,11 @@ export const TurnOffTwoFA = async (Delete: boolean) => {
         if (decoded.id !== data.user.id) return { error: 'Please log in' }
 
         if (Delete) {
+            await supabase_admin.auth.admin.updateUserById(data.user.id, {
+                app_metadata: {
+                    twofa: 'false',
+                }
+            })
             await Token.deleteOne({ token: Cookie.value });
             cookies().delete('user-log-2fa');
             return { success: 'success' }

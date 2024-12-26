@@ -68,13 +68,18 @@ export async function updateSession(request: NextRequest) {
         }
       }
       else {
-        await supabase.auth.signOut()
+        await supabase.auth.signOut();
       }
     }
     else {
-      await supabase.auth.signOut()
+      if ((request.nextUrl.pathname !== '/resetpassword') && 
+      (!request.nextUrl.pathname.startsWith('/auth/confirm/resetpassword')) && 
+      (request.nextUrl.pathname !== '/api/category') && 
+      (request.nextUrl.pathname !== '/api/search')
+    ){
+        await supabase.auth.signOut();
+      }
     }
-
   }
 
   if (

@@ -25,6 +25,8 @@ export function createClient() {
           }
         },
       },
+      auth:{persistSession: true,
+        detectSessionInUrl: true,}
     }
   )
 }

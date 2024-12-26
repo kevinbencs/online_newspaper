@@ -101,7 +101,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
   return (
     <>
       <form action="#" onSubmit={handleSubmit} className="input input-bordered dark:border-2 border-none dark:border-solid focus-within:outline-none flex items-center h-16 gap-2">
-        <input type="text" onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}}  className="grow text-lg text-base-content" placeholder="Search" value={Input} onChange={(e) => setInput(e.target.value)} />
+        <input name='headerSearch' type="text" onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}}  className="grow text-lg text-base-content" placeholder="Search" value={Input} onChange={(e) => setInput(e.target.value)} />
         <button onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}} >
           <svg
             xmlns="http://www.w3.org/2000/svg"
