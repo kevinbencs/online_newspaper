@@ -2,22 +2,23 @@ import Image from 'next/image';
 import { registry } from '@/actions/twofa';
 import TwoFA from '@/app/_components/about/twofa';
 import DeleteTwofa from '@/app/_components/about/deleteTwofa';
+import DownloadDeleteCode from '@/app/_components/about/deleteCode';
 
 const Page = async () => {
 
-    const {have, error, qr, codeNumber} = await registry()
-    
-    if(error) return (
+    const { have, error, qr, code } = await registry()
+
+    if (error) return (
         <div className='text-2xl'>{error}</div>
     )
 
-    if(have) return(
+    if (have) return (
         <div>
             <div className='mb-8'>You have already set up 2FA. Would you like to turn off? (If you turn off, you have to scan the QR-code again.)</div>
             <DeleteTwofa />
         </div>
     )
-    
+
 
     return (
         <div>
@@ -48,7 +49,7 @@ const Page = async () => {
             {(qr && qr !== '') &&
                 <Image src={qr} alt='qr-code' width={200} height={200} className='mb-10' />
             }
-            <div className='mb-20'>Number: {codeNumber}</div>
+            <DownloadDeleteCode code={code}/>
             <TwoFA />
         </div>
     )

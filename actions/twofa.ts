@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 import { supabase_admin } from "@/utils/supabase/admin";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Token from '@/model/Token';
+import { v4 as uuid } from 'uuid';
 
 interface Decoded extends JwtPayload {
     id: string
@@ -34,10 +35,13 @@ export const registry = async () => {
                 name: 'Word-Times'
             });
 
+            const code = uuid();
+
             await supabase_admin.auth.admin.updateUserById(id, {
                 app_metadata: {
                     twofa: 'false',
                     twofaId: secret.base32,
+                    twofaDeletCode: code
                 }
             })
 
@@ -50,15 +54,11 @@ export const registry = async () => {
                 encoding: 'base32'
             })
 
-            const codeNumber = speakeasy.totp({
-                secret: secret.base32,
-                encoding: 'base32',
-                digits: 6,
-            })
+            
 
             const qrcode = await QRCode.toDataURL(url)
 
-            return { qr: qrcode, codeNumber }
+            return { qr: qrcode, code  }
 
         }
     }
@@ -192,6 +192,17 @@ export const verifySingIn2FA = async (token: string) => {
                 return { success: 'success' }
             }
             else {
+                if(token === secret.data.user?.app_metadata.twofaDeletCode){
+                    cookies().delete('singTwoFA');
+                    await Token.deleteOne({ token: TWOFA.value });
+                    await supabase_admin.auth.admin.updateUserById(data.user.id, {
+                        app_metadata: {
+                            twofa: 'false',
+                        }
+                    })
+                    return {success: 'success'}
+                }
+
                 return { error: 'Error in verify' }
             }
         }
