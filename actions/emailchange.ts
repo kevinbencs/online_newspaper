@@ -3,12 +3,9 @@
 import { EmailSchema } from "@/schema";
 import { supabase } from "@/utils/supabase/article";
 import * as z from 'zod'
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import { createClient } from "@/utils/supabase/server";
 
-interface Decoded extends JwtPayload {
-    email: string
-}
+
 
 export const emailChange = async (value: string) => {
 

@@ -30,18 +30,28 @@ export const registry = async () => {
                 if (Cookie) return { have: "You have already set up the 2FA" }
                 else return { error: 'Please log in' }
             }
+            const secret = speakeasy.generateSecret({
+                name: 'Word-Times'
+            });
 
-            const user = await supabase_admin.auth.admin.getUserById(id)
+            await supabase_admin.auth.admin.updateUserById(id, {
+                app_metadata: {
+                    twofa: 'false',
+                    twofaId: secret.base32,
+                }
+            })
+
+            //const user = await supabase_admin.auth.admin.getUserById(id)
 
             const url = speakeasy.otpauthURL({
-                secret: user.data.user?.app_metadata.twofaId,
+                secret: secret.base32,
                 label: `Word-Times (${data.user.email})`,
                 issuer: 'Word-Times',
                 encoding: 'base32'
             })
 
             const codeNumber = speakeasy.totp({
-                secret: user.data.user?.app_metadata.twofaId,
+                secret: secret.base32,
                 encoding: 'base32',
                 digits: 6,
             })
@@ -118,7 +128,7 @@ export const verifyRegistry2FA = async (code: string) => {
 
 export const verifySingIn2FA = async (token: string) => {
     try {
-        
+
         const supabase = createClient();
         const { data, error } = await supabase.auth.getUser();
 
@@ -136,23 +146,23 @@ export const verifySingIn2FA = async (token: string) => {
                 return { error: 'Token expired. Please log in' }
             }
 
-            const token2 = await Token.find({token: TWOFA.value});
+            const token2 = await Token.find({ token: TWOFA.value });
 
-            if(!token2){
+            if (!token2) {
                 await supabase.auth.signOut();
 
                 return { error: 'Please log in' }
             }
 
-            const decoded = jwt.verify(TWOFA.value, process.env.TwoFA_URI!) as Decoded;
+            const decoded = jwt.verify(TWOFA.value, process.env.TwoFaSingIn_Uri!) as Decoded;
 
-            if(!decoded){
+            if (!decoded) {
                 await supabase.auth.signOut();
 
                 return { error: 'Please log in' }
             }
 
-            if(decoded.id !== id){
+            if (decoded.id !== id) {
                 await supabase.auth.signOut();
 
                 return { error: 'Please log in' }
@@ -166,10 +176,18 @@ export const verifySingIn2FA = async (token: string) => {
                 token,
                 time: Date.now() / 1000,
             });
+
             if (verified) {
                 cookies().delete('singTwoFA')
-                await Token.deleteOne({token: TWOFA.value})
-                cookies().set({ name: 'user-log-2fa', value: token, httpOnly: true, sameSite: 'strict', path: '/' })
+                await Token.deleteOne({ token: TWOFA.value })
+
+                const newToken = jwt.sign({id}, process.env.TwoFA_URI!)
+
+                const newTok = new Token({ token: newToken });
+
+                await newTok.save();
+
+                cookies().set({ name: 'user-log-2fa', value: newToken, httpOnly: true, sameSite: 'strict', path: '/' })
 
                 return { success: 'success' }
             }
@@ -180,13 +198,11 @@ export const verifySingIn2FA = async (token: string) => {
         else {
             return { error: 'Server error' }
         }
-        return {error: 'passz'}
     }
     catch (err) {
         console.log(err)
         return { error: 'Serever error' }
     }
-    return {error: 'pass2'}
 }
 
 
@@ -216,16 +232,7 @@ export const TurnOffTwoFA = async (Delete: boolean) => {
         if (decoded.id !== data.user.id) return { error: 'Please log in' }
 
         if (Delete) {
-            const secret = speakeasy.generateSecret({
-                name: 'Word-Times'
-            });
-
-            await supabase_admin.auth.admin.updateUserById(decoded.id, {
-                app_metadata: {
-                    twofa: 'false',
-                    twofaId: secret.base32,
-                }
-            })
+            await Token.deleteOne({ token: Cookie.value });
             cookies().delete('user-log-2fa');
             return { success: 'success' }
         }

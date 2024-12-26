@@ -14,14 +14,26 @@ interface Decoded extends JwtPayload {
 
 export const isLogged = async () => {
     const supabase = createClient();
-
     const { data, error } = await supabase.auth.getUser();
 
     const TwoFA = cookies().get('user-log-2fa');
 
-    if(data.user?.app_metadata.twofa === 'true' && TwoFA) return { role: 'user', name: '' };
+    if (data.user && (data.user?.app_metadata.twofa === 'false' || !data.user?.app_metadata.twofa)) return { role: 'user', name: '' };
 
-    if (data.user && (data.user?.app_metadata.twofa === 'false' || !data.user?.app_metadata.twofa )) return { role: 'user', name: '' };
+    if (data.user?.app_metadata.twofa === 'true' && TwoFA) {
+
+        const tokenRes = await Token.find({ token: TwoFA.value });
+
+        if (!tokenRes) return { role: '', name: '' };;
+
+        if (!process.env.TwoFA_URI) return { role: '', name: '' };
+
+        const decoded = await jwt.verify(TwoFA.value, process.env.TwoFA_URI!) as Decoded;
+
+        if (decoded.id !== data.user.id) return { role: '', name: '' };;
+
+        return { role: 'user', name: '' };
+    }
 
     const Cookie = cookies().get('admin-log');
 
@@ -30,23 +42,23 @@ export const isLogged = async () => {
 
             const token = await Token.findOne({ token: Cookie.value });
             if (!token) {
-                
+
                 return { role: '', name: '' };
             }
 
             const decoded = jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded
             if (!decoded) {
-                
+
                 return { role: '', name: '' };
             }
 
-            const account = await Admin.findById(decoded.id,{role: 1, name: 1})
+            const account = await Admin.findById(decoded.id, { role: 1, name: 1 })
 
-            
+
 
             if (!account) return { role: '', name: '' };
 
-            return { role: account.role , name: account.name };
+            return { role: account.role, name: account.name };
         }
         catch (err) {
             return { role: '', name: '' }

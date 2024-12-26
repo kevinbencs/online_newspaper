@@ -27,23 +27,3 @@ export const subscribe = async (value: z.infer<typeof SubscribeSchema> ) => {
 
 
 
-export const subscribeUser = async () => {
-
-    try{
-        const dataUser = await createClient().auth.getUser();
-
-        if(!dataUser) return {failed: 'Please sign in.'};
-
-        const {data, error} = await supabase.from('newsletter').insert({
-            email: dataUser.data.user?.email,
-            name: dataUser.data.user?.user_metadata.name
-        })
-
-        if (error) return {failed: 'Server error.'}
-
-        return {success: 'Success'}
-    }
-    catch(err){
-        return {failed: 'Server error.'}
-    }
-}

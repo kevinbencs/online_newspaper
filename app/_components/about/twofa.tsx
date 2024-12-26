@@ -2,13 +2,11 @@
 
 import { SyntheticEvent, useState, useTransition, } from 'react';
 import { verifyRegistry2FA } from '@/actions/twofa';
-import { useRouter } from 'next/navigation';
 
 const TwoFA = () => {
     const [code, setCode] = useState<string>('');
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string>('')
-    const {push} = useRouter()
 
     const handleSubmit = (e:SyntheticEvent) => {
         e.preventDefault()

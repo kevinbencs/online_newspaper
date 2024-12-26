@@ -29,7 +29,7 @@ export const login = async (values: z.infer<typeof LoginShcema>) => {
       const token = jwt.sign({
         id: data.user.id.toString(),
       },
-        process.env.TwoFA_URI!,
+        process.env.TwoFaSingIn_Uri!,
         { expiresIn: '2m' }
       )
 

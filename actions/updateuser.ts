@@ -3,13 +3,34 @@
 import { createClient } from "@/utils/supabase/server";
 import { supabase } from "@/utils/supabase/article";
 import { NewPasswordSchema, updateUserSchema } from "@/schema";
-import * as z from 'zod'
+import * as z from 'zod';
+import { cookies } from "next/headers";
+import jwt, {JwtPayload} from 'jsonwebtoken';
+import Token from "@/model/Token";
 
+interface Decoded extends JwtPayload {
+    id: string
+}
 
 export const updateUser = async (value: z.infer<typeof updateUserSchema>) => {
     try {
         const data = await createClient().auth.getUser();
         if (!data) return { error: 'Please log in' };
+        const Cookie = cookies().get('user-log-2fa');
+
+        if(data.data.user?.app_metadata.twofa === 'true'){
+            if(!Cookie) return {error: 'Please log in'};
+
+            const tokenRes = await Token.find({token: Cookie.value});
+
+            if(!tokenRes) return {error: 'Please log in'};
+
+            if(!process.env.TwoFA_URI) return {error: 'process.env.TwoFA_URI is missing'}
+
+            const decoded = await jwt.verify(Cookie.value, process.env.TwoFA_URI!) as Decoded;
+
+            if(decoded.id !== data.data.user.id) return {error: 'Please log in'};
+        }
 
         const validatedFields = updateUserSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors };
@@ -40,6 +61,22 @@ export const changePassword = async (value: z.infer<typeof NewPasswordSchema>) =
     try {
         const data = await createClient().auth.getUser();
         if (!data) return { error: 'Please log in' };
+
+        const Cookie = cookies().get('user-log-2fa');
+
+        if(data.data.user?.app_metadata.twofa === 'true'){
+            if(!Cookie) return {error: 'Please log in'};
+
+            const tokenRes = await Token.find({token: Cookie.value});
+
+            if(!tokenRes) return {error: 'Please log in'};
+
+            if(!process.env.TwoFA_URI) return {error: 'process.env.TwoFA_URI is missing'}
+
+            const decoded = await jwt.verify(Cookie.value, process.env.TwoFA_URI!) as Decoded;
+
+            if(decoded.id !== data.data.user.id) return {error: 'Please log in'};
+        }
 
         const validatedFields = NewPasswordSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors };

@@ -4,9 +4,7 @@ import { useLogged } from '../../_components/islogged/isloggedprovider';
 import { useRouter } from 'next/navigation'
 import { verifySingIn2FA } from '@/actions/twofa';
 
-
-
-const Page = () => {
+const Page =  () => {
     const [error, setError] = useState<string | undefined>('');
     const [code, setCode] = useState<string | undefined>('');
     const [isPending, startTransition] = useTransition();
@@ -29,6 +27,8 @@ const Page = () => {
             })
         }
     }
+
+    
 
 
     useEffect(() => {

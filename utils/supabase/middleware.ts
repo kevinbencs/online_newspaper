@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { cookies } from 'next/headers'
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -50,9 +51,31 @@ export async function updateSession(request: NextRequest) {
   const Cookie = cookies().get('user-log-2fa')
   const TWOFA = cookies().get('singTwoFA')
 
-  /*if(user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true'){
-    await supabase.auth.signOut()
-  }*/
+  if (user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true') {
+    if (request.nextUrl.pathname.startsWith('/signin/twofa')) {
+      const search = request.nextUrl.searchParams.get('linkToken');
+      if (search) {
+
+        const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ search })
+        })
+
+        const resJSON: { res: string } = await res.json()
+        if (resJSON.res === 'false') {
+          await supabase.auth.signOut()
+        }
+      }
+      else {
+        await supabase.auth.signOut()
+      }
+    }
+    else {
+      await supabase.auth.signOut()
+    }
+
+  }
 
   if (
     user && (user.app_metadata.twofa === 'false' || !user.app_metadata.twofa) &&
@@ -67,33 +90,106 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  
 
-  if (user && user.app_metadata.twofa === 'true' && !Cookie &&
+
+  if (user && user.app_metadata.twofa === 'true' &&
     (
       request.nextUrl.pathname.startsWith('/about')
     )) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/'
-    return NextResponse.redirect(url)
+    if (!Cookie) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+    else {
+      const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa/twofausercookie`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: Cookie.value, id: user.id })
+      })
+
+      const resJSON: { res: string } = await res.json()
+      if (resJSON.res === 'false') {
+
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)
+      }
+    }
   }
 
-  if((!user || !TWOFA || user.app_metadata.twofa === 'false')  &&
-    request.nextUrl.pathname === '/signin/twofa'
-  ){
-    const url = request.nextUrl.clone()
-    url.pathname = '/signin'
-    return NextResponse.redirect(url)
+
+  if (TWOFA && request.nextUrl.pathname.startsWith('/signin/twofa')) {
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/signin'
+      return NextResponse.redirect(url)
+    }
+
+    const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa/twofasingincookie`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TWOFA.value, id: user.id })
+    })
+
+    const resJSON: { res: string } = await res.json();
+
+    if (resJSON.res === 'false') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/signin'
+      return NextResponse.redirect(url)
+    }
+
+  }
+
+
+  if ((!TWOFA) &&
+    request.nextUrl.pathname.startsWith('/signin/twofa')
+  ) {
+    const search = request.nextUrl.searchParams.get('linkToken');
+    if (search) {
+
+      const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ search })
+      })
+
+      const resJSON: { res: string } = await res.json()
+      if (resJSON.res === 'false') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/signin'
+        return NextResponse.redirect(url)
+      }
+
+    }
+    else {
+      const url = request.nextUrl.clone()
+      url.pathname = '/signin'
+      return NextResponse.redirect(url)
+    }
   }
 
   if (user && user.app_metadata.twofa === 'true' && TWOFA &&
     (
       request.nextUrl.pathname === '/signin'
     )) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/signin/twofa'
-    return NextResponse.redirect(url)
+    const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa/twofasingincookie`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TWOFA.value, id: user.id })
+    })
+
+    const resJSON: { res: string } = await res.json();
+
+    if (resJSON.res === 'false') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/signin/twofa'
+      return NextResponse.redirect(url)
+    }
   }
+
+
 
   if (user && user.app_metadata.twofa === 'true' && Cookie && (
     request.nextUrl.pathname.startsWith('/signin') ||
