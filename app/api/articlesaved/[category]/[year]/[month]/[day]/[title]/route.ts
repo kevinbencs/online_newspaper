@@ -26,17 +26,17 @@ export async function GET(request: NextRequest) {
         const Cookie = request.cookies.get('user-log-2fa');
 
         if (data.user?.app_metadata.twofa === 'true') {
-            if (!Cookie) return { error: 'Please log in' };
+            if (!Cookie) return NextResponse.json({ error: 'Please log in' },{status: 400}) ;
 
             const tokenRes = await Token.find({ token: Cookie.value });
 
-            if (!tokenRes) return { error: 'Please log in' };
+            if (!tokenRes) return NextResponse.json({ error: 'Please log in' },{status: 400}) ;
 
-            if (!process.env.TwoFA_URI) return { error: 'process.env.TwoFA_URI is missing' }
+            if (!process.env.TwoFA_URI) return NextResponse.json({ error: 'process.env.TwoFA_URI is missing' },{status: 500}) 
 
             const decoded = await jwt.verify(Cookie.value, process.env.TwoFA_URI!) as Decoded;
 
-            if (decoded.id !== data.user.id) return { error: 'Please log in' };
+            if (decoded.id !== data.user.id) return NextResponse.json({ error: 'Please log in' },{status: 400}) ;
         }
 
         if (error || !data || !data.user) NextResponse.json({ saved: false }, { status: 200 });

@@ -10,7 +10,7 @@ const Page = () => {
   const [success, setSuccess] = useState<string | undefined>('');
   const [failed, setFailed] = useState<ZodIssue[] | undefined>([])
   const [password, setPassword] = useState<string>('');
-  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+  const [confirmPassword, setPasswordConfirm] = useState<string>('');
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -19,7 +19,7 @@ const Page = () => {
     setFailed([])
     e.preventDefault();
     startTransition(() => {
-      changeAdminPassword({ password, passwordConfirm })
+      changeAdminPassword({ password, confirmPassword })
         .then((val) => {
           setError(val.error);
           setFailed(val.failed);
@@ -52,7 +52,7 @@ const Page = () => {
       <h2 className='text-3xl mb-20 text-center lg:text-start'>Change password</h2>
       <form onSubmit={handleSubmit} className='text-center md:text-start'>
         <input type="password" className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="password" required placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} disabled={isPending} />
-        <input type="password" className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="confirm_password" required placeholder='Confirm password' disabled={isPending} value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
+        <input type="password" className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="confirm_password" required placeholder='Confirm password' disabled={isPending} value={confirmPassword} onChange={(e) => setPasswordConfirm(e.target.value)} />
         <input type="submit" value="Change password" className='md:w-96 lg:w-auto w-full text-white hover:bg-slate-500 p-1 rounded bg-slate-700 mt-5' disabled={isPending} />
       </form>
     </div>
