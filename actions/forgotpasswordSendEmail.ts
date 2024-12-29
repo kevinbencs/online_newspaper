@@ -1,8 +1,15 @@
 'use server'
-import { createClient } from "@/utils/supabase/server"
+import { createClient } from "@/utils/supabase/server";
+import { EmailSchema } from "@/schema";
+import * as z from 'zod'
 
 
-export const forgotPasswordSendEmail = async (email: string) => {
+export const forgotPasswordSendEmail = async (value: z.infer<typeof EmailSchema>) => {
+    const validatedFields = EmailSchema.safeParse(value);
+    if(validatedFields.error) return {failed: validatedFields.error.errors}
+
+    const email = value.email
+
     const supabase = createClient();
     
     const { data, error } = await supabase.auth.resetPasswordForEmail(email)

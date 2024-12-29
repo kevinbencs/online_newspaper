@@ -8,6 +8,8 @@ import Admin from "@/model/Admin";
 import { connectToMongo } from "@/lib/mongo";
 import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import * as z from 'zod';
+import { getArtSchema } from "@/schema";
 
 interface Decoded extends JwtPayload {
     id: string
@@ -32,7 +34,14 @@ interface Art {
 
 
 
-export const getArticle = async (Article: string, date: string, source: string) => {
+export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
+
+    const validatedFields = getArtSchema.safeParse(value);
+    if(validatedFields.error) return {failed: validatedFields.error.errors}
+
+    const Article = value.Article;
+    const date = value.date;
+    const source = value.source;
 
     const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', Article).eq('date', date)
 
@@ -46,7 +55,7 @@ export const getArticle = async (Article: string, date: string, source: string) 
         date: currentDate
     })
 
-    console.log(res.error)
+
 
     if (!article.data[0].paywall) {
         return {

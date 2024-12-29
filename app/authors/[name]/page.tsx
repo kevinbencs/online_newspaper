@@ -6,9 +6,9 @@ import Category_menu_articles from "@/app/_components/category_menu_search/categ
 
 const Page = async ({params, searchParams}: {params:{name: string}, searchParams:{page: number}}) => {
 
-    const lastPage = await numberOfAuthorArticle(params.name)
+    const lastPage = await numberOfAuthorArticle({author: params.name})
 
-    const res = await authorArticle(params.name.replaceAll('_',' '), searchParams.page)
+    const res = await authorArticle({author:params.name.replaceAll('_',' '), page: searchParams.page})
 
     if(res.error) return(
       <div className="relative">

@@ -35,7 +35,7 @@ const Page = () => {
 
 
   const bold_italic: string[] = ['bold', 'italic'];
-  const link_anchor: string[] = ['anchor_link'];
+  const link_anchor: string[] = ['anchor_link', 'link'];
   const list_embedded = [
     { text: 'image', textElem: '<Image id=()/>' },
     { text: 'highlight', textElem: '<highlight></highlight>' },

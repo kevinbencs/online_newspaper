@@ -8,18 +8,21 @@ const Page =  () => {
     const [error, setError] = useState<string | undefined>('');
     const [code, setCode] = useState<string | undefined>('');
     const [isPending, startTransition] = useTransition();
-    const { RoleLogged, setRole } = useLogged();
+    const { RoleLogged, setRole, setNumOfSavedArt } = useLogged();
     const { push } = useRouter();
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         if (code && code !== '') {
             startTransition(() => {
-                verifySingIn2FA(code)
+                verifySingIn2FA({code})
                     .then(res => {
                         if (!res) push('/signin')
                         else {
-                            if (res.success) setRole('user')
+                            if (res.numberOfArt) {
+                                setRole('user');
+                                setNumOfSavedArt(res.numberOfArt)
+                            }
                             if (res.error) setError(res.error)
                         }
 

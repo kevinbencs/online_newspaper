@@ -6,15 +6,18 @@ import { SyntheticEvent, useEffect, useState, KeyboardEvent, useTransition } fro
 import { ZodIssue } from "zod";
 import { useRouter } from "next/navigation";
 import { v4 as uuid } from "uuid";
+import { getAllSaveArticle } from "@/actions/savearticle";
+import DeleteSavedArticle from "@/app/_components/about/deleteSavedArticle";
 
 const Page = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [subscribe, setSubscribe] = useState<boolean>(false);
-    const [articles, setArticles] = useState<string>('');
+    const [articles, setArticles] = useState<{title:string, id: string}[]>([]);
     const [error, setError] = useState<undefined | string>('');
     const [failed, setFailed] = useState<undefined | ZodIssue[]>([]);
     const [isPending, startTransition] = useTransition();
+    const [deleteArticle, setDeleteArticles] = useState<{title: string}[]>([])
     const { push } = useRouter();
 
 
@@ -28,12 +31,21 @@ const Page = () => {
                     if (val.subscribe) setSubscribe(val.subscribe)
                 }
             })
+            .catch(err => {
+                setError(err)
+            })
+        
+        getAllSaveArticle()
+        .then(res => {
+            if(res.Error) setError(res.Error);
+            if(res.data) setArticles(res.data)
+        })
     }, [])
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         startTransition(() => {
-            updateUser({ name, email, newsletter: subscribe, articles })
+            updateUser({ name, email, newsletter: subscribe, articles: deleteArticle })
                 .then(res => {
                     setError(res.error)
                     setFailed(res.failed);
@@ -69,7 +81,7 @@ const Page = () => {
                         </svg>
                         Name
                     </label>
-                    <input type="text" name="name" id="name" className="mb-5 p-2 bg-[#121212] text-white rounded" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" name="name" id="name" className="mb-5 p-2 bg-[#121212] dark:bg-slate-50 dark:text-black text-white rounded" value={name} onChange={(e) => setName(e.target.value)} />
 
                     <label htmlFor="name" className="pl-2 flex gap-2 items-center mb-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
@@ -77,7 +89,7 @@ const Page = () => {
                         </svg>
                         Email
                     </label>
-                    <input type="text" className="mb-12 p-2 bg-[#121212] text-white rounded" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="text" className="mb-12 p-2 bg-[#121212] dark:bg-slate-50 dark:text-black text-white rounded" value={email} onChange={(e) => setEmail(e.target.value)} />
 
                     <h2 className="mb-5 text-2xl border-b dark:border-white border-black font-bold">Subscribe for newsletter</h2>
                     <div className="checkbox-wrapper-62 mb-12" >
@@ -96,11 +108,7 @@ const Page = () => {
 
                     <h2 className="mb-5 text-2xl border-b dark:border-white border-black font-bold">Favorite articles</h2>
                     <ul className="pl-2">
-                        <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-                        <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-                        <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-                        <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-                        <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
+                        {articles.map(item => <DeleteSavedArticle articles={articles} deleteArticle={deleteArticle} setArticles={setArticles} setDeleteArticles={setDeleteArticles} title={item.title} key={`delete-${item.id}`} />)}
                     </ul>
                     <div className="flex justify-end gap-2">
                         <Link href={'/about'} className="mt-5 bg-slate-600 text-white hover:bg-slate-400 dark:hover:text-white hover:text-white rounded p-2">Cancel</Link>

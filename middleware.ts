@@ -16,7 +16,8 @@ export async function middleware(request: NextRequest) {
     url === '/delete_data' ||
     url.startsWith('/editarticle') ||
     url === '/newarticle' ||
-    url === '/writenewsletter'
+    url === '/writenewsletter' ||
+    url.startsWith('/lockedarticle')
   )) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
@@ -39,8 +40,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
   }
-
-
 
   return await updateSession(request)
 }

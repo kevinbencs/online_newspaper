@@ -19,7 +19,7 @@ const Page = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('')
-  const { RoleLogged, setRole } = useLogged();
+  const { RoleLogged, setRole, setNumOfSavedArt } = useLogged();
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -29,8 +29,9 @@ const Page = () => {
       login({ email, password })
         .then((data) => {
           setError(data.error);
-          if (data.success) {
+          if (data.numberOfArt) {
             setRole('user');
+            setNumOfSavedArt(data.numberOfArt)
           }
           if(data.redirect) push('/signin/twofa');
         })

@@ -1,6 +1,5 @@
 'use server'
 
-import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Token from "@/model/Token";
@@ -8,6 +7,9 @@ import Admin from "@/model/Admin";
 import { connectToMongo } from "@/lib/mongo";
 import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import * as z from 'zod'
+import { getEditArtSchema } from "@/schema";
+
 
 interface Decoded extends JwtPayload {
     id: string
@@ -34,11 +36,7 @@ interface Art {
 
 
 
-export const getEditArticle = async (Article: string, date: string) => {
-
-    const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', Article).eq('date', date)
-
-    if (!article.data || article.data.length === 0) { return { error: 'No article' } }
+export const getEditArticle = async (value: z.infer<typeof getEditArtSchema>) => {
 
     const Cookie = cookies().get('admin-log');
 
@@ -62,6 +60,16 @@ export const getEditArticle = async (Article: string, date: string) => {
             if (!account) return {
                 error: 'Please log in'
             };
+
+            const validateFields = getEditArtSchema.safeParse(value);
+            if(validateFields.error) return {failed: validateFields.error.errors}
+
+            const title = value.title;
+            const date = value.date
+
+            const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', title).eq('date', date)
+
+            if (!article.data || article.data.length === 0) { return { error: 'No article' } }
 
             const TextArr = article.data[0].text.split('$');
 

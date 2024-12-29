@@ -1,8 +1,10 @@
 'use server'
 
+import { searchArtSchema } from "@/schema";
 import { supabase } from "@/utils/supabase/article"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
+import * as z from 'zod'
 
 interface Data {
     id: string,
@@ -15,14 +17,23 @@ interface Data {
     paywall: boolean
 }
 
-export const searchNews = async (
-    category: string | undefined | null, text: string, date_from: string | undefined | null, date_to: string | undefined | null, author: string | undefined | null, page: number | undefined | null, filter: string | undefined | null
-) => {
+export const searchNews = async (value: z.infer<typeof searchArtSchema>) => {
     // disable cache for this server action
     const _cookie = cookies()
 
-    let queryTitle = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).ilike('title', `%${text}%`);
-    let queryTheme = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).contains('keyword', [text]).not('title', 'like', `%${text}%`);
+    const validateFields = searchArtSchema.safeParse(value);
+    if(validateFields.error) return {failed: validateFields.error.errors}
+
+    const category = value.category
+    const text = value.text
+    const date_from = value.date_from
+    const date_to = value.date_to
+    const author = value.author
+    const page = value.page
+    const filter = value.filter
+
+    let queryTitle = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).ilike('title', `%${text}%`).order('id', { ascending: false });
+    let queryTheme = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).contains('keyword', [text]).not('title', 'like', `%${text}%`).order('id', { ascending: false });
 
     if (category) {
         queryTitle = queryTitle.eq('category', category.replaceAll('-', ' & ').slice(0, 1).toUpperCase() + category.slice(1, category.length));
@@ -86,7 +97,7 @@ export const searchNews = async (
 
     const resTitle: PostgrestSingleResponse<Data[]> = await queryTitle;
     const resTheme: PostgrestSingleResponse<Data[]> = await queryTheme;
-    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text16', params)
+    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text16', params).order('id', { ascending: false })
 
     if (resText.error || resTheme.error || resTitle.error) return { error: 'Server error', filt: 'none', lastPage: 0 }
 

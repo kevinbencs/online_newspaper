@@ -1,9 +1,16 @@
 'use server'
 import { createClient } from '@/utils/supabase/server';
+import * as z from 'zod'
+import { tokenSchema } from '@/schema';
 
-export const Confirm = async (token_hash: string, ) => {
+export const Confirm = async (value: z.infer<typeof tokenSchema>) => {
 
   try {
+
+    const validateFields = tokenSchema.safeParse(value)
+    if(validateFields.error) return {failed: validateFields.error.errors}
+
+    const token_hash = value.token
     const supabase = createClient()
     if (token_hash) {
       const { data, error } = await supabase.auth.verifyOtp({

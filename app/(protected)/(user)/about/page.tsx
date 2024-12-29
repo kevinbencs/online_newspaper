@@ -1,12 +1,14 @@
-//'use client'
+
 import { getUserData } from "@/actions/getuserdata";
-import Link from "next/link"
-//import { useEffect, useState } from "react"
+import { getAllSaveArticle } from "@/actions/savearticle";
+import Link from "next/link";
 
 const Page = async ({ searchParams }: { searchParams: { message: string } }) => {
 
 
   const { name, email, subscribe, error } = await getUserData();
+
+  const {data, Error} = await getAllSaveArticle()
 
 
   return (
@@ -44,21 +46,17 @@ const Page = async ({ searchParams }: { searchParams: { message: string } }) => 
           {subscribe === true ? 'Yes' : 'No'}
         </p>
 
+
+
         <h2 className="mb-5 text-2xl border-b dark:border-white border-black font-bold">Favorite articles</h2>
         <ul className="pl-2">
-          <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-          <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-          <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-          <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
-          <li className="mb-1"><Link href={'/'}>seoisugs</Link> </li>
+          {Error && <li className="mb-1">{Error}</li>}
+          {data && data.map(item => <li key={`${item.id}-${item.title}`} className="mb-1"><Link href={`/${item.url}`}>{item.title}</Link> </li>)}
         </ul>
 
-        <div className="text-end">
-          <Link href={'/about/changedata'} className="mt-5 bg-slate-600 text-white hover:bg-slate-400 dark:hover:text-white hover:text-white rounded p-2 ">Change</Link>
+        <div className="text-end mt-20">
+          <Link href={'/about/changedata'} className=" bg-slate-600 text-white hover:bg-slate-400 dark:hover:text-white hover:text-white rounded p-2 ">Change</Link>
         </div>
-
-
-
       </div>
     </div>
   )

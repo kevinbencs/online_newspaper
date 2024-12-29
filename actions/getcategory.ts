@@ -10,9 +10,9 @@ interface Cat{
 export const getCategory = async () => {
 
     try{
-        const category: Cat[] = await Category.find();
+        const category: Cat[] = await Category.find().sort({name: 1});
 
-        return {success: JSON.parse(JSON.stringify(category.sort(compareNumbers)))}
+        return {success: JSON.parse(JSON.stringify(category))}
     }
     catch(err){
         console.log(err)
@@ -20,9 +20,3 @@ export const getCategory = async () => {
     }
 }
 
-const compareNumbers = (a: Cat, b: Cat) => {
-    if(a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-    if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-
-    return 0
-}

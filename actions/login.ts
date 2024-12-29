@@ -7,6 +7,7 @@ import Token from '@/model/Token';
 import jwt from 'jsonwebtoken';
 
 import { createClient } from '@/utils/supabase/server'
+import { getNumberSaveArticle } from './savearticle';
 
 export const login = async (values: z.infer<typeof LoginShcema>) => {
   try {
@@ -41,7 +42,11 @@ export const login = async (values: z.infer<typeof LoginShcema>) => {
       return { redirect: '2FA' };
     }
 
-    return { success: 'Success' }
+    const res = await getNumberSaveArticle()
+
+    if(res.count) return { numberOfArt: res.count }
+
+    return { error: 'Server error' }
   }
   catch (err) {
     console.log(err);

@@ -7,6 +7,12 @@ import { supabase_admin } from "@/utils/supabase/admin";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Token from '@/model/Token';
 import { v4 as uuid } from 'uuid';
+import { getNumberSaveArticle } from './savearticle';
+import * as z from 'zod';
+import { tokenSchema } from '@/schema';
+import { codeSchema } from '@/schema';
+
+
 
 interface Decoded extends JwtPayload {
     id: string
@@ -54,11 +60,11 @@ export const registry = async () => {
                 encoding: 'base32'
             })
 
-            
+
 
             const qrcode = await QRCode.toDataURL(url)
 
-            return { qr: qrcode, code  }
+            return { qr: qrcode, code }
 
         }
     }
@@ -69,13 +75,18 @@ export const registry = async () => {
 
 }
 
-export const verifyRegistry2FA = async (code: string) => {
+export const verifyRegistry2FA = async (value: z.infer<typeof codeSchema>) => {
     try {
 
         const supabase = createClient();
         const { data, error } = await supabase.auth.getUser();
 
         if (!data.user) return { error: 'Please log in' }
+
+        const validateFields = codeSchema.safeParse(value);
+        if(validateFields.error) return {failed: validateFields.error.errors}
+
+        const code = value.code
 
         const id = data.user.id;
 
@@ -126,7 +137,7 @@ export const verifyRegistry2FA = async (code: string) => {
 
 }
 
-export const verifySingIn2FA = async (token: string) => {
+export const verifySingIn2FA = async (value: z.infer<typeof codeSchema>) => {
     try {
 
         const supabase = createClient();
@@ -168,6 +179,11 @@ export const verifySingIn2FA = async (token: string) => {
                 return { error: 'Please log in' }
             }
 
+            const validateFields = tokenSchema.safeParse(value);
+            if(validateFields.error) return {failed: validateFields.error.errors}
+
+            const token = value.code
+
             const secret = await supabase_admin.auth.admin.getUserById(id)
 
             const verified = speakeasy.totp.verify({
@@ -181,7 +197,7 @@ export const verifySingIn2FA = async (token: string) => {
                 cookies().delete('singTwoFA')
                 await Token.deleteOne({ token: TWOFA.value })
 
-                const newToken = jwt.sign({id}, process.env.TwoFA_URI!)
+                const newToken = jwt.sign({ id }, process.env.TwoFA_URI!)
 
                 const newTok = new Token({ token: newToken });
 
@@ -189,10 +205,14 @@ export const verifySingIn2FA = async (token: string) => {
 
                 cookies().set({ name: 'user-log-2fa', value: newToken, httpOnly: true, sameSite: 'strict', path: '/' })
 
-                return { success: 'success' }
+                const res = await getNumberSaveArticle()
+
+                if (res.count) return { numberOfArt: res.count }
+
+                return { error: 'Serever error' }
             }
             else {
-                if(token === secret.data.user?.app_metadata.twofaDeletCode){
+                if (token === secret.data.user?.app_metadata.twofaDeletCode) {
                     cookies().delete('singTwoFA');
                     await Token.deleteOne({ token: TWOFA.value });
                     await supabase_admin.auth.admin.updateUserById(data.user.id, {
@@ -200,7 +220,12 @@ export const verifySingIn2FA = async (token: string) => {
                             twofa: 'false',
                         }
                     })
-                    return {success: 'success'}
+
+                    const res = await getNumberSaveArticle()
+
+                    if (res.count) return { numberOfArt: res.count }
+
+                    return { error: 'Serever error' }
                 }
 
                 return { error: 'Error in verify' }
@@ -217,7 +242,7 @@ export const verifySingIn2FA = async (token: string) => {
 }
 
 
-export const TurnOffTwoFA = async (Delete: boolean) => {
+export const TurnOffTwoFA = async () => {
     try {
         const supabase = createClient();
         const { data } = await supabase.auth.getUser();
@@ -242,19 +267,16 @@ export const TurnOffTwoFA = async (Delete: boolean) => {
 
         if (decoded.id !== data.user.id) return { error: 'Please log in' }
 
-        if (Delete) {
-            await supabase_admin.auth.admin.updateUserById(data.user.id, {
-                app_metadata: {
-                    twofa: 'false',
-                }
-            })
-            await Token.deleteOne({ token: Cookie.value });
-            cookies().delete('user-log-2fa');
-            return { success: 'success' }
-        }
-        else {
-            return { error: 'Delete must be true' }
-        }
+
+        await supabase_admin.auth.admin.updateUserById(data.user.id, {
+            app_metadata: {
+                twofa: 'false',
+            }
+        })
+        await Token.deleteOne({ token: Cookie.value });
+        cookies().delete('user-log-2fa');
+        return { success: 'success' }
+
 
     }
     catch (err) {

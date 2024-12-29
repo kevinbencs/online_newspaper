@@ -49,6 +49,14 @@ export const updateUser = async (value: z.infer<typeof updateUserSchema>) => {
             if (data2.error) return { error: `Already registered an account with ${value.email}.` }
         }
 
+        if(value.articles.length > 0) {
+            for(let j of value.articles){
+                const {error} = await supabase.from('saveArticle').delete().eq('user_email',data.data.user?.email).eq('title',j.title );
+                if(error) console.log(error);
+            }
+            
+        }
+
         return { success: data.data.user?.email !== value.email ? 'We sent a confirm email.' : 'Success' }
 
     }

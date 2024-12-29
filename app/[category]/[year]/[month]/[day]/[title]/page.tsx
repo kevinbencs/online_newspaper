@@ -19,7 +19,7 @@ export const revalidate = 60
 const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams:{ source: string} }) => {
 
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-  const res = await getArticle(params.title.replaceAll('_', ' '), date, searchParams.source);
+  const res = await getArticle({Article: params.title.replaceAll('_', ' '), date, source: searchParams.source});
 
   if (res.error) notFound();
 
@@ -58,7 +58,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
             <div className='mb-5 flex justify-between items-center'>
               <Link href={`/authors/${res.data.author.replaceAll(' ', '_')}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1'>{res.data.author}</Link>
               <div className='flex gap-3 items-center'>
-                <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`}/>
+                <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
                 <CopyLink url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
                 <ShareFacebook url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=facebook`}
                   title={params.title.replaceAll('-', ' ')} />

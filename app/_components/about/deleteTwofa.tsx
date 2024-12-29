@@ -14,15 +14,17 @@ const DeleteTwofa = () => {
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault()
-        startTransition(() => {
-            TurnOffTwoFA(deleteTwoFA)
-            .then(res => {
-                if(res.error) setError(res.error)
+        if (deleteTwoFA) {
+            startTransition(() => {
+                TurnOffTwoFA()
+                    .then(res => {
+                        if (res.error) setError(res.error)
+                    })
+                    .catch(err => {
+                        setError(err)
+                    })
             })
-            .catch(err => {
-                setError(err)
-            })
-        })
+        }
     }
 
     return (

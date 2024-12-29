@@ -3,7 +3,6 @@
 import { supabase } from "@/utils/supabase/article";
 import * as z from 'zod';
 import { SubscribeSchema } from "@/schema";
-import { createClient } from "@/utils/supabase/server";
 
 
 export const subscribe = async (value: z.infer<typeof SubscribeSchema> ) => {

@@ -5,13 +5,15 @@ import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
+import { taskSchema } from "@/schema";
+import * as z from 'zod'
 
 interface Decoded extends JwtPayload {
     id: string
 }
 
 
-export const AddTask = async (inputValue: string) => {
+export const AddTask = async (value: z.infer<typeof taskSchema>) => {
     const cookie = cookies().get('admin-log');
     if (!cookie) return { error: 'Please log in' };
 
@@ -33,6 +35,11 @@ export const AddTask = async (inputValue: string) => {
 
             return { error: 'Please log in' };
         }
+
+        const validatedFields = taskSchema.safeParse(value);
+        if(validatedFields.error) return {failed: validatedFields.error.errors}
+
+        const inputValue = value.task;
 
         const task = new Task({ task: inputValue });
 

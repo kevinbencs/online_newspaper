@@ -12,7 +12,7 @@ const Page = () => {
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         startTransition(() => {
-            forgotPasswordSendEmail(email)
+            forgotPasswordSendEmail({email})
                 .then(res => {
                     setSuccess(res.success);
                     if (res.success) setEmail('');

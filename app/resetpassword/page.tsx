@@ -1,9 +1,9 @@
 'use client'
 
 import { resetPassword } from '@/actions/resetPassword';
-import React, { SyntheticEvent, useEffect, useRef, useState, useTransition } from 'react'
+import React, { SyntheticEvent,  useRef, useState, useTransition } from 'react'
 
-const Page = ({ searchParams }: { searchParams: { code: string } }) => {
+const Page = () => {
     const [password, setPassword] = useState<string>('')
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [success, setSuccess] = useState<string | undefined>('');
@@ -23,7 +23,7 @@ const Page = ({ searchParams }: { searchParams: { code: string } }) => {
         setSuccess('')
         e.preventDefault();
         startTransition(() => {
-            resetPassword(password, confirmPassword)
+            resetPassword({password, confirmPassword})
                 .then(res => {
                     if (res.success) {
                         setSuccess(res.success);

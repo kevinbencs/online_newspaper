@@ -8,7 +8,7 @@ import { latestNews, numberOfLatestNews } from "@/actions/getlatest";
 const Page = async ({searchParams}: {searchParams:{page: number}}) => {
   const lastPage = await numberOfLatestNews()
 
-  const res = await latestNews(searchParams.page)
+  const res = await latestNews({page: searchParams.page})
 
   if(res.error) return(
     <div>{res.error}</div>

@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 
 const Page = () => {
   const [password, setPassword] = useState<string>('');
-  const [passwordConfirm, setConfirmPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<undefined | string>('');
   const [failed, setFailed] = useState<undefined | ZodIssue[]>([]);
   const [success, setSuccess] = useState<string | undefined>('');
@@ -15,7 +15,7 @@ const Page = () => {
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     startTransition(() => {
-      changePassword({ password, passwordConfirm })
+      changePassword({ password, confirmPassword })
         .then(res => {
           setSuccess(res.success);
           setFailed(res.failed);
@@ -47,7 +47,7 @@ const Page = () => {
       }
       <form onSubmit={handleSubmit} className='text-center md:text-start'>
         <input type="password" maxLength={16} className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="password" required placeholder='Password' disabled={isPending} value={password} onChange={(e) => setPassword(e.target.value)} />
-        <input type="password" maxLength={16} className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="confirm_password" required placeholder='Confirm password' disabled={isPending} value={passwordConfirm} onChange={(e) => setConfirmPassword(e.target.value)} />
+        <input type="password" maxLength={16} className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="confirm_password" required placeholder='Confirm password' disabled={isPending} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         <input type="submit" value="Change password" className='md:w-96 lg:w-auto w-full text-white hover:bg-slate-500 p-1 rounded bg-slate-700 mt-5' />
       </form>
     </div>

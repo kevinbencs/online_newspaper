@@ -45,6 +45,16 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
             }
 
         }
+        else if (s.indexOf('<link', index1) === index2 && index2 > -1) {
+            textArray.push(s.slice(index1, index2));
+            result = createLink(s.slice(index2, s.indexOf('</link>', index2) + 7), setTextError);
+            if (typeof (result) !== 'number') {
+                textArray.push(result);
+                index1 = s.indexOf('</link>', index2) + 7;
+                index2 = s.indexOf('<', index1);
+            }
+
+        }
         else if (s.indexOf('<bold>', index1) === index2 && index2 > -1) {
             textArray.push(s.slice(index1, index2));
             result = createStrong(s.slice(index2, s.indexOf('</bold>', index2) + 7), setTextError);
@@ -79,6 +89,62 @@ const jsxInText = (s: string, setTextError: Dispatch<SetStateAction<string>>) =>
     if (error === '') textArray.push(s.slice(index1, s.length));
 
     return textArray;
+}
+
+const createLink = (s: string, setTextError: Dispatch<SetStateAction<string>>) => {
+    const indexHref: number = s.indexOf('(');
+    const indexHrefEnd: number = s.indexOf(')');
+    const indexTextEnd: number = s.indexOf('</link', 1);
+    const emIndex: number = s.indexOf('<italic');
+    const strongIndex: number = s.indexOf('<bold');
+    const index: number = s.indexOf('<', 1);
+    if (indexHref !== 10 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
+        setTextError(`Link error`);
+        return -1;
+    }
+
+    const text = s.slice(indexHrefEnd + 2, indexTextEnd);
+    const textArray: (string | JSX.Element)[] = [];
+    let index1: number = 0
+    let index3: number = text.indexOf('<');
+    let result: JSX.Element | number = <></>;
+
+    while (index3 > -1) {
+        if (text.indexOf('<italic') === index3 && index3 > -1) {
+
+            textArray.push(text.slice(index1, index3));
+            result = createEm(text.slice(index3, text.indexOf('</italic>', index3) + 9), setTextError);
+            if (typeof (result) !== 'number') {
+                textArray.push(result);
+                index1 = text.indexOf('</italic', index3) + 9;
+                index3 = text.indexOf('<', index1);
+            }
+
+        }
+        else if (text.indexOf('<bold') === index3 && index3 > -1) {
+            textArray.push(text.slice(index1, index3));
+            result = createStrong(text.slice(index3, text.indexOf('</bold>', index3) + 7), setTextError);
+            if (typeof (result) !== 'number') {
+                textArray.push(result);
+                index1 = text.indexOf('</bold>', index3) + 7;
+                index3 = text.indexOf('<', index1);
+            }
+
+        }
+        else {
+            setTextError(`Link error`);
+            return -1;
+        }
+        if (typeof (result) === 'number') {
+            return -1;
+        }
+    }
+    textArray.push(text.slice(index1, text.length))
+    const url = s.slice(indexHref + 1, indexHrefEnd)
+
+    return (
+        <a target='_blank' href={`${window.location.origin}${url}`} key={uuid()} className='link hover:text-black dark:hover:text-black'>{textArray}</a>
+    )
 }
 
 
@@ -133,7 +199,7 @@ const createAnchor = (s: string, setTextError: Dispatch<SetStateAction<string>>)
     textArray.push(text.slice(index1, text.length))
 
     return (
-        <a target='_blank' href={s.slice(indexHref + 1, indexHrefEnd)} key={uuid()} className='link hover:text-black dark:hover:text-black'>{textArray}</a>
+        <a target='_blank' href={`${s.slice(indexHref + 1, indexHrefEnd)}`} key={uuid()} className='link hover:text-black dark:hover:text-black'>{textArray}</a>
     )
 }
 

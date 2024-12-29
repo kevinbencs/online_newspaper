@@ -33,7 +33,8 @@ export const deleteAccount = async () => {
             }
             
             await supabase_user.auth.signOut();
-            await supabase.from('nesletter').update({ user_id: '' }).eq('email', data.data.user.email)
+            await supabase.from('newsletter').update({ user_id: '' }).eq('email', data.data.user.email)
+            await supabase.from('saveArticle').delete().eq('user_email', data.data.user.email)
             await supabase_admin.auth.admin.deleteUser(data.data.user.id);
             return { success: 'Success' };
         }

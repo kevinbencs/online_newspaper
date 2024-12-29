@@ -3,7 +3,7 @@ import React from 'react'
 
 const Page = async ({searchParams}: {searchParams: {token_hash: string}}) => {
 
-    const res = await Confirm(searchParams.token_hash);
+    const res = await Confirm({token:searchParams.token_hash});
     const error = res.error;
     const success = res.success;
     

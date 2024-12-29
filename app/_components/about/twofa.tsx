@@ -12,7 +12,7 @@ const TwoFA = () => {
         e.preventDefault()
         if (code && code !== '') {
             startTransition(() => {
-                verifyRegistry2FA(code)
+                verifyRegistry2FA({code})
                     .then(res => {
                         if(res.error) setError(res.error)
                     })
@@ -23,7 +23,7 @@ const TwoFA = () => {
         }
     }
     return (
-        <form action="#" onSubmit={handleSubmit} className='dark:bg-neutral block  bg-gray-200 border-gray-800 rounded-lg p-[5%] pt-6 pb-6 mb-10 border dark:border-slate-400'>
+        <form action="#" onSubmit={handleSubmit} className='dark:bg-neutral block max-w-96  bg-gray-200 border-gray-800 rounded-lg p-[5%] pt-6 pb-6 mb-10 border dark:border-slate-400'>
             <div className='text-red-700 text-2xl'>{error}</div>
             <label className='text-sm mb-5 block text-center'>
                 2FA Code

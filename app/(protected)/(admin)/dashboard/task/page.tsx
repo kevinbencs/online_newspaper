@@ -22,7 +22,7 @@ const Page = () => {
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         setError('');
-        AddTask(inputValue)
+        AddTask({task: inputValue})
             .then(val => {
                 if (val.error) setError(val.error);
                 if (val.success) { setINputValue(''); setChangeTask(true); }

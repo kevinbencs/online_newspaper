@@ -7,7 +7,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 const TaskItem = (props: { name: string, id: string, task: string, setChangeTask: Dispatch<SetStateAction<boolean>>, setError: Dispatch<SetStateAction<string>> }) => {
     const handleDelete = async () => {
         props.setError('');
-        DeleteTask(props.id)
+        DeleteTask({id: props.id})
         .then(val => {
             if(val.error) props.setError(val.error)
         })
@@ -17,7 +17,7 @@ const TaskItem = (props: { name: string, id: string, task: string, setChangeTask
     const changeName = () => {
         props.setError('');
         console.log(props.id)
-        AddName(props.id)
+        AddName({id: props.id})
         .then(val => {
             if(val.error) props.setError(val.error)
         })

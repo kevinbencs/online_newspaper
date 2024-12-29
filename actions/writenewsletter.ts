@@ -34,8 +34,6 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
             return { error: 'Please log in' };
         }
 
-        console.log(decoded.id)
-
         const admin = await Admin.findById(decoded.id);
         if (!admin) {
 
@@ -71,11 +69,12 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
             emailNewTextArr[i] = await chooseTypeOfTextItem(emailTextArray[i]);
             if(emailNewTextArr[i] === "Error in Italic" || emailNewTextArr[i]  === "Error in Bold" || 
                 emailNewTextArr[i]  === "Error in Anchor" || emailNewTextArr[i]  === "Error in Text" || 
-                emailNewTextArr[i]  === "Error in Image" || emailNewTextArr[i]  === "Error in Highlight" || 
-                emailNewTextArr[i]  === "Error: id is not in database or error in connection") {
+                emailNewTextArr[i]  === "Error in Image" || emailNewTextArr[i]  === "Error in Highlight" ||
+                emailNewTextArr[i]  === "Error: id is not in database or error in connection" || emailNewTextArr[i]  === "Error in Link") {
                 return{error: emailNewTextArr[i]}
             }
         }
+
 
 
 
@@ -231,7 +230,7 @@ const chooseTypeOfTextItem = async (s: string) => {
 
 const createParagh = (s: string) => {
     const res = jsxInText(s);
-    if (res === "Error in Italic" || res === "Error in Bold" || res === "Error in Anchor" || res === "Error in Text") return res
+    if (res === "Error in Italic" || res === "Error in Bold" || res === "Error in Anchor" || res === "Error in Text" || res === "Error in Link") return res
     return (
         `<p style="margin-bottom:40px;padding-left:8px" >
             ${res}
@@ -258,6 +257,17 @@ const jsxInText = (s: string) => {
             else {
                 textArray.push(result);
                 index1 = s.indexOf('</anchor_link>', index2) + 14;
+                index2 = s.indexOf('<', index1);
+            }
+
+        }
+        else if (s.indexOf('<link', index1) === index2 && index2 > -1) {
+            textArray.push(s.slice(index1, index2));
+            result = createLink(s.slice(index2, s.indexOf('</link>', index2) + 7));
+            if (result === "Error in Italic" || result === "Error in Bold" || result === "Error in Link") return result
+            else {
+                textArray.push(result);
+                index1 = s.indexOf('</link>', index2) + 7;
                 index2 = s.indexOf('<', index1);
             }
 
@@ -346,6 +356,60 @@ const createAnchor = (s: string) => {
 
     return (
         `<a target='_blank' href=${s.slice(indexHref + 1, indexHrefEnd)} style="color:black;text-decoration:underline">${textArray.join('')}</a>`
+    )
+}
+
+const createLink = (s: string) => {
+    const indexHref: number = s.indexOf('(');
+    const indexHrefEnd: number = s.indexOf(')');
+    const indexTextEnd: number = s.indexOf('</link', 1);
+    const emIndex: number = s.indexOf('<italic');
+    const strongIndex: number = s.indexOf('<bold');
+    const index: number = s.indexOf('<', 1);
+    if (indexHref !== 10 || indexHrefEnd === -1 || indexTextEnd === -1 || (index !== emIndex && index !== strongIndex && index !== indexTextEnd)) {
+
+        return "Error in Link";
+    }
+
+    const text = s.slice(indexHrefEnd + 2, indexTextEnd);
+    const textArray: (string)[] = [];
+    let index1: number = 0
+    let index3: number = text.indexOf('<');
+    let result: number | string = '';
+
+    while (index3 > -1) {
+        if (text.indexOf('<italic') === index3 && index3 > -1) {
+
+            textArray.push(text.slice(index1, index3));
+            result = createEm(text.slice(index3, text.indexOf('</italic>', index3) + 9));
+            if (typeof (result) !== 'number') {
+                textArray.push(result);
+                index1 = text.indexOf('</italic', index3) + 9;
+                index3 = text.indexOf('<', index1);
+            }
+
+        }
+        else if (text.indexOf('<bold') === index3 && index3 > -1) {
+            textArray.push(text.slice(index1, index3));
+            result = createStrong(text.slice(index3, text.indexOf('</bold>', index3) + 7));
+            if (typeof (result) !== 'number') {
+                textArray.push(result);
+                index1 = text.indexOf('</bold>', index3) + 7;
+                index3 = text.indexOf('<', index1);
+            }
+
+        }
+        else {
+            return "Error in Link"
+        }
+        if (result === "Error in Italic" || result === "Error in Bold") {
+            return result;
+        }
+    }
+    textArray.push(text.slice(index1, text.length))
+
+    return (
+        `<a target='_blank' href='http://localhost:3000${s.slice(indexHref + 1, indexHrefEnd)}?source=newsletter' style="color:black;text-decoration:underline">${textArray.join('')}</a>`
     )
 }
 

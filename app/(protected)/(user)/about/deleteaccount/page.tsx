@@ -1,5 +1,5 @@
 'use client'
-import { deleteAccount } from '@/actions/deleteaccounr';
+import { deleteAccount } from '@/actions/deleteaccount';
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { useLogged } from '@/app/_components/islogged/isloggedprovider';

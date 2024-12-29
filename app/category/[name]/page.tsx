@@ -10,7 +10,7 @@ import Category_menu_articles from "@/app/_components/category_menu_search/categ
 const Page = async ({ params, searchParams }: { params: { name: string }, searchParams: { page: number } }) => {
 
 
-  const res = await getCategoryArticle(searchParams.page, params.name)
+  const res = await getCategoryArticle({page: searchParams.page, name: params.name})
 
   const lastPage = await numberOfCategoryArticle(params.name)
 

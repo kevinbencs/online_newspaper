@@ -53,13 +53,14 @@ export async function updateSession(request: NextRequest) {
 
   if (user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true') {
     if (request.nextUrl.pathname.startsWith('/signin/twofa')) {
-      const search = request.nextUrl.searchParams.get('linkToken');
-      if (search) {
+      //The browser gets the cookie slowly 
+      const token = request.nextUrl.searchParams.get('linkToken');
+      if (token) {
 
         const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ search })
+          body: JSON.stringify({ token })
         })
 
         const resJSON: { res: string } = await res.json()

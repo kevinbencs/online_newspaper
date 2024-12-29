@@ -191,7 +191,8 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
             sidebar: value.sidebar,
             cover_img_id,
             keyword: value.keyword,
-            detail: value.detail
+            detail: value.detail,
+            updated: true
         }).eq('title', value.lastTitle)
 
         if (error) {

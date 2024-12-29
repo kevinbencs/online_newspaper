@@ -22,7 +22,7 @@ const DownloadDeleteCode = (props: { code: string | undefined }) => {
 
     return (
         <div className='mb-20'>
-            <div>2FA delete code (if you can not sign in with 2FA, add this code):
+            <div>2FA delete code (if you can not sign in with 2FA, enter this code on log in page):
                 <button className="ml-2 font-bold hover:text-gray-400 dark:hover:text-white" onClick={handleClick}>
                     Download as Text File
                 </button>

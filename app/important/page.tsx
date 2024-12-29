@@ -7,7 +7,7 @@ const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
 
   const lastPage = await numberOfImportantArticle();
 
-  const res = await importantArticle(searchParams.page)
+  const res = await importantArticle({page: searchParams.page})
 
   if (res.error) return (
 

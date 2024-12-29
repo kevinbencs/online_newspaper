@@ -115,7 +115,7 @@ const Page = ({params}: {params: {category: string, year: string, month: string,
 
   useEffect(() => {
     const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-    getEditArticle(params.title.replaceAll('_', ' '), date)
+    getEditArticle({title: params.title.replaceAll('_', ' '), date})
     .then(res => {
       if(res.data) {
         setTitleInput(res.data.title);
