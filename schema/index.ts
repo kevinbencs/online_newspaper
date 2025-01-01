@@ -217,3 +217,18 @@ export const twoFaTokenIdeSchema = z.object({
     token: z.string().min(1, { message: 'Token is required' }),
     id: z.string().min(1, { message: 'Id is required' })
 })
+
+export const deleteIdsSchema = z.object({
+    ids: z.number({message: 'Id is required'}).array().length(1,{message: 'Ids is required'})
+})
+
+export const deleteIdsStringSchema = z.object({
+    ids: z.string().min(1,{message: 'Id is required'}).array().length(1,{message: 'Ids is required'})
+})
+
+
+export const  WriteCarrierSchema = z.object({
+    text: z.string().min(1, { message: 'Text is required' }),
+    title: z.string().min(1, { message: 'Title is required' }),
+    
+})

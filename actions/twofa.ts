@@ -139,7 +139,7 @@ export const verifyRegistry2FA = async (value: z.infer<typeof codeSchema>) => {
 
 export const verifySingIn2FA = async (value: z.infer<typeof codeSchema>) => {
     try {
-
+        
         const supabase = createClient();
         const { data, error } = await supabase.auth.getUser();
 
@@ -150,13 +150,13 @@ export const verifySingIn2FA = async (value: z.infer<typeof codeSchema>) => {
         if (id) {
 
             const TWOFA = cookies().get('singTwoFA')
-
+            
             if (!TWOFA) {
                 await supabase.auth.signOut();
 
                 return { error: 'Token expired. Please log in' }
             }
-
+            
             const token2 = await Token.find({ token: TWOFA.value });
 
             if (!token2) {
@@ -164,7 +164,7 @@ export const verifySingIn2FA = async (value: z.infer<typeof codeSchema>) => {
 
                 return { error: 'Please log in' }
             }
-
+            
             const decoded = jwt.verify(TWOFA.value, process.env.TwoFaSingIn_Uri!) as Decoded;
 
             if (!decoded) {
@@ -172,20 +172,20 @@ export const verifySingIn2FA = async (value: z.infer<typeof codeSchema>) => {
 
                 return { error: 'Please log in' }
             }
-
+            
             if (decoded.id !== id) {
                 await supabase.auth.signOut();
 
                 return { error: 'Please log in' }
             }
-
-            const validateFields = tokenSchema.safeParse(value);
+            
+            const validateFields = codeSchema.safeParse(value);
             if(validateFields.error) return {failed: validateFields.error.errors}
 
             const token = value.code
 
             const secret = await supabase_admin.auth.admin.getUserById(id)
-
+            
             const verified = speakeasy.totp.verify({
                 secret: secret.data.user?.app_metadata.twofaId,
                 encoding: 'base32',
@@ -207,9 +207,9 @@ export const verifySingIn2FA = async (value: z.infer<typeof codeSchema>) => {
 
                 const res = await getNumberSaveArticle()
 
-                if (res.count) return { numberOfArt: res.count }
-
-                return { error: 'Serever error' }
+                if (res.error || res.Error) return { error: 'Serever error' }
+                
+                return { numberOfArt: res.count }
             }
             else {
                 if (token === secret.data.user?.app_metadata.twofaDeletCode) {

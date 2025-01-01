@@ -34,7 +34,7 @@ const Footer = () => {
             <Link href="/" className='link link-hover'> Cookie policy</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Careers</Link>
+            <Link href="/carrier" className='link link-hover'> Careers</Link>
           </li>
         </ul>
       </nav>

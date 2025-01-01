@@ -4,7 +4,7 @@ import { useLogged } from '../../_components/islogged/isloggedprovider';
 import { useRouter } from 'next/navigation'
 import { verifySingIn2FA } from '@/actions/twofa';
 
-const Page =  () => {
+const Page = () => {
     const [error, setError] = useState<string | undefined>('');
     const [code, setCode] = useState<string | undefined>('');
     const [isPending, startTransition] = useTransition();
@@ -15,15 +15,22 @@ const Page =  () => {
         e.preventDefault();
         if (code && code !== '') {
             startTransition(() => {
-                verifySingIn2FA({code})
+                verifySingIn2FA({ code })
                     .then(res => {
                         if (!res) push('/signin')
                         else {
-                            if (res.numberOfArt) {
-                                setRole('user');
-                                setNumOfSavedArt(res.numberOfArt)
-                            }
+                            
                             if (res.error) setError(res.error)
+                            else {
+                                setRole('user');
+                                if (res.numberOfArt) {
+                                    setNumOfSavedArt(res.numberOfArt)
+                                }
+                                else{
+                                    setNumOfSavedArt(0)
+                                }
+                                
+                            }
                         }
 
                     })
@@ -31,7 +38,7 @@ const Page =  () => {
         }
     }
 
-    
+
 
 
     useEffect(() => {
