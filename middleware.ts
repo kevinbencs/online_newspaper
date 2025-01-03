@@ -17,7 +17,8 @@ export async function middleware(request: NextRequest) {
     url.startsWith('/editarticle') ||
     url === '/newarticle' ||
     url === '/writenewsletter' ||
-    url.startsWith('/lockedarticle')
+    url.startsWith('/lockedarticle') ||
+    url === '/writecarrier'
   )) {
     const url = request.nextUrl.clone()
     url.pathname = '/'

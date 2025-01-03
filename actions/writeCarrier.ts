@@ -4,7 +4,6 @@ import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
-import { supabase } from "@/utils/supabase/article";
 import * as z from 'zod'
 import { WriteCarrierSchema } from "@/schema";
 import Carrier from "@/model/Carrier";

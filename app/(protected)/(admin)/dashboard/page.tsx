@@ -2,7 +2,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>
+    <div className='w-full'>
       <div>Names of editors, authors, admin</div>
       <div>Number of articles</div>
       <div>number of accounts</div>

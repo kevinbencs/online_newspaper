@@ -51,7 +51,7 @@ const Page = () => {
     }, [])
 
     return (
-        <div className='flex justify-center'>
+        <div className='flex justify-center w-full'>
             <div className='lg:w-[680px] w-full'>
                 <h2 className='text-center mb-10 text-3xl'>Tasks</h2>
                 {error &&

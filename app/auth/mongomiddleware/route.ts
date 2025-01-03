@@ -54,7 +54,9 @@ export async function POST(request: NextRequest) {
             url.startsWith('/editarticle') ||
             url === '/newarticle' ||
             url === '/writenewsletter' ||
-            url.startsWith('/lockedarticle')
+            url.startsWith('/lockedarticle') ||
+            url === '/writecarrier'
+            
         )) {
             return NextResponse.json({ res: 'error' }, { status: 400 })
         }
@@ -68,7 +70,8 @@ export async function POST(request: NextRequest) {
             url.startsWith('/editarticle') ||
             url === '/newarticle' ||
             url === '/writenewsletter' ||
-            url.startsWith('/lockedarticle')
+            url.startsWith('/lockedarticle')||
+            url === '/writecarrier'
         )) {
             return NextResponse.json({ res: 'error' }, { status: 400 })
         }
@@ -82,10 +85,11 @@ export async function POST(request: NextRequest) {
             url.startsWith('/editarticle') ||
             url === '/newarticle' ||
             url === '/writenewsletter' ||
-            url.startsWith('/lockedarticle')
+            url.startsWith('/lockedarticle')||
+            url === '/writecarrier'
         )) { return NextResponse.json({ res: 'error' }, { status: 400 }) }
 
-        if (account.role !== 'Admin' && url === '/createdadmin') {
+        if (account.role !== 'Admin' && (url === '/createdadmin' || url === '/writecarrier' || url ==='/dashboard/delete_user_article_colleague_carrier')) {
             return NextResponse.json({ res: 'error' }, { status: 400 })
         }
 

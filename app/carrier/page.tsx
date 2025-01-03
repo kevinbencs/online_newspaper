@@ -16,8 +16,8 @@ const Page = async () => {
                 <div>{data.error}</div>
             }
             {data.success &&
-                <section>
-                    {data.success.map(item => <Link href={`/carrier/${item.title.replaceAll(' ','_')}`} key={item._id}>{item.title}</Link>)}
+                <section className="text-xl">
+                    {data.success.map(item => <Link className="mb-4" href={`/carrier/${item.title.replaceAll(' ','_')}`} key={item._id}>{item.title}</Link>)}
                 </section>
             }
         </div>

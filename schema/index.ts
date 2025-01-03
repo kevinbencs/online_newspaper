@@ -232,3 +232,8 @@ export const  WriteCarrierSchema = z.object({
     title: z.string().min(1, { message: 'Title is required' }),
     
 })
+
+
+export const titleSchema = z.object({
+    title: z.string().min(1,{ message: 'Title is required' })
+})
