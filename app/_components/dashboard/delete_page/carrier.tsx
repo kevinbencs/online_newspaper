@@ -1,6 +1,6 @@
 'use client'
 import { SyntheticEvent, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { preload } from 'swr'
 import { ZodIssue } from 'zod'
 import { v4 as uuid } from 'uuid'
 import CarrierItem from './carrierItem'
@@ -24,6 +24,8 @@ const fetcher = async (url: string): Promise<{ Car: Carrier[] }> => {
 
     return res.json()
 }
+
+preload('/api/carrier', fetcher)
 
 const DeleteCarrier = () => {
     const { data, error, mutate, isLoading } = useSWR('/api/carrier', fetcher)

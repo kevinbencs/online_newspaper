@@ -1,6 +1,6 @@
 'use client'
 import { SyntheticEvent, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { preload } from 'swr'
 import { ZodIssue } from 'zod'
 import { v4 as uuid } from 'uuid'
 import ColleagueItem from './colleagueItem'
@@ -25,6 +25,8 @@ const fetcher = async (url: string): Promise<{ Col: Colleague[] }> => {
 
     return res.json()
 }
+
+preload('/api/colleague', fetcher)
 
 const DeleteColleague = () => {
     const { data, error, mutate, isLoading } = useSWR('/api/colleague', fetcher)

@@ -1,6 +1,6 @@
 'use client'
 import { SyntheticEvent, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { preload } from 'swr'
 import ArticleItem from './articleItem'
 import { ZodIssue } from 'zod'
 import { v4 as uuid } from 'uuid'
@@ -12,6 +12,8 @@ interface Art {
     date: string,
     title: string
 }
+
+
 
 const fetcher = async (url: string): Promise<{ art: Art[] }> => {
     const res = await fetch(url);
@@ -26,6 +28,8 @@ const fetcher = async (url: string): Promise<{ art: Art[] }> => {
 
     return res.json()
 }
+
+preload('/api/article', fetcher)
 
 const DeleteArticle = () => {
     const { data, error, mutate, isLoading } = useSWR('/api/article', fetcher)

@@ -1,6 +1,6 @@
 'use client'
 import { SyntheticEvent, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { preload } from 'swr'
 import UserItem from './userItem'
 import { ZodIssue } from 'zod'
 import { v4 as uuid } from 'uuid'
@@ -22,6 +22,8 @@ const fetcher = async (url: string): Promise<{ users: User[] }> => {
 
     return res.json()
 }
+
+preload('/api/user', fetcher);
 
 const DeleteUser = () => {
     const { data, error, mutate, isLoading } = useSWR('/api/user', fetcher)
