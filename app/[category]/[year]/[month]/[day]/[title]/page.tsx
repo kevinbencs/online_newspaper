@@ -29,14 +29,14 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       description: res.data?.description,
       type: 'article',
       publishedTime: res.data?.date,
-      /*images: [
+      images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
-          width: 800,
-          height: 600,
+          width: 300,
+          height: 200,
           alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
         }
-      ],*/
+      ],
       locale: 'en_US',
     },
     twitter:{
@@ -46,8 +46,8 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
-          width: 144,
-          height: 144,
+          width: 300,
+          height: 200,
           alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
         }
       ],
