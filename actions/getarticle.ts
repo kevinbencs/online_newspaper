@@ -29,7 +29,8 @@ interface Art {
     keyword: string[],
     time: string,
     id: string,
-    paywall_text: string
+    paywall_text: string,
+    update: boolean
 }
 
 
@@ -73,6 +74,7 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                 keyword: article.data[0].keyword,
                 time: article.data[0].time,
                 id: article.data[0].id,
+                update: article.data[0].update
             }
         }
     }

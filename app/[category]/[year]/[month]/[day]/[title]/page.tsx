@@ -12,14 +12,56 @@ import ShareFacebook from '@/app/_components/article/shareFacebook';
 import ShareX from '@/app/_components/article/embedded/shareX';
 import CopyLink from '@/app/_components/article/copylink';
 import EditSave from '@/app/_components/article/editSave';
+import { Metadata, ResolvingMetadata } from 'next';
+import { getArticleMetadata } from '@/actions/getArticleMetadata';
+
+export async function generateMetadata({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }, parent: ResolvingMetadata): Promise<Metadata> {
+  const date = params.year + '. ' + params.month + '. ' + params.day + '.'
+  const res = await getArticleMetadata({ Article: params.title.replaceAll('_', ' '), date, source: searchParams.source });
+  console.log()
+  return {
+    title: params.title.replaceAll('_', ' '),
+    description: res.data?.description,
+    keywords: res.data?.keyword,
+    category: res.data?.category,
+    openGraph: {
+      title: params.title.replaceAll('_', ' '),
+      description: res.data?.description,
+      type: 'article',
+      publishedTime: res.data?.date,
+      images: [
+        {
+          url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
+          width: 800,
+          height: 600,
+          alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
+        }
+      ],
+      locale: 'en_US',
+    },
+    twitter:{
+      title: params.title.replaceAll('_', ' '),
+      description: res.data?.description,
+      card: 'summary_large_image',
+      images: [
+        {
+          url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
+          width: 800,
+          height: 600,
+          alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
+        }
+      ],
+    }
+  }
+}
 
 
 export const revalidate = 60
 
-const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams:{ source: string} }) => {
+const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }) => {
 
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-  const res = await getArticle({Article: params.title.replaceAll('_', ' '), date, source: searchParams.source});
+  const res = await getArticle({ Article: params.title.replaceAll('_', ' '), date, source: searchParams.source });
 
   if (res.error) notFound();
 
@@ -51,6 +93,9 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
           <span className='ml-2'>
             {res.data.time}
           </span>
+          {res.data.update &&
+            <span className='ml-3'>Updated!</span>
+          }
         </div>
 
         <div className="lg:flex mt-12 mb-10 lg:gap-32 lg:flex-wrap">
