@@ -42,7 +42,7 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
     twitter:{
       title: params.title.replaceAll('_', ' '),
       description: res.data?.description,
-      card: 'summary_large_image',
+      card: 'player',
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
