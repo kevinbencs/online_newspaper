@@ -47,8 +47,8 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
-          width: 300,
-          height: 200,
+          width: 1200,
+          height: 628,
           alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
         }
       ],
