@@ -40,7 +40,7 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       ],
     },*/
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: params.title.replaceAll('_', ' '),
       description: res.data?.description,
       site: '@SandorPint42',
