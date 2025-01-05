@@ -24,7 +24,7 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
     description: res.data?.description,
     keywords: res.data?.keyword,
     category: res.data?.category,
-    /*openGraph: {
+    openGraph: {
       title: params.title.replaceAll('_', ' '),
       description: res.data?.description,
       type: 'article',
@@ -33,22 +33,18 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
-          width: 300,
-          height: 200,
           alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
         }
       ],
-    },*/
+    },
     twitter: {
-      card: 'summary_large_image',
+      card: 'summary',
       title: params.title.replaceAll('_', ' '),
       description: res.data?.description,
       site: '@SandorPint42',
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
-          width: 1200,
-          height: 628,
           alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
         }
       ],
