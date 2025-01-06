@@ -16,18 +16,18 @@ export const metadata: Metadata = {
     default: "World Times",
   },
   description: "News of the world",
-
+  
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'emerald' },
-    { media: '(prefers-color-scheme: dark)', color: 'dracula' },
+    { media: '(prefers-color-scheme: light)', color: 'light' },
+    { media: '(prefers-color-scheme: dark)', color: 'dark' },
   ],
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 2,
+  userScalable: true,
 }
 
 export default function RootLayout({

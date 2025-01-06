@@ -24,6 +24,7 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
     description: res.data?.description,
     keywords: res.data?.keyword,
     category: res.data?.category,
+    authors: {name: res.data?.author},
     openGraph: {
       title: params.title.replaceAll('_', ' '),
       description: res.data?.description,
@@ -48,6 +49,22 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
           alt: res.data ? res.data?.cover_img_id.split(';')[2] : '',
         }
       ],
+    },
+    robots:{
+      index: true,
+      follow: true,
+      nocache: false,
+      noarchive:false,
+      noimageindex:false,
+      googleBot:{
+        index:true,
+        follow:true,
+        noarchive:false,
+        nocache:false,
+        noimageindex:false,
+        "max-video-preview": 0,
+        "max-image-preview": "large",
+      }
     }
   }
 }
