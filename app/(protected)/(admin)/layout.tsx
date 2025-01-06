@@ -1,4 +1,3 @@
-import Client from './client'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -24,11 +23,12 @@ export const metadata: Metadata = {
   }
 }
 
-const Page = () => {
-  return(
-    <Client/>
+const Layout = ({children}: {children: React.ReactNode}) => {
+  return (
+    <>
+        {children}
+    </>
   )
 }
 
-
-export default Page
+export default Layout

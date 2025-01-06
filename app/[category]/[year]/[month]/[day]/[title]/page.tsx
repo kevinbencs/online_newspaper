@@ -18,7 +18,7 @@ import { getArticleMetadata } from '@/actions/getArticleMetadata';
 export async function generateMetadata({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }, parent: ResolvingMetadata): Promise<Metadata> {
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
   const res = await getArticleMetadata({ Article: params.title.replaceAll('_', ' '), date, source: searchParams.source });
-  console.log()
+
   return {
     title: params.title.replaceAll('_', ' '),
     description: res.data?.description,

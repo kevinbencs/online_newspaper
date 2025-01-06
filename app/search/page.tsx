@@ -4,7 +4,52 @@ import Search from "./search";
 import Rightsidebar from "../_components/category_menu_search/rightsidebar";
 import Latest_important from "../_components/category_menu_search/latest_important";
 import { searchNews } from "@/actions/getsearchnews";
+import { Metadata, ResolvingMetadata } from "next";
 
+
+
+
+
+export async function generateMetadata({ searchParams }: {
+  searchParams: {
+    category: string | undefined | null, text: string, date_from: string | undefined | null, date_to: string | undefined | null, author: string | undefined | null, page: number | undefined, filter: string | undefined | null
+  }}, parent: ResolvingMetadata): Promise<Metadata> {
+
+  return {
+    metadataBase: new URL('https://online-newspaper.vercel.app'),
+    title: `${searchParams.text.replaceAll('_', ' ')} news`,
+    description: `Search ${searchParams.text.replaceAll('_', ' ')} news on Word Times`,
+    alternates: {
+      canonical: `/search&text=${searchParams.text}`
+    },
+    keywords: searchParams.text.replaceAll('_', ' '),
+    openGraph: {
+      title: `${searchParams.text.replaceAll('_', ' ')} news`,
+      description: `Search ${searchParams.text.replaceAll('_', ' ')} news on Word Times`,
+      type: 'article',
+      url: `https://online-newspaper.vercel.app/search?text=${searchParams.text}`,
+      images: [
+        {
+          url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+          alt: 'Cover image of Word Times',
+        }
+      ],
+    },
+    twitter: {
+      card: 'summary',
+      title: `${searchParams.text.replaceAll('_', ' ')} news`,
+      description: `Search ${searchParams.text.replaceAll('_', ' ')} news on Word Times`,
+      site: '',
+      images: [
+        {
+          url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+          alt: 'Cover image of Word Times',
+        }
+      ],
+    },
+
+  }
+}
 
 const Page = async ({ searchParams }: {
   searchParams: {

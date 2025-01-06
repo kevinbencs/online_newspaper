@@ -1,13 +1,13 @@
-import { Metadata } from 'next';
-import Client from './client';
+import { Metadata } from "next"
+
 
 export const metadata: Metadata = {
-  title: 'Unsubscribe for newsletters',
-  description: 'Unsubscribe for newsletters of World Times',
+  title: 'Privacy policy',
+  description: 'Privacy policy of World Times',
   openGraph: {
-    title: "Unsubscribe for newsletters",
-    description: "Unsubscribe for newsletters of World Times",
-    url: `https://online-newspaper.vercel.app/newsletter`,
+    title: "Privacy policy",
+    description: "Subscribe for newsletters of World Times",
+    url: `https://online-newspaper.vercel.app/privacypolicy`,
     images: [
       {
         url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: 'Unsubscribe for newsletters',
-    description: "Unsubscribe for newsletters of World Times",
+    title: 'Privacy policy',
+    description: "Privacy policy of World Times",
     site: '',
     images: [
       {
@@ -28,11 +28,10 @@ export const metadata: Metadata = {
   },
 }
 
-const Page = () => {
-  
 
+const Page = () => {
   return (
-    <Client/>
+    <div>Page</div>
   )
 }
 

@@ -1,6 +1,38 @@
 import { getAuthor } from '@/actions/getauthor';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
+
+export const metadata: Metadata = {
+  title: 'Authors',
+  description: 'Authors of World Times',
+  openGraph: {
+    title: "Authors",
+    description: "Authors of World Times",
+    url: `https://online-newspaper.vercel.app/authors`,
+    images: [
+      {
+        url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+        alt: 'Cover image of Word Times',
+      }
+    ],
+  },
+  twitter: {
+    title: 'Authors',
+    description: "Authors of World Times",
+    site: '',
+    images: [
+      {
+        url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+        alt: 'Cover image of Word Times',
+      }
+    ],
+  },
+}
+
+
+
 
 interface author {
   _id: string,

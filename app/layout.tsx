@@ -22,7 +22,7 @@ export const metadata: Metadata = {
       default: "World Times",
     },
     description: "News of the world",
-    type: 'article',
+    type: 'website',
     url: `https://online-newspaper.vercel.app`,
     images: [
       {

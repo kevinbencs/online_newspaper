@@ -2,7 +2,39 @@ import Latest_important from "../_components/category_menu_search/latest_importa
 import Pagination from "./pagination";
 import Rightsidebar from "../_components/category_menu_search/rightsidebar";
 import { latestNews, numberOfLatestNews } from "@/actions/getlatest";
+import { Metadata } from "next";
 
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://online-newspaper.vercel.app'),
+  title: 'Latest news',
+  description: 'Latest news',
+  alternates:{
+    canonical:'/latest'
+  },
+  openGraph: {
+    title: "Latest news",
+    description: "Latest news",
+    url: `https://online-newspaper.vercel.app/latest`,
+    images: [
+      {
+        url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+        alt: 'Cover image of Word Times',
+      }
+    ],
+  },
+  twitter: {
+    title: 'Lates news',
+    description: "Latest news",
+    site: '',
+    images: [
+      {
+        url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+        alt: 'Cover image of Word Times',
+      }
+    ],
+  },
+}
 
 
 const Page = async ({searchParams}: {searchParams:{page: number}}) => {

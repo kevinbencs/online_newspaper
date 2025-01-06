@@ -1,8 +1,47 @@
-import { v4 as uuid } from "uuid";
 import Pagination from "./pagination";
 import Rightsidebar from "../../_components/category_menu_search/rightsidebar";
 import { authorArticle, numberOfAuthorArticle } from "@/actions/getarthurarticle";
 import Category_menu_articles from "@/app/_components/category_menu_search/category_menu_articles";
+import { Metadata, ResolvingMetadata } from "next";
+
+
+export async function generateMetadata({params, searchParams}: {params:{name: string}, searchParams:{page: number}}, parent: ResolvingMetadata): Promise<Metadata> {
+
+  return {
+    metadataBase: new URL('https://online-newspaper.vercel.app'),
+    title: `${params.name.replaceAll('_',' ')}`,
+    description: `Articles of ${params.name.replaceAll('_',' ')} on Word Times`,
+    alternates: {
+      canonical: `/authors/${params.name.replaceAll('_',' ')}`
+    },
+    openGraph: {
+      title: `${params.name.replaceAll('_',' ')}`,
+      description: `Articles of ${params.name.replaceAll('_',' ')} on Word Times`,
+      type: 'website',
+      url: `https://online-newspaper.vercel.app/authors/${params.name}`,
+      images: [
+        {
+          url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+          alt: 'Cover image of Word Times',
+        }
+      ],
+    },
+    twitter: {
+      card: 'summary',
+      title: `${params.name.replaceAll('_',' ')}`,
+      description: `Articles of ${params.name.replaceAll('_',' ')} on Word Times`,
+      site: '',
+      images: [
+        {
+          url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
+          alt: 'Cover image of Word Times',
+        }
+      ],
+    },
+
+  }
+}
+
 
 const Page = async ({params, searchParams}: {params:{name: string}, searchParams:{page: number}}) => {
 
@@ -14,7 +53,7 @@ const Page = async ({params, searchParams}: {params:{name: string}, searchParams
       <div className="relative">
 
 
-      <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name}</h2>
+      <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name.replaceAll('_',' ')}</h2>
 
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
