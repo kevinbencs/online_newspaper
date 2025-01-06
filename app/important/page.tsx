@@ -2,6 +2,44 @@ import Latest_important from "../_components/category_menu_search/latest_importa
 import Pagination from "./pagination";
 import Rightsidebar from "../_components/category_menu_search/rightsidebar";
 import { importantArticle, numberOfImportantArticle } from "@/actions/getimportantarticle";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://online-newspaper.vercel.app'),
+  title: 'Word Times: Important news',
+  description: 'Important news',
+  alternates:{
+    canonical:'/important'
+  },
+  openGraph: {
+    title: 'Word Times: Important news',
+    description: 'Important news',
+    type: 'article',
+    url: `/important`,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Word Times: Important news',
+    description: 'Important news',
+    site: '',
+  },
+  robots:{
+    index: true,
+    follow: true,
+    nocache: false,
+    noarchive:false,
+    noimageindex:true,
+    googleBot:{
+      index:true,
+      follow:true,
+      noarchive:false,
+      nocache:false,
+      noimageindex:true,
+      "max-video-preview": 0,
+      "max-image-preview": "large",
+    }
+  }
+}
 
 const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
 

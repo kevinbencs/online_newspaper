@@ -42,7 +42,7 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       card: 'summary',
       title: params.title.replaceAll('_', ' '),
       description: res.data?.description,
-      site: '@SandorPint42',
+      site: '',
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
