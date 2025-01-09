@@ -2,19 +2,19 @@ import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const resArt = await fetch('http://localhost:3000/api/article', { cache: 'no-store' });
+    const resArt = await fetch('https://online-newspaper.vercel.app/api/article', { cache: 'no-store' });
     const dataArt: { art: { title: string, date: string, category: string }[] } = await resArt.json();
 
-    const resCar = await fetch('http://localhost:3000/api/carrier', { cache: 'no-store' });
+    const resCar = await fetch('https://online-newspaper.vercel.app/api/carrier', { cache: 'no-store' });
     const dataCar: { Car: { title: string, date: string }[] } = await resCar.json();
 
-    const resAuth = await fetch('http://localhost:3000/api/authors', { cache: 'no-store' });
+    const resAuth = await fetch('https://online-newspaper.vercel.app/api/authors', { cache: 'no-store' });
     const dataAuth: { res: { name: string}[] } = await resAuth.json();
 
-    const resCategory = await fetch('http://localhost:3000/api/category', { cache: 'no-store' });
+    const resCategory = await fetch('https://online-newspaper.vercel.app/api/category', { cache: 'no-store' });
     const dataCategory: { success: { name: string, _id:string}[] } = await resCategory.json();
 
-    const resSearch = await fetch('http://localhost:3000/api/search/sitemap', { cache: 'no-store' });
+    const resSearch = await fetch('https://online-newspaper.vercel.app/api/search/sitemap', { cache: 'no-store' });
     const dataSearch: { res: { theme: string}[] } = await resSearch.json();
 
     const ResArray: {
@@ -138,42 +138,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'daily',
         priority: 0.6,
       },
-      {
-        url: 'https://online-newspaper.vercel.app/cookie',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/help',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/termsofservice',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/contactus',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/world_time_about',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/imprint',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
       ...ResArray
     ]
 
@@ -242,46 +206,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       },
       {
-        url: 'https://online-newspaper.vercel.app/carrier',
+        url: 'https://online-newspaper.vercel.app/career',
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 0.6,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/cookie',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/help',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/termsofservice',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/contactus',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/world_time_about',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
-      },
-      {
-        url: 'https://online-newspaper.vercel.app/imprint',
-        lastModified: '2024-12-01',
-        changeFrequency: 'yearly',
-        priority: 0.3,
       },
     ]
   }

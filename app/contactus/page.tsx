@@ -32,10 +32,10 @@ const Page = () => {
     return (
         <div className="min-h-screen">
             <h1 className="mb-10 mt-10 text-3xl">Contact Us</h1>
-            <div className="mb-1">Have questions, feedback, or story tips? We'd love to hear from you!</div>
+            <div className="mb-1">Have questions, feedback, or story tips? We&apos;d love to hear from you!</div>
             <div className="mb-3">You can reach us through the following channels:</div>
             <ul className=" list-disc list-inside mb-8">
-                <li className="mb-1 ml-2">Email: contact@worldtimes.com</li>
+                <li className="mb-1 ml-2">Email: contact&#64;worldtimes.com</li>
                 <li className="mb-1 ml-2">Phone: +1 (123) 456-7890</li>
                 <li className="mb-1 ml-2">Address: 123 Media Lane, New York, NY 10001, USA</li>
             </ul>

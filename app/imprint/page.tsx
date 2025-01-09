@@ -42,7 +42,7 @@ const Page = () => {
             <ul className=" list-disc list-inside mb-8">
                 <li className="mb-2">Website Owner: World Times Media LLC</li>
                 <li className="mb-2">Managing Director: John Doe</li>
-                <li className="mb-2">Contact Email: admin@worldtimes.com</li>
+                <li className="mb-2">Contact Email: admin&#64;worldtimes.com</li>
                 <li className="mb-2">Phone: +1 (123) 456-7890</li>
             </ul>
             <div>This website is operated by World Times Media LLC, a company registered in the United States. All rights reserved.</div>
