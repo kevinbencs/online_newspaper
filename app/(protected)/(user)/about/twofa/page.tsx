@@ -13,7 +13,8 @@ const Page = async () => {
     )
 
     if (have) return (
-        <div>
+        <div className='pl-2 lg:pl-0'>
+            <h1 className='mb-10 text-3xl'>2FA</h1>
             <div className='mb-8'>You have already set up 2FA. Would you like to turn off? (If you turn off, you have to scan the QR-code again.)</div>
             <DeleteTwofa />
         </div>
@@ -21,7 +22,8 @@ const Page = async () => {
 
 
     return (
-        <div>
+        <div className='pl-2 lg:pl-0'>
+            <h1 className='mb-10 text-3xl'>2FA</h1>
             <div className='mb-4'>
                 1. Download a 2fa application
             </div>

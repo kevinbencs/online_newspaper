@@ -38,32 +38,31 @@ const DeleteCarrier = () => {
         e.preventDefault();
         if (data?.Car) {
             try {
+                mutate({ Car: mutateFilter(data.Car, deleteIds) }, false)
+                const res = await fetch('/api/article', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: deleteIds })
+                })
 
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 400) {
+                    setFailed(resJson.failed)
+                }
+                if (res.status === 401 || res.status === 500) {
+                    setError(resJson.error)
+                }
+                mutate();
             } catch (error) {
                 console.error(error);
 
             }
-            mutate({ Car: mutateFilter(data.Car, deleteIds) }, false)
-            const res = await fetch('/api/article', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids: deleteIds })
-            })
-
-            const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
-
-            if (res.status === 400) {
-                setFailed(resJson.failed)
-            }
-            if (res.status === 401 || res.status === 500) {
-                setError(resJson.error)
-            }
-            mutate();
         }
     }
 
     const handleFilter = (e: Carrier) => {
-        return e.title.toLowerCase().indexOf(filter.toLowerCase()) > -1 
+        return e.title.toLowerCase().indexOf(filter.toLowerCase()) > -1
     }
 
     return (
@@ -80,7 +79,7 @@ const DeleteCarrier = () => {
                 <input type="text" name="art_filter" value={filter} onChange={e => setFilter(e.target.value)} placeholder='Filter' className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
                 <ul className='mb-5 h-60 overflow-y-scroll  sidebar   w-[100%] dark:bg-neutral bg-base-200  '>
                     {isLoading && <div>Loading...</div>}
-                    {(data && data.Car) && data.Car.filter(handleFilter).map(item => <CarrierItem key={item._id}  title={item.title} id={item._id} setDeleteIds={setDeleteIds} deleteIds={deleteIds} />)}
+                    {(data && data.Car) && data.Car.filter(handleFilter).map(item => <CarrierItem key={item._id} title={item.title} id={item._id} setDeleteIds={setDeleteIds} deleteIds={deleteIds} />)}
                 </ul>
                 <input type="submit" value="Delete" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
             </form>

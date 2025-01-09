@@ -196,6 +196,7 @@ const Page = () => {
 
   return (
     <div className='mb-20'>
+      <h1 className='mt-8 mb-10 text-5xl text-center'>New article</h1>
       <Rules />
 
       <form action="" className='mb-20 mt-10' onSubmit={handleSubmit}>

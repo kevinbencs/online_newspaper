@@ -48,7 +48,7 @@ const Page = async () => {
 
   return (
     <div className='min-h-[90vh] mt-32 mb-40'>
-      <h2 className='text-center text-5xl mb-28'>Authors</h2>
+      <h1 className='text-center text-5xl mb-28'>Authors</h1>
       <section className='flex justify-center flex-wrap gap-24 author'>
         {authors.error &&
           <div>{authors.error}</div>

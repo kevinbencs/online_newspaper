@@ -36,6 +36,10 @@ const Page = () => {
                         setSuccess(res.success);
                     }
                 })
+                .catch(error =>{
+                    console.log(error);
+                    setError('Something went wrong, please try again')
+                })
         })
     }
 
@@ -64,7 +68,7 @@ const Page = () => {
     return (
         <div className='md:flex md:justify-center mt-32 h-screen  '>
             <form className='flex flex-col md:w-[80%] ml-3 md:ml-0 lg:w-[50%] w-[95%]' onSubmit={handleSubmit}>
-                <h2 className='text-3xl mb-8'>Create new account</h2>
+                <h1 className='text-3xl mb-8'>Create new account</h1>
                 {error &&
                     <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5 text-center p-2'>{error}</div>
                 }
@@ -105,7 +109,7 @@ const Page = () => {
                         {Role.map((item) => <li tabIndex={0} onFocus={() => setOptClass(`h-36`)} onBlur={() => setOptClass(`h-0`)} key={item} onClick={() => handleClick(item)} onKeyDown={(e) => handleKeyDown(e, item)}>{item} </li>)}
                     </ul>
                 </label>
-                <input type="submit" disabled={isPending} value="Sign up" className='p-1 border-2 border-base-content w-28 cursor-pointer bg-base-300 dark:bg-gray-400 hover:bg-base-100 dark:hover:bg-gray-500 dark:text-white' />
+                <input type="submit" disabled={isPending} value="Create new account" className='p-1 border-2 border-base-content w-28 cursor-pointer bg-base-300 dark:bg-gray-400 hover:bg-base-100 dark:hover:bg-gray-500 dark:text-white' />
             </form>
         </div>
     )

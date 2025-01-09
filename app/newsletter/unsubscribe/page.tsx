@@ -2,11 +2,11 @@ import { Metadata } from 'next';
 import Client from './client';
 
 export const metadata: Metadata = {
-  title: 'Unsubscribe for newsletters',
-  description: 'Unsubscribe for newsletters of World Times',
+  title: 'Unsubscribe from newsletters',
+  description: 'Unsubscribe from newsletters of World Times',
   openGraph: {
-    title: "Unsubscribe for newsletters",
-    description: "Unsubscribe for newsletters of World Times",
+    title: "Unsubscribe from newsletters",
+    description: "Unsubscribe from newsletters of World Times",
     url: `https://online-newspaper.vercel.app/newsletter`,
     images: [
       {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: 'Unsubscribe for newsletters',
+    title: 'Unsubscribe from newsletters',
     description: "Unsubscribe for newsletters of World Times",
     site: '',
     images: [

@@ -6,7 +6,7 @@ const Page = async () => {
 
   return (
     <div className="min-h-screen pt-10">
-      <h2 className="mb-32 text-5xl text-center ">Locked articles</h2>
+      <h1 className="mb-32 text-5xl text-center ">Locked articles</h1>
       {data.error && 
         <div className="text-red-700 text-4xl text-center">{data.error}</div>
       }

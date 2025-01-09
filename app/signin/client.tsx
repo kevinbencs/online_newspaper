@@ -35,6 +35,10 @@ const Client = () => {
                     }
                     if (data.redirect) push('/signin/twofa');
                 })
+                .catch(error =>{
+                    console.log(error);
+                    setError('Something went wrong, please try again')
+                })
         })
     }
 
@@ -59,7 +63,7 @@ const Client = () => {
     return (
         <div className='flex justify-center min-h-screen pt-10 mb-10'>
             <div className='w-80'>
-                <h2 className='text-center mb-5 text-3xl'>Sign in to Word Times</h2>
+                <h1 className='text-center mb-5 text-3xl'>Sign in to Word Times</h1>
                 <form action="#" className='dark:bg-neutral bg-gray-200 border-gray-800 rounded-lg p-[5%] pt-6 pb-6 mb-10 border dark:border-slate-400' onSubmit={handleSubmit}>
 
                     {error &&

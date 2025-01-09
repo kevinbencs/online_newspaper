@@ -49,9 +49,7 @@ const Page = async ({searchParams}: {searchParams:{page: number}}) => {
   return (
     <div className="relative">
 
-
-
-      <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">Latest</h2>
+      <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">Latest</h1>
 
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">

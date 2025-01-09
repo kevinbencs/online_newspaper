@@ -10,31 +10,31 @@ const Footer = () => {
       <nav className='border-b-2 border-base-content block w-full max-h-none'>
         <ul className='flex gap-10 w-full pb-5  justify-center md:pl-30% md:pr-30% pl-1 pr-1 flex-wrap'>
           <li>
-            <Link href="/" className='link link-hover'> Imprint</Link> 
+            <Link href="/imprint" className='link link-hover'> Imprint</Link> 
           </li>
           <li>
             <Link href="/newsletter" className='link link-hover'> Newsletter</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Privacy Policy</Link>
+            <Link href="/privacypolicy" className='link link-hover'> Privacy Policy</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Terms of Service</Link>
+            <Link href="/termsofservice" className='link link-hover'> Terms of Service</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> About</Link>
+            <Link href="/world_times_about" className='link link-hover'> About</Link>
+          </li> 
+          <li>
+            <Link href="/help" className='link link-hover'> Help</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Help</Link>
+            <Link href="/contactus" className='link link-hover'> Contact us</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Contact us</Link>
+            <Link href="/cookie" className='link link-hover'> Cookie policy</Link>
           </li>
           <li>
-            <Link href="/" className='link link-hover'> Cookie policy</Link>
-          </li>
-          <li>
-            <Link href="/carrier" className='link link-hover'> Careers</Link>
+            <Link href="/career" className='link link-hover'> Careers</Link>
           </li>
         </ul>
       </nav>

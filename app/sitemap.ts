@@ -133,10 +133,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       },
       {
-        url: 'https://online-newspaper.vercel.app/carrier',
+        url: 'https://online-newspaper.vercel.app/career',
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 0.6,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/cookie',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/help',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/termsofservice',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/contactus',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/world_time_about',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/imprint',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
       },
       ...ResArray
     ]
@@ -210,6 +246,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 0.6,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/cookie',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/help',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/termsofservice',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/contactus',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/world_time_about',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
+      },
+      {
+        url: 'https://online-newspaper.vercel.app/imprint',
+        lastModified: '2024-12-01',
+        changeFrequency: 'yearly',
+        priority: 0.3,
       },
     ]
   }

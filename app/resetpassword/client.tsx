@@ -33,8 +33,9 @@ const Client = () => {
                     }
                     setError(res.error)
                 })
-                .catch(err => {
-                    setError(err)
+                .catch(error =>{
+                    console.log(error);
+                    setError('Something went wrong, please try again')
                 })
         })
     }
@@ -42,7 +43,7 @@ const Client = () => {
     return (
         <div className='flex justify-center min-h-screen pt-10 '>
             <div className='w-80'>
-                <h2 className='text-center text-3xl mb-10'>Reset your password</h2>
+                <h1 className='text-center text-3xl mb-10'>Reset your password</h1>
                 {success &&
                     <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>{success}</div>
                 }

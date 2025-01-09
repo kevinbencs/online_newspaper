@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div className="h-full text-center pt-10 text-2xl">Error in auth</div>
+    <h1 className="h-full text-center pt-10 text-2xl">Error in auth</h1>
   )
 }
 

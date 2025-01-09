@@ -34,12 +34,16 @@ const Client = () => {
                     setCheckboxValue(false);
                 }
             })
+            .catch(error =>{
+                console.log(error);
+                setFailed('Something went wrong, please try again')
+            })
     }
 
 
     return (
         <div className="min-h-[90vh] lg:ml-80 lg:w-[500px] w-full">
-            <h2 className="mt-20 text-3xl mb-16 font-bold text-center lg:text-start">Subscribe for the newsletters</h2>
+            <h1 className="mt-20 text-3xl mb-16 font-bold text-center lg:text-start">Subscribe for the newsletters</h1>
             {(error && error.length > 0) &&
                 <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5  p-2'>
                     {error.map(e => <p key={uuid()}>{e.message}</p>)}

@@ -184,6 +184,10 @@ const Client = () => {
                             })
                         }
                     })
+                    .catch(error =>{
+                        console.log(error);
+                        setFailed('Something went wrong, please try again')
+                    })
             })
         }
     }
@@ -323,7 +327,7 @@ const Client = () => {
             <div className='w-[90%] max-w-[800px]'>
                 <form action="" onSubmit={handleSubmit} className='relative'>
                     <div className='mb-20'>
-                        <h2 className='mb-5 text-4xl'>Create a new account</h2>
+                        <h1 className='mb-5 text-4xl'>Create a new account</h1>
                         {(error && error.length > 0) &&
                             <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5  p-2'>
                                 {error.map(e => <p key={uuid()}>{e.message}</p>)}

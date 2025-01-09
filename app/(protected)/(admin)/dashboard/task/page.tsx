@@ -36,6 +36,10 @@ const Page = () => {
                     if (val.error) setError(val.error);
                     setTasks(val.tasks)
                     
+                })
+                .catch(error =>{
+                    console.log(error);
+                    setError('Something went wrong, please try again')
                 });
             setChangeTask(false)
         }
@@ -48,12 +52,16 @@ const Page = () => {
                 if (val.error) setError(val.error);
                 setTasks(val.tasks)
             })
+            .catch(error =>{
+                console.log(error);
+                setError('Something went wrong, please try again')
+            })
     }, [])
 
     return (
         <div className='flex justify-center w-full'>
             <div className='lg:w-[680px] w-full'>
-                <h2 className='text-center mb-10 text-3xl'>Tasks</h2>
+                <h1 className='text-center mb-10 text-3xl'>Tasks</h1>
                 {error &&
                     <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5 text-center  p-2'>
                         {error}

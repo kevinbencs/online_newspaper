@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'Privacy policy of World Times',
   openGraph: {
     title: "Privacy policy",
-    description: "Subscribe for newsletters of World Times",
+    description: "Privacy policy of World Times",
     url: `https://online-newspaper.vercel.app/privacypolicy`,
     images: [
       {
@@ -31,7 +31,21 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <div>Page</div>
+    <div className="min-h-screen">
+      <h1 className="mb-10 mt-10 text-3xl">Privacy Policy</h1>
+      <div className="mb-3">Your privacy is important to us. This Privacy Policy explains how World Times collects, uses, and protects your information.</div>
+      <div className="mb-3">Data We Collect:</div>
+      <ul className=" list-disc list-inside mb-8">
+        <li className="mb-1 ml-2">Anonymous Data: Information such as the number of article clicks is collected to improve content relevance.</li>
+        <li className="mb-1 ml-2">Authentication Data: If you create an account, authentication data is securely managed via Supabase.</li>
+      </ul>
+      <div className="mb-3">How We Use Data:</div>
+      <ul className=" list-disc list-inside mb-8">
+        <li className="mb-1 ml-2">To analyze user interactions and improve our services.</li>
+        <li className="mb-1 ml-2">To analyze user interactions and improve our services.</li>
+      </ul>
+      <div>We do not sell or share your personal data with third parties. For detailed inquiries, contact us at privacy@worldtimes.com.</div>
+    </div>
   )
 }
 

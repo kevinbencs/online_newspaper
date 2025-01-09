@@ -116,7 +116,7 @@ const Header = (props: { mainPos: number }) => {
         </div>
 
         <nav className='mr-2 ml-2 text-center'>
-          <Link href='/'><h1 className='text-3xl  sm:text-5xl font-serif dark:text-slate-50 dark:hover:text-slate-400 hover:text-slate-950 text-stone-700 lg:pr-20'>World Times</h1></Link>
+          <Link href='/'><span className='text-3xl  sm:text-5xl font-serif dark:text-slate-50 dark:hover:text-slate-400 hover:text-slate-950 text-stone-700 lg:pr-20'>World Times</span></Link>
         </nav>
         <div>
           <ThemeController />

@@ -221,6 +221,7 @@ const Page = ({params}: {params: {category: string, year: string, month: string,
 
   return (
     <div className='mb-20'>
+      <h1 className='mt-8 mb-10 text-5xl text-center'>Unlock article</h1>
       <Rules />
 
       <form action="" className='mb-20 mt-10' onSubmit={handleSubmit}>

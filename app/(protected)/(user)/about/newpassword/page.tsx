@@ -25,13 +25,17 @@ const Page = () => {
             setConfirmPassword('');
           }
         })
+        .catch(error =>{
+            console.log(error);
+            setError('Something went wrong, please try again')
+        })
     })
 
   }
 
   return (
     <div className='w-full lg:w-[500px]'>
-      <h2 className='text-3xl mb-20 text-center lg:text-start'>Change password</h2>
+      <h1 className='text-3xl mb-20 text-center lg:text-start'>Change password</h1>
       {(failed && failed.length > 0) &&
         <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5  p-2'>
           {failed.map(e => <p key={uuid()}>{e.message}</p>)}

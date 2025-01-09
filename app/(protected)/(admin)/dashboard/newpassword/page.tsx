@@ -29,6 +29,10 @@ const Page = () => {
             setPasswordConfirm('');
           }
         })
+        .catch(error =>{
+            console.log(error);
+            setError('Something went wrong, please try again')
+        })
     })
   }
 
@@ -50,7 +54,7 @@ const Page = () => {
         }
       </div>
       <div className='lg:w-[500px]'>
-        <h2 className='text-3xl mb-20 text-center lg:text-start'>Change password</h2>
+        <h1 className='text-3xl mb-20 text-center lg:text-start'>Change password</h1>
         <form onSubmit={handleSubmit} className='text-center md:text-start'>
           <input type="password" className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="password" required placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} disabled={isPending} />
           <input type="password" className='p-1 pl-2 dark:bg-[#121212] border-gray-800 border rounded w-full mb-2' name="confirm_password" required placeholder='Confirm password' disabled={isPending} value={confirmPassword} onChange={(e) => setPasswordConfirm(e.target.value)} />

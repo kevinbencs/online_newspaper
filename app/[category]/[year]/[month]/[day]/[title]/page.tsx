@@ -95,7 +95,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
             <Youtube url={res.data.first_element_url} />
           </div>
         }
-        <h2 className='mt-20 text-4xl mb-8 font-bold'>{params.title.replaceAll('_', ' ')}</h2>
+        <h1 className='mt-20 text-4xl mb-8 font-bold'>{params.title.replaceAll('_', ' ')}</h1>
 
         <div>
           <Link href={`/category/${res.data.category.toLowerCase()}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >

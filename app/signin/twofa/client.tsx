@@ -34,6 +34,10 @@ const Client = () => {
                         }
 
                     })
+                    .catch(error =>{
+                        console.log(error);
+                        setError('Something went wrong, please try again')
+                    })
             })
         }
     }

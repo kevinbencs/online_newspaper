@@ -20,8 +20,9 @@ const DeleteTwofa = () => {
                     .then(res => {
                         if (res.error) setError(res.error)
                     })
-                    .catch(err => {
-                        setError(err)
+                    .catch(error =>{
+                        console.log(error);
+                        setError('Something went wrong, please try again')
                     })
             })
         }

@@ -19,8 +19,9 @@ const Client = () => {
                     if (res.success) setEmail('');
                     setError(res.error)
                 })
-                .catch(error => {
-                    setError(error)
+                .catch(error =>{
+                    console.log(error);
+                    setError('Something went wrong, please try again')
                 })
         })
     };
@@ -28,7 +29,7 @@ const Client = () => {
     return (
         <div className='flex  pt-[10vh] flex-col items-center pb-[20vh] h-[90vh]'>
             <div className='max-w-[600px]'>
-                <h2 className='text-3xl mb-9 text-center'>Reset your password</h2>
+                <h1 className='text-3xl mb-9 text-center'>Reset your password</h1>
                 {success &&
                     <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold w-full'>{success}</div>
                 }

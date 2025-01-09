@@ -39,27 +39,26 @@ const DeleteColleague = () => {
         e.preventDefault();
         if (data?.Col) {
             try {
+                mutate({ Col: mutateFilter(data.Col, deleteIds) }, false)
+                const res = await fetch('/api/article', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: deleteIds })
+                })
 
+                const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
+
+                if (res.status === 400) {
+                    setFailed(resJson.failed)
+                }
+                if (res.status === 401 || res.status === 500) {
+                    setError(resJson.error)
+                }
+                mutate();
             } catch (error) {
                 console.error(error);
 
             }
-            mutate({ Col: mutateFilter(data.Col, deleteIds) }, false)
-            const res = await fetch('/api/article', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids: deleteIds })
-            })
-
-            const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: ZodIssue[] | undefined };
-
-            if (res.status === 400) {
-                setFailed(resJson.failed)
-            }
-            if (res.status === 401 || res.status === 500) {
-                setError(resJson.error)
-            }
-            mutate();
         }
     }
 

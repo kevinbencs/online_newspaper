@@ -29,10 +29,14 @@ const Page = () => {
                 setError(err.error);
                 setShowPopup(false);
             })
+            .catch(error =>{
+                console.log(error);
+                setError('Something went wrong, please try again')
+            })
     }
     return (
         <div className='lg:w-[calc(100%-140px-12rem)]'>
-            <h2 className='text-3xl mb-5 text-center lg:text-start'>Delete account</h2>
+            <h1 className='text-3xl mb-5 text-center lg:text-start'>Delete account</h1>
             {error &&
                 <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5  p-2'>
                     {error}

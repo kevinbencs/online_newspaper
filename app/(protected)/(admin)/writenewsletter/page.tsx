@@ -93,7 +93,7 @@ const Page = () => {
 
   return (
     <div className='mt-20 min-h-screen'>
-      
+      <h1 className='mt-10 mb-8 text-center text-5xl'>Write email</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" disabled={isPending} name="subject" className='focus-within:outline-none border-t-0 border-r-0 border-l-0 w-full border border-b p-3 bg-transparent input-bordered' placeholder='Subject' value={subject} onChange={(e) => { setSubject(e.target.value); setSuccess('') }} />
         <input type='text' disabled={isPending} name="title" className='mt-5 mb-16 focus-within:outline-none border-t-0 border-r-0 border-l-0 w-full border border-b p-3 bg-transparent input-bordered' placeholder='Title' value={title} onChange={(e) => { setTitle(e.target.value); setSuccess('') }} />

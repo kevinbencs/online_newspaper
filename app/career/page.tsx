@@ -42,6 +42,7 @@ const Page = async () => {
 
     return (
         <div className="min-h-screen">
+          <h1 className="mb-10 mt-10 text-center text-5xl">Careers</h1>
             {data.error &&
                 <div>{data.error}</div>
             }

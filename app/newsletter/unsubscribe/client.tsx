@@ -24,10 +24,15 @@ const Client = () => {
                 setError(val.error);
                 setFailed(val.failed)
             })
+            .catch(error =>{
+                console.log(error);
+                setFailed('Something went wrong, please try again')
+            })
     }
 
     return (
         <div className='min-h-[90vh] mt-20 lg:ml-80 lg:w-[500px]'>
+            <h1 className='mt-10 mb-10 text-center text-5xl'>Unsubscribe from newsletters</h1>
             {success &&
                 <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>{success}</div>
             }
@@ -41,6 +46,7 @@ const Client = () => {
                     {failed}
                 </div>
             }
+            
             <p className='mb-2 text-center lg:text-start'>If you would like to unsubscribe, enter your email.</p>
             <form action="#" className='relative' onSubmit={handleSubmit}>
                 <input type="email" name="email" className='dark:text-white block w-[100%] border border-gray-400 dark:border-current p-2 pt-1 pb-1 rounded-sm focus-within:outline-none' value={email} onChange={(e) => { setEmail(e.target.value); setSuccess('') }} />

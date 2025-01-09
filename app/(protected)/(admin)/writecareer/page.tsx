@@ -96,7 +96,7 @@ const Page = () => {
 
     return (
         <div className='mb-20 min-h-screen pt-10'>
-
+            <h1 className='mt-8 mb-10 text-5xl text-center'>Write careers</h1>
             <form action="" className='mb-20 mt-10' onSubmit={handleSubmit}>
                 <input type="text" name='title' disabled={isPending} className='focus-within:outline-none border-b-2 input-bordered block w-[100%] mb-8 bg-transparent pl-2 dark:text-white' placeholder='Title' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} />
 
