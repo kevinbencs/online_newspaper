@@ -156,30 +156,31 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
 
 
 
-
-
         if (value.important === 'Second most important') {
-            const Arts = await supabase.from('article').select().eq('important', 'Second most important');
+            const Arts = await supabase.from('article').select().eq('important', 'Second most important').eq('locked',false);
             if (Arts.data?.length === 2) {
-                const Update = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'important').order('id').limit(1)
+                const Update = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'important').order('id').eq('locked',false).limit(1)
                 console.log(Update.error)
             }
         }
 
         if (value.important === 'Most important') {
-            const Arts = await supabase.from('article').select().eq('important', 'Second most important');
+            const Arts = await supabase.from('article').select().eq('important', 'Second most important').eq('locked',false);
             if (Arts.data?.length === 2) {
-                const Update = await supabase.from('article').update({ 'important': 'important' }).eq('important', 'Second most important').order('id').limit(1)
+                const Update = await supabase.from('article').update({ 'important': 'important' }).eq('important', 'Second most important').eq('locked',false).order('id').limit(1)
                 console.log(Update.error)
             }
 
-            const Art2 = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'Most important');
+            const Art2 = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'Most important').eq('locked',false);
             console.log(Art2.error)
         }
-
-        const lastArticle = await supabase.from('article').select('keyword').eq('title', value.lastTitle)
+        
+        const currentDate: string = new Date().toDateString();
+        const currentTime: string = new Date().toTimeString();
 
         const { data, error } = await supabase.from('article').update({
+            date: currentDate,
+            time: currentTime,
             text: textArra.join('$'),
             title: value.title,
             first_element: value.first_element,
@@ -201,62 +202,17 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
         }
 
 
-        if (lastArticle.data) {
-            for (let i = 0; i < value.keyword.length; i++) {
-                if (!(value.keyword[i] in lastArticle.data[0].keyword)) {
-                    const res = await supabase.rpc('settheme', { p_theme: value.keyword[i] });
-                    if (res.error) console.log(res.error)
-                }
-            }
-
-            for (let i = 0; i < lastArticle.data[0].keyword.length; i++) {
-                if (!(lastArticle.data[0].keyword[i] in value.keyword)) {
-                    const res: PostgrestSingleResponse<Theme[]> = await supabase.from('themes').select().eq('theme', lastArticle.data[0].keyword[i])
-                    if (res.data) {
-                        if (res.data[0].number > 1) {
-                            const Res = await supabase.from('themes').update({
-                                number: res.data[0].number - 1
-                            }).eq('theme', lastArticle.data[0].keyword[i])
-
-                            if (Res.error) console.log(Res.error);
-                        }
-                        else {
-                            const Res = await supabase.from('themes').delete().eq('theme', lastArticle.data[0].keyword[i]);
-                            if (Res.error) console.log(Res.error);
-                        }
-                    }
-                    if (res.error) console.log(res.error)
-                }
-            }
+    
+        for(let i = 0; i < value.keyword.length; i++){
+            const res = await supabase.rpc('settheme',{ p_theme: value.keyword[i]});
+            if( res.error) console.log(res.error)
         }
 
-        if (value.title !== value.lastTitle) {
-            const Title: string[] = value.title.split(' ');
-            const LastTitle: string[] = value.lastTitle.split(' ');
+        const Title: string[] = value.title.split(' ');
 
-            for (let i = 0; i < Title.length; i++) {
-                if (!(Title[i] in LastTitle)) {
-                    const res = await supabase.rpc('settitle', { p_title: Title[i].toLowerCase() })
-                    if (res.error) console.log(res.error)
-                }
-            }
-
-            for (let i = 0; i < LastTitle.length; i++) {
-                if(!(LastTitle[i] in Title)){
-                    const res: PostgrestSingleResponse<Title[]> = await supabase.from('titles').select().eq('title',LastTitle[i]);
-                    if(res.data){
-                        if(res.data[0].number > 1){
-                            const Res = await supabase.from('titles').update({number: res.data[0].number - 1}).eq('title',LastTitle[i]);
-                            if (Res.error) console.log(Res.error);
-                        }
-                        else{
-                            const Res = await supabase.from('titles').delete().eq('title',LastTitle[i]);
-                            if (Res.error) console.log(Res.error);
-                        }
-                    }
-                    if (res.error) console.log(res.error)
-                }
-            }
+        for(let i = 0; i < Title.length; i++){
+           const res = await supabase.rpc('settitle', {p_title: Title[i].toLowerCase()})
+           if(res.error) console.log(res.error)
         }
 
 
@@ -744,7 +700,7 @@ const createHighlight = (s: string) => {
 const isValidUrl = (urlString: string) => {
     try {
         const url = new URL(urlString);
-        console.log(2)
+        
         if (url.hostname.includes('www.')) {
             return url.hostname.includes('.', 3)
         }
@@ -767,12 +723,12 @@ const isValidRelativeUrl = (urlString: string) => {
 
 
 const isValidFacebookUrl = (urlString: string) => {
-    console.log(urlString)
+    
     return Boolean(urlString.indexOf('https://www.facebook.com') === 0)
 }
 
 const isValidLinkedinUrl = (urlString: string) => {
-    console.log(urlString)
+    
     return Boolean(urlString.indexOf('https://www.linkedin.com') === 0)
 }
 

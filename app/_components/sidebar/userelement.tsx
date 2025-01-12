@@ -22,7 +22,7 @@ const fetcher = async (url: string): Promise<{ number: number }> => {
 
 const UserElement = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
     const { WhoLogged, RoleLogged } = useLogged();
-    const { data, error, } = useSWR('/api/lockedarticlenumber', fetcher/*,{ refreshInterval: 10000 }*/);
+    const { data, error, } = useSWR('/api/lockedarticlenumber', fetcher,{ refreshInterval: 10000 });
 
     const checked = () => {
         props.setCheckboxValue(false);

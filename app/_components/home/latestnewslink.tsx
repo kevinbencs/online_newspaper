@@ -33,20 +33,19 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
     function updateTime() {
       const dateTime = new Date(props.Article.date);
       const now = new Date();
+
       const secondsPast = Math.floor((Number(now) - Number(dateTime)) / 1000);
-      console.log(now)
-      console.log(new Date())
       if (secondsPast < 60) {setTime(`${secondsPast} seconds ago`);}
       else if (secondsPast < 3600) {setTime(`${Math.floor(secondsPast / 60)} minutes ago`)}
-      else if (dateTime.getDay() === now.getDay()) {setTime(`Today ${dateTime.getHours()}:${dateTime.getMinutes()}`)}
+      else if (dateTime.toLocaleDateString() === now.toLocaleDateString()) {setTime(`Today ${dateTime.getHours().toLocaleString()}:${dateTime.getMinutes().toLocaleString()}`)}
       else {
         
-        let month: number | string = dateTime.getMonth();
-        let day: number | string = dateTime.getDay();
+        let month: number | string = Number(dateTime.getMonth().toLocaleString());
+        let day: number | string = Number(dateTime.getDay().toLocaleString());
         month = Month[month];
         if (day < 10) day = '0' + day;
 
-        setTime(`${month}.${day}.-${dateTime.getHours()}:${dateTime.getMinutes()}`);
+        setTime(`${month}.${day}.-${dateTime.getHours().toLocaleString()}:${dateTime.getMinutes().toLocaleString()}`);
         return () => clearInterval(IntervalId);
       }
     }
@@ -67,7 +66,7 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
 
 
   return (
-    <Link href={props.Article.link} className='min-w-64 block select-none border-r' draggable='false' onClick={handleClick}>
+    <Link prefetch={true} href={props.Article.link} className='min-w-64 w-64 block select-none border-r' draggable='false' onClick={handleClick}>
       
       <div className='flex gap-1 items-center mb-1'>
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="8" height="8" viewBox="0 0 50 50" className='fill-slate-600 dark:fill-slate-500 mr-1'>
@@ -76,10 +75,11 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
       <div className='text-xs dark:text-slate-400 text-slate-500 w-[100%]'>{time}</div>
       </div>
 
-
+      
       <h2 className='text-sm font-bold'>{props.Article.header.slice(0, 56)}</h2>
-      <div> <IoLockClosed/> </div>
+
       <div className='w-[60%] h-4 relative bg-gradient-to-r from-transparent via-base-100 to-base-100   -top-4 left-[25%]'></div>
+      {props.Article.paywall && <div> <IoLockClosed/> </div>}
     </Link>
   )
 }

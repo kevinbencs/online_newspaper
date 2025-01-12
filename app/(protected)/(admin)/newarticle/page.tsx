@@ -211,7 +211,7 @@ const Page = () => {
           <input type="text" name='first_element_url' className='dark:text-white focus-within:outline-none input-bordered border-b-2 block lg:w-[30%] w-full bg-transparent pl-2' placeholder='URL/Id' value={firstElementUrl} onChange={(e) => setFirstElementUrl(e.target.value)} />
         </div>
         <div className='flex gap-5 flex-wrap mb-8'>
-          <ArticleCategoryGroup setOptInput={setImportantInput} optInput={importantInput} />
+          <ArticleCategoryGroup setOptInput={setCategoryInput} optInput={categoryInput} />
           <Optgroup optElement={Important} setOptInput={setImportantInput} optInput={importantInput} placeHolder='Important?' />
         </div>
 

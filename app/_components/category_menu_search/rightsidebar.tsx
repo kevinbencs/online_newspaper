@@ -41,14 +41,14 @@ const Rightsidebar = async () => {
                 </div>
             </Link>
 
-            <section className='max-w-[400px] ml-2 lg:ml-0'>
+            <div className='max-w-[400px] ml-2 lg:ml-0'>
                 <Link href='/latest' className='mb-2 flex items-center gap-2'>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 fill-slate-400 text-slate-400" >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                     </svg>
                     <h3 className='text-3xl text-slate-400'>Latest</h3>
                 </Link>
-                <div>
+                <section>
                     {latest.error && <div>{latest.error}</div>}
                     {latest.success && <>
                         {latest.success.map(item => <div key={item.id}>
@@ -64,8 +64,8 @@ const Rightsidebar = async () => {
                             </Link>
                         </div>)}
                     </>}
-                </div>
-            </section>
+                </section>
+            </div>
             <Link href="/" className='border border-gray-500 dark:bg-neutral text-neutral-content hover:text-gray-400 bg-gray-600 rounded text-center p-2 mt-24 mb-24 block'>
                 <h3 className='text-lg  '>Support</h3>
                 <div className='text-xs mt-6 flex  justify-evenly'>
@@ -84,7 +84,7 @@ const Rightsidebar = async () => {
                     </svg>
                 </div>
             </Link>
-            <section className='mb-24 max-w-[400px] ml-2 lg:ml-0'>
+            <div className='mb-24 max-w-[400px] ml-2 lg:ml-0'>
                 <Link href='/important' className='flex items-center mb-2 gap-2'>
 
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@ const Rightsidebar = async () => {
                     </svg>
                     <h3 className=' text-3xl text-slate-400'>Important</h3>
                 </Link>
-                <div >
+                <section >
                     {important.error && <div>{important.error}</div>}
                     {important.success && <>
                         {important.success.map(item => <div key={item.id}>
@@ -109,8 +109,8 @@ const Rightsidebar = async () => {
                             </Link>
                         </div>)}
                     </>}
-                </div>
-            </section>
+                </section>
+            </div>
             <Link href='https://www.facebook.com' className='mb-7 block text-center bg-sky-700 text-white rounded hover:text-white dark:hover:text-white pt-5 pb-5'>
                 <h3 className='text-3xl mb-3'>Word Times</h3>
                 <p className='text-lg mb-3'>Follow us on Facebook!</p>

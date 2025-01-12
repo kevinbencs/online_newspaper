@@ -27,13 +27,13 @@ export const latestNews = async (value: z.infer<typeof pageSchema>) => {
     const page = value.page
 
     if (typeof page !== 'undefined') {
-        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').range((page - 1) * 20, page * 20).order('id', { ascending: false })
+        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').range((page - 1) * 20, page * 20).order('id', { ascending: false }).eq('locked',false)
 
         if (res.error) return { error: 'Server error' }
         return { success: res }
     }
 
-    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').limit(20).order('id', { ascending: false })
+    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').limit(20).order('id', { ascending: false }).eq('locked',false)
     if (res.error) return { error: 'Server error' }
     return { success: res }
 }
@@ -43,7 +43,7 @@ export const numberOfLatestNews = async () => {
     // disable cache for this server action
     const _cookie = cookies()
     
-    const res: number | null = (await supabase.from('article').select('*', { count: 'exact' })).count
+    const res: number | null = (await supabase.from('article').select('*', { count: 'exact' }).eq('locked',false)).count
 
     if (!res) return { error: 'Server error' }
     return { success: res }

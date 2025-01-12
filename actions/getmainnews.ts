@@ -15,10 +15,10 @@ interface Data {
 }
 
 export const mainSection = async () => {
-    const article1: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall, important').eq('important', 'Most important');
-    const article2: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall, important').eq('important', 'Second most important').limit(2).order('id',{ ascending: false });
-    const article3: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall, important').eq('important', 'important').limit(10);
-
+    const article1: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall, important').eq('important', 'Most important').eq('locked',false);
+    const article2: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall, important').eq('important', 'Second most important').limit(2).order('id',{ ascending: false }).eq('locked',false);
+    const article3: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall, important').eq('important', 'Important').limit(10).order('id',{ ascending: false }).eq('locked',false);
+    
     if (article1.error || article2.error || article3.error) return { error: 'Server error' };
 
     return { data: [...article1.data, ...article2.data, ...article3.data] };

@@ -25,8 +25,21 @@ import { useRouter } from 'next/navigation';
 import { unlockArticle } from '@/actions/unlockarticle';
 import { getLockedArticle } from '@/actions/getlockedarticle';
 
+/*const fetcher = async (title: string, date: string) => {
 
-
+  const cacheData = localStorage.getItem(`locked_artielce_${title}`)
+  if(cacheData && cacheData !== null){
+    console.log(JSON.parse(cacheData))
+    return JSON.parse(cacheData)
+  }
+  else{
+    const data = await getLockedArticle({title: title.replaceAll('_', ' '), date});
+    console.log(data)
+    localStorage.setItem(`locked_artielce_${title}`,JSON.stringify(data))
+    return data;
+  }
+}
+*/
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
 const Page = ({params}: {params: {category: string, year: string, month: string, day: string, title: string}}) => {
@@ -113,9 +126,11 @@ const Page = ({params}: {params: {category: string, year: string, month: string,
   ];
 
   useEffect(() => {
-    const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-    getLockedArticle({title: params.title.replaceAll('_', ' '), date: date})
+    const date = params.year + '. ' + params.month + '. ' + params.day + '.';
+    //fetcher(decodeURIComponent(params.title), date)
+    getLockedArticle({title: decodeURIComponent(params.title.replaceAll('_', ' ')), date})
     .then(res => {
+      
       if(res.data) {
         setTitleInput(res.data.title);
         setPaywall(res.data.paywall ? 'Paywall yes': 'Paywall no');
@@ -197,14 +212,14 @@ const Page = ({params}: {params: {category: string, year: string, month: string,
         unlockArticle({
           text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
           paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
-          paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: params.title.replaceAll('_', ' ')
+          paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: decodeURIComponent(params.title.replaceAll('_', ' '))
 
         })
           .then((res) => {
             if (res.success) {
               setSuccess(res.success);
 
-              push(`${categoryInput}/${params.year}/${params.month}/${params.day}/${titleInput}`)
+              push(`${params.category}/${params.year}/${params.month}/${params.day}/${titleInput.replaceAll(' ','_')}`)
               
             }
             if (res.error) setError(res.error);

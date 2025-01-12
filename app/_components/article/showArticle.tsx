@@ -522,7 +522,7 @@ const createList = (s: string) => {
 
     const List = s.slice(index1 + 4, index2);
     return (
-        <ul key={uuid()} className="mb-10">
+        <ul key={uuid()} className="mb-10 ml-3">
             {List.split('<list>').map((listItem: string) => <li key={uuid()}
                 className="before:w-[8px] before:inline-block before:h-[8px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3 mb-3"> {jsxInText(listItem)}</li>)}
         </ul>

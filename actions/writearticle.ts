@@ -142,30 +142,10 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
             firstElementUrl = value.first_element_url;
         }
 
+        const currentDate: string = new Date().toDateString();
+        const currentTime: string = new Date().toTimeString();
 
-
-        const currentDate: string = new Date().toLocaleDateString();
-        const currentTime: string = new Date().toLocaleTimeString();
-
-        if(value.important === 'Second most important') {
-            const Arts = await supabase.from('article').select().eq('important', 'Second most important');
-            if (Arts.data?.length === 2) {
-                const Update = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'important').order('id').limit(1)
-                console.log(Update.error)
-            }
-        }
-
-        if(value.important === 'Most important') {
-            const Arts = await supabase.from('article').select().eq('important', 'Second most important');
-            if (Arts.data?.length === 2) {
-                const Update = await supabase.from('article').update({ 'important': 'important' }).eq('important', 'Second most important').order('id').limit(1)
-                console.log(Update.error)
-            }
-
-            const Art2 = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'Most important');
-            console.log(Art2.error)
-        }
-
+        
         const { data, error } = await supabase.from('article').insert({
             date: currentDate,
             time: currentTime,
@@ -189,17 +169,6 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
             return { error: 'Server error' }
         }
 
-        for(let i = 0; i < value.keyword.length; i++){
-            const res = await supabase.rpc('settheme',{ p_theme: value.keyword[i]});
-            if( res.error) console.log(res.error)
-        }
-
-        const Title: string[] = value.title.split(' ');
-
-        for(let i = 0; i < Title.length; i++){
-           const res = await supabase.rpc('settitle', {p_title: Title[i].toLowerCase()})
-           if(res.error) console.log(res.error)
-        }
         
         return { success: 'Success' }
     }
@@ -687,7 +656,7 @@ const createHighlight = (s: string) => {
 const isValidUrl = (urlString: string) => {
     try {
         const url = new URL(urlString);
-        console.log(2)
+        
         if (url.hostname.includes('www.')) {
             return url.hostname.includes('.', 3)
         }
@@ -710,12 +679,12 @@ const isValidRelativeUrl = (urlString: string) => {
 
 
 const isValidFacebookUrl = (urlString: string) => {
-    console.log(urlString)
+    
     return Boolean(urlString.indexOf('https://www.facebook.com') === 0)
 }
 
 const isValidLinkedinUrl = (urlString: string) => {
-    console.log(urlString)
+    
     return Boolean(urlString.indexOf('https://www.linkedin.com') === 0)
 }
 

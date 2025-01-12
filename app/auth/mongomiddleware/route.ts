@@ -89,6 +89,10 @@ export async function POST(request: NextRequest) {
             url === '/writecarrier'
         )) { return NextResponse.json({ res: 'error' }, { status: 400 }) }
 
+        if ((account.role !== 'Admin' && account.role !== 'Editor') &&  url ==='/dashboard/category_image_audio_video') {
+            return NextResponse.json({ res: 'error' }, { status: 400 })
+        }
+
         if (account.role !== 'Admin' && (url === '/createdadmin' || url === '/writecarrier' || url ==='/dashboard/delete_user_article_colleague_carrier')) {
             return NextResponse.json({ res: 'error' }, { status: 400 })
         }
@@ -96,7 +100,7 @@ export async function POST(request: NextRequest) {
         if ((account.role !== 'Admin' && account.role !== 'Editor') && url.startsWith('/lockedarticle')) {
             return NextResponse.json({ res: 'error' }, { status: 400 })
         }
-
+        
         if (url.startsWith('/editarticle') && account.role !== 'Author') {
             const first_slash_index = url.indexOf("/", 13);
             const second_slash_index = url.indexOf("/", first_slash_index + 1);

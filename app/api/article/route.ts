@@ -24,7 +24,7 @@ type deleteSchema = z.infer<typeof deleteIdsSchema>
 export async function GET(request: NextRequest) {
     try {
 
-        const { data, error }: PostgrestSingleResponse<Art[]> = await supabase.from('article').select('title, id, category, date').order('title')
+        const { data, error }: PostgrestSingleResponse<Art[]> = await supabase.from('article').select('title, id, category, date').eq('locked',false).order('title')
 
         if (error) {
             console.log(error)

@@ -32,8 +32,8 @@ export const searchNews = async (value: z.infer<typeof searchArtSchema>) => {
     const page = value.page
     const filter = value.filter
 
-    let queryTitle = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).ilike('title', `%${text}%`).order('id', { ascending: false });
-    let queryTheme = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).contains('keyword', [text]).not('title', 'like', `%${text}%`).order('id', { ascending: false });
+    let queryTitle = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).ilike('title', `%${text}%`).order('id', { ascending: false }).eq('locked',false);
+    let queryTheme = supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall', { count: 'exact' }).contains('keyword', [text]).not('title', 'like', `%${text}%`).order('id', { ascending: false }).eq('locked',false);
 
     if (category) {
         queryTitle = queryTitle.eq('category', category.replaceAll('-', ' & ').slice(0, 1).toUpperCase() + category.slice(1, category.length));
@@ -97,7 +97,7 @@ export const searchNews = async (value: z.infer<typeof searchArtSchema>) => {
 
     const resTitle: PostgrestSingleResponse<Data[]> = await queryTitle;
     const resTheme: PostgrestSingleResponse<Data[]> = await queryTheme;
-    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text16', params).order('id', { ascending: false })
+    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text16', params).order('id', { ascending: false }).eq('locked',false)
 
     if (resText.error || resTheme.error || resTitle.error) return { error: 'Server error', filt: 'none', lastPage: 0 }
 

@@ -70,12 +70,12 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
 }
 
 
-export const revalidate = 60
+export const revalidate = 30
 
 const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }) => {
 
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-  const res = await getArticle({ Article: params.title.replaceAll('_', ' '), date, source: searchParams.source });
+  const res = await getArticle({ Article: decodeURIComponent(params.title.replaceAll('_', ' ')), date, source: searchParams.source });
 
   if (res.error) notFound();
 

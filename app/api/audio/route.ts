@@ -48,17 +48,16 @@ export async function GET(request: NextRequest) {
         const account = await Admin.findById(decoded.id);
         if (!account) {
 
-            return  NextResponse.json({ error: 'Please log in' },{status:401});
+            return NextResponse.json({ error: 'Please log in' }, { status: 401 });
         }
 
         const aud: audioUrl[] = await Audio.find();
 
-
-        return NextResponse.json({ success: aud },{status: 200});
+        return NextResponse.json({ success: aud }, { status: 200 });
     }
     catch (err) {
         console.log(err)
-        return NextResponse.json({ error: 'Server error' }, {status: 500})
+        return NextResponse.json({ error: 'Server error' }, { status: 500 })
     }
 }
 
@@ -72,21 +71,23 @@ export async function POST(request: NextRequest) {
 
         const token = await Token.findOne({ token: Cookie.value });
         if (!token) {
-
             return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
         }
 
         const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
         if (!decoded) {
-
             return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
         }
 
         const account = await Admin.findById(decoded.id);
         if (!account) {
-
             return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
         }
+
+        if (account.role !== 'Admin' && account.role !== 'Editor') {
+            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        }
+
         const body = await request.json()
         const audioData: audioData = AudioVideoUrlSchema.parse(body);
         const validatedFields = AudioVideoUrlSchema.safeParse(audioData);
@@ -140,6 +141,11 @@ export async function DELETE(request: NextRequest) {
 
             return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
         }
+
+        if (account.role !== 'Admin' && account.role !== 'Editor') {
+            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        }
+
         const body = await request.json();
         const audio: audio = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(audio);

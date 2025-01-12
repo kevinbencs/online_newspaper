@@ -10,6 +10,7 @@ export const revalidate = 60
 
 export default async function Page() {
 
+ 
 
   return (
     <>
@@ -21,7 +22,7 @@ export default async function Page() {
         <h3>Latest</h3>
       </Link>
       
-      <LatestNews />
+      <LatestNews/>
 
       <MainNews />
       <SectionTwo />

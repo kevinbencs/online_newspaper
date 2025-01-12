@@ -2,16 +2,31 @@
 
 import { useState, MouseEvent, useRef, useEffect, TouchEvent } from "react";
 import LatestNewsLink from "./latestnewslink";
-import { latestNewsMainPage } from "@/actions/getlatestnews";
+import useSWR, { preload } from 'swr'
 
 
-interface DataGet {
+interface DataMainPage {
+  id: string,
   title: string,
   date: string,
-  id: string,
+  time: string,
   category: string,
   paywall: boolean
 }
+
+const fetcher = async (url: string): Promise<{data: DataMainPage[]}> => {
+  const res = await fetch(url);
+
+  if(!res.ok){
+    const error = new Error('An error occurred while fetching the data.');
+    error.cause = res.json().then(res => res.error)
+    console.error(error.cause)
+    throw error;
+  }
+  return res.json()
+}
+
+preload('api/article/lastMainPage',fetcher)
 
 const LatestNews = () => {
   const [isDown, setIsDown] = useState<boolean>(false);
@@ -20,8 +35,9 @@ const LatestNews = () => {
   const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [isDragging, setDragging] = useState<boolean>(false);
 
-  const [Articles, setArticles] = useState<DataGet[]>();
-  const [err, setErr] = useState<string>('')
+  const {data, error, isLoading} = useSWR('api/article/lastMainPage',fetcher,  {refreshInterval: 1000 })
+
+
 
   const handleMouseDown = (e: MouseEvent<HTMLElement>) => {
     setIsDown(true);
@@ -76,20 +92,11 @@ const LatestNews = () => {
   }
 
 
-
-  useEffect(() => {
-    latestNewsMainPage()
-      .then((res) => {
-        if(res.data) setArticles(res.data)
-        if(res.error) setErr('Server error')
-      })
-  }, [])
-
   return (
     <div>
 
-      {err !== '' &&
-        <div>{err}</div>
+      {error !== '' &&
+        <div>{error}</div>
       }
       
       <div className=" overflow-x-hidden overflow-y-hidden cursor-pointer mb-5 ml-5 sm:ml-0" 
@@ -102,7 +109,7 @@ const LatestNews = () => {
       onTouchEnd={handleTouchEnd}
       ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {Articles?.map(item => <LatestNewsLink Article={{header: item.title, paywall: item.paywall, date: item.date, link:`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(5,7)}/ ${item.date.slice(8,10)}/${item.title.replaceAll(' ','_')}`}} key={item.id} isDragging={isDragging}/>)}
+          {data && data.data?.map(item => <LatestNewsLink Article={{header: item.title, paywall: item.paywall, date: item.date, link:`/${item.category.toLowerCase()}/${item.date.slice(0,4)}/${item.date.slice(5,7)}/${item.date.slice(8,10)}/${item.title.replaceAll(' ','_')}`}} key={item.id} isDragging={isDragging}/>)}
         </section>
       </div>
     </div>
