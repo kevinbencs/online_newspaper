@@ -6,7 +6,7 @@ class SocketService {
 
   private constructor() {
     this.socket = io(process.env.URL, {
-      // Reconnection beállítások ha szükséges
+      
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

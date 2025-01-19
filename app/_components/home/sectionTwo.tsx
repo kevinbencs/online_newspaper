@@ -15,7 +15,7 @@ const SectionTwo = async () => {
         <div className='md:flex md:gap-4 mb-12'>
             <div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px] category-picture'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px] category-picture'>afdwqfwqfwq</Link>
                     <Link href='/' >
                         <div className='overflow-hidden'>
                             <Image src={Stop} alt='Stop' />
@@ -27,7 +27,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px] category-picture'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px] category-picture'>afdwqfwqfwq</Link>
                     <Link href='/' >
                         <div className='overflow-hidden'>
                             <Image src={Stop} alt='Stop' />
@@ -39,7 +39,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -48,7 +48,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -59,7 +59,7 @@ const SectionTwo = async () => {
             </div>
             <div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px] category-picture'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px] category-picture'>afdwqfwqfwq</Link>
                     <Link href='/' >
                         <div className='overflow-hidden'>
                             <Image src={Stop} alt='Stop' />
@@ -71,7 +71,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -80,7 +80,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -89,7 +89,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -98,7 +98,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -109,7 +109,7 @@ const SectionTwo = async () => {
             </div>
             <div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px] category-picture'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px] category-picture'>afdwqfwqfwq</Link>
                     <Link href='/' >
                         <div className='overflow-hidden'>
                             <Image src={Stop} alt='Stop' />
@@ -121,7 +121,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px] category-picture'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px] category-picture'>afdwqfwqfwq</Link>
                     <Link href='/' >
                         <div className='overflow-hidden'>
                             <Image src={Stop} alt='Stop' />
@@ -133,7 +133,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
@@ -142,7 +142,7 @@ const SectionTwo = async () => {
                     </Link>
                 </div>
                 <div className='mb-5 '>
-                    <Link href='/latest/faew' className='category uppercase text-[10px]'>afdwqfwqfwq</Link>
+                    <Link href='/latest/faew' className='category uppercase drop-shadow-md font-bold text-[10px]'>afdwqfwqfwq</Link>
                     <Link href='/' className='mb-5 block '>
                         <article>
                             <h2 className='text-lg font-bold'>segseges e gesgseg</h2>
