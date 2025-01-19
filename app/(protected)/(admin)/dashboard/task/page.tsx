@@ -5,6 +5,7 @@ import { GetTask } from '@/actions/gettasks';
 import TaskItem from '@/app/_components/taskitem';
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid';
+import { useSocket } from '@/app/_components/socketProvider';
 
 
 interface TaskType {
@@ -15,9 +16,9 @@ interface TaskType {
 
 const Page = () => {
     const [tasks, setTasks] = useState<TaskType[] | undefined>([]);
-    const [changeTask, setChangeTask] = useState<boolean>(false);
     const [inputValue, setINputValue] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const {task} = useSocket();
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
@@ -25,25 +26,15 @@ const Page = () => {
         AddTask({task: inputValue})
             .then(val => {
                 if (val.error) setError(val.error);
-                if (val.success) { setINputValue(''); setChangeTask(true); }
+                if (val.success) { setINputValue(''); }
             })
     }
 
+
+
     useEffect(() => {
-        if (changeTask) {
-            GetTask()
-                .then((val) => {
-                    if (val.error) setError(val.error);
-                    setTasks(val.tasks)
-                    
-                })
-                .catch(error =>{
-                    console.log(error);
-                    setError('Something went wrong, please try again')
-                });
-            setChangeTask(false)
-        }
-    }, [changeTask])
+        setTasks(task)
+    },[task])
 
 
     useEffect(() => {
@@ -79,7 +70,7 @@ const Page = () => {
                     </div>
                 </form>
                 <div className='mt-10'>
-                    {tasks && tasks.map((item: TaskType) => <TaskItem name={item.name} task={item.task} id={item._id} setChangeTask={setChangeTask} key={uuid()} setError={setError} />)}
+                    {tasks && tasks.map((item: TaskType) => <TaskItem name={item.name} task={item.task} id={item._id}  key={uuid()} setError={setError} />)}
                 </div>
             </div>
         </div>

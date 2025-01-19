@@ -4,14 +4,13 @@ import { AddName } from '@/actions/addnametask'
 import { DeleteTask } from '@/actions/daletetask'
 import React, { Dispatch, SetStateAction } from 'react'
 
-const TaskItem = (props: { name: string, id: string, task: string, setChangeTask: Dispatch<SetStateAction<boolean>>, setError: Dispatch<SetStateAction<string>> }) => {
+const TaskItem = (props: { name: string, id: string, task: string, setError: Dispatch<SetStateAction<string>> }) => {
     const handleDelete = async () => {
         props.setError('');
         DeleteTask({id: props.id})
         .then(val => {
             if(val.error) props.setError(val.error)
         })
-        props.setChangeTask(true);
     }
 
     const changeName = () => {
@@ -21,10 +20,9 @@ const TaskItem = (props: { name: string, id: string, task: string, setChangeTask
         .then(val => {
             if(val.error) props.setError(val.error)
         })
-        props.setChangeTask(true);
     }
     return (
-        <div className=' bg-gray-200    text-black rounded-lg shadow-3xl shadow-black dark:shadow-none dark:bg-slate-700 dark:text-white'>
+        <div className=' bg-gray-200 mb-2 text-black rounded-lg shadow-3xl shadow-black dark:shadow-none dark:bg-slate-700 dark:text-white'>
             <div className='w-full pl-10 p-5'>
                 <p className=' w-full mb-5'>{props.task}</p>
                 <div className='flex gap-2 items-center'>

@@ -16,17 +16,7 @@ interface Decoded extends JwtPayload {
     id: string
 }
 
-interface Theme {
-    id: string,
-    theme: string,
-    number: number
-}
 
-interface Title{
-    id: string,
-    title: string,
-    number: number
-}
 
 export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) => {
     const cookie = cookies().get('admin-log');
@@ -175,8 +165,8 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
             console.log(Art2.error)
         }
         
-        const currentDate: string = new Date().toDateString();
-        const currentTime: string = new Date().toTimeString();
+        const currentDate: string = new Date().toISOString().slice(0,10).replaceAll('-','. ')+'.';
+        const currentTime: string = new Date().toISOString().slice(11,19);
 
         const { data, error } = await supabase.from('article').update({
             date: currentDate,

@@ -1,49 +1,60 @@
-'use server'
-
+import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/utils/supabase/article";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import Admin from "@/model/Admin"
 import Token from "@/model/Token"
-import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
-import { supabase } from "@/utils/supabase/article";
-import { NewArticleSchema } from "@/schema";
-import * as z from 'zod'
-import { getImageById } from "./getimageurl";
-import { getAudioById } from "./getaudiourl";
-import { getVideoById } from "./getvideourl";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { EditArticleSchema } from "@/schema";
+import { getImageById } from "@/actions/getimageurl";
+import { getAudioById } from "@/actions/getaudiourl";
+import { getVideoById } from "@/actions/getvideourl";
 import SocketService from "@/service/socketService";
+
+
 
 interface Decoded extends JwtPayload {
     id: string
 }
 
+interface DataMainPage {
+    id: string,
+    title: string,
+    date: string,
+    time: string,
+    category: string,
+    paywall: boolean
+}
 
-export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
-    const cookie = cookies().get('admin-log');
-    if (!cookie) return { error: 'Please log in' };
+
+export async function POST(req: NextRequest) {
+
 
     try {
+        const cookie = req.cookies.get('admin-log');
+        if (!cookie) return NextResponse.json({ error: 'Please log in' }, { status: 401 });
 
         const token = await Token.findOne({ token: cookie.value });
         if (!token) {
 
-            return { error: 'Please log in' };
+            return NextResponse.json({ error: 'Please log in' }, { status: 401 });
         }
 
         const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
         if (!decoded) {
 
-            return { error: 'Please log in' };
+            return NextResponse.json({ error: 'Please log in' }, { status: 401 });
         }
 
         const account = await Admin.findById(decoded.id);
         if (!account) {
 
-            return { error: 'Please log in' };
+            return NextResponse.json({ error: 'Please log in' }, { status: 401 });
         }
 
-        const validatedFields = NewArticleSchema.safeParse(value);
-        if (validatedFields.error) return { failed: validatedFields.error.errors };
+        const body = await req.json();
+        const value = EditArticleSchema.parse(body);
+        const validatedFields = EditArticleSchema.safeParse(value);
+        if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
         let res: string = 'ok';
         const textArra: string[] = value.text.split('$');
@@ -51,14 +62,14 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
 
         for (let i = 0; i < textArra.length && res === 'ok'; i++) {
             res = chooseTypeOfTextItem(textArra[i]);
-            if (res !== 'ok') return { error: res }
+            if (res !== 'ok') return NextResponse.json({ error: res }, { status: 500 })
             if (textArra[i].indexOf('<video') === 0) {
                 const res = await searchVideo(textArra[i]);
 
                 if (res.success) {
                     textArra[i] = `<video id=(${res.success.url};${res.success._id};${res.success.title})></video>`
                 }
-                else return { error: 'Video id is not in database' }
+                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
             }
 
             if (textArra[i].indexOf('<audio') === 0) {
@@ -67,31 +78,31 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
                 if (res.success) {
                     textArra[i] = `<audio id=(${res.success.url};${res.success._id};${res.success.title};${res.success.date})></<audio>`
                 }
-                else return { error: 'Video id is not in database' }
+                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
             }
 
             if (textArra[i].indexOf('<Image') === 0) {
-                
+
                 const res = await editImageIdToData(textArra[i]);
-                
+
                 if (res.success) {
                     textArra[i] = `<Image id=(${res.success.url};${res.success._id};${res.success.detail})></<Image>`
                 }
-                else return { error: 'Image id is not in database' }
+                else return NextResponse.json({ error: 'Image id is not in database' }, { status: 404 })
             }
         }
 
-        
+
         for (let i = 0; i < paywallTextArr.length && res === 'ok'; i++) {
             res = chooseTypeOfTextItem(paywallTextArr[i]);
-            if (res !== 'ok') return { error: res }
+            if (res !== 'ok') return NextResponse.json({ error: res }, { status: 500 })
             if (paywallTextArr[i].indexOf('<video') === 0) {
                 const res = await searchVideo(paywallTextArr[i]);
 
                 if (res.success) {
                     paywallTextArr[i] = `<video id=(${res.success.url};${res.success._id};${res.success.title})></video>`
                 }
-                else return { error: 'Video id is not in database' }
+                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
             }
 
             if (paywallTextArr[i].indexOf('<audio') === 0) {
@@ -100,7 +111,7 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
                 if (res.success) {
                     paywallTextArr[i] = `<audio id=(${res.success.url};${res.success._id};${res.success.title};${res.success.date})></<audio>`
                 }
-                else return { error: 'Video id is not in database' }
+                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
             }
 
             if (paywallTextArr[i].indexOf('<Image') === 0) {
@@ -109,14 +120,14 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
                 if (res.success) {
                     paywallTextArr[i] = `<Image id=(${res.success.url};${res.success._id};${res.success.detail})></<Image>`
                 }
-                else return { error: 'Image id is not in database' }
+                else return NextResponse.json({ error: 'Image id is not in database' }, { status: 404 })
             }
         }
 
 
         const resImg = await getImageById({ id: value.cover_img_id })
 
-        if (resImg.error) return { error: 'Cover image id is not in database' }
+        if (resImg.error) return NextResponse.json({ error: 'Cover image id is not in database' }, { status: 404 });
         const cover_img_id = resImg.success.url + ';' + resImg.success._id + ';' + resImg.success.detail;
 
         let resFirstElement;
@@ -125,37 +136,56 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
         if (value.first_element === 'Image') {
             resFirstElement = await getImageById({ id: value.first_element_url });
 
-            if (resFirstElement?.error || resFirstElement.success === null) return { error: 'First element image id is not in database' }
+            if (resFirstElement?.error || resFirstElement.success === null) return NextResponse.json({ error: 'First element image id is not in database' }, { status: 404 })
             else { firstElementUrl = resFirstElement?.success.url + ';' + resFirstElement?.success.id + ';' + resFirstElement?.success.detail }
         }
         else if (value.first_element === 'Video') {
             resFirstElement = await getVideoById({ id: value.first_element_url });
 
-            if (resFirstElement?.error || resFirstElement.success === null) return { error: 'First element video id is not in database' }
+            if (resFirstElement?.error || resFirstElement.success === null) return NextResponse.json({ error: 'First element video id is not in database' }, { status: 404 });
             else { firstElementUrl = resFirstElement?.success.url + ';' + resFirstElement?.success.id + ';' + resFirstElement?.success.title }
         }
         else if (value.first_element === 'Youtube') {
             resFirstElement = isValidYoutubeUrl(value.first_element_url)
 
-            if (!resFirstElement) return { error: 'First element youtube url is not correct' }
+            if (!resFirstElement) return NextResponse.json({ error: 'First element youtube url is not correct' }, { status: 404 });
             else { firstElementUrl = value.first_element_url; }
         }
         else {
             firstElementUrl = value.first_element_url;
         }
 
-        const currentDate: string = new Date().toISOString().slice(0,10).replaceAll('-','. ')+'.';
-        const currentTime: string = new Date().toISOString().slice(11,19);
 
-        
-        const { data, error } = await supabase.from('article').insert({
+
+        if (value.important === 'Second most important') {
+            const Arts = await supabase.from('article').select().eq('important', 'Second most important').eq('locked', false);
+            if (Arts.data?.length === 2) {
+                const Update = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'important').order('id').eq('locked', false).limit(1)
+                console.log(Update.error)
+            }
+        }
+
+        if (value.important === 'Most important') {
+            const Arts = await supabase.from('article').select().eq('important', 'Second most important').eq('locked', false);
+            if (Arts.data?.length === 2) {
+                const Update = await supabase.from('article').update({ 'important': 'important' }).eq('important', 'Second most important').eq('locked', false).order('id').limit(1)
+                console.log(Update.error)
+            }
+
+            const Art2 = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'Most important').eq('locked', false);
+            console.log(Art2.error)
+        }
+
+        const currentDate: string = new Date().toISOString().slice(0, 10).replaceAll('-', '. ') + '.';
+        const currentTime: string = new Date().toISOString().slice(11, 19);
+
+        const { error } = await supabase.from('article').update({
             date: currentDate,
             time: currentTime,
             text: textArra.join('$'),
             title: value.title,
             first_element: value.first_element,
             first_element_url: firstElementUrl,
-            author: account.name,
             category: value.category,
             important: value.important,
             paywall: value.paywall,
@@ -163,35 +193,60 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
             sidebar: value.sidebar,
             cover_img_id,
             keyword: value.keyword,
-            detail: value.detail
-        })
+            detail: value.detail,
+            locked: false
+        }).eq('title', value.lastTitle)
 
         if (error) {
             console.log(error);
-            return { error: 'Server error' }
+            return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
-        
+
+
+
+        for (let i = 0; i < value.keyword.length; i++) {
+            const res = await supabase.rpc('settheme', { p_theme: value.keyword[i] });
+            if (res.error) console.log(res.error)
+        }
+
+        const Title: string[] = value.title.split(' ');
+
+        for (let i = 0; i < Title.length; i++) {
+            const res = await supabase.rpc('settitle', { p_title: Title[i].toLowerCase() })
+            if (res.error) console.log(res.error)
+        }
         const socketService = SocketService.getInstance();
+        const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').eq('important', 'Not important').limit(6).eq('locked', false).order('id', { ascending: false })
+        if (!article.error) {
+            article.data.map(val => {
+                val.date = val.date.replaceAll(' ', '').replaceAll('.', '-');
+                if (val.time.length === 8) val.date = val.date.slice(0, -1) + 'T' + val.time + 'Z'
+                else val.date = val.date.slice(0, -1) + 'T0' + val.time + 'Z'
+            })
+
+            socketService.emit('lastMainPage', { data: article.data })
+        }
+
+
         const lockeddArticle: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
         if (!lockeddArticle.data || lockeddArticle.data.length === 0) {
 
-            socketService.emit('writeArticle', { data: 0 })
+            socketService.emit('unLockArticle', { data: 0 })
         }
         else {
-            socketService.emit('writeArticle', { data: lockeddArticle.count })
+            socketService.emit('unLockArticle', { data: lockeddArticle.count })
         }
 
-        
-        return { success: 'Success' }
+
+
+        return NextResponse.json({ success: 'Success' }, { status: 200 });
+
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
-    catch (err) {
-        console.log(err)
-        return { error: 'Server error' }
-    }
+
 }
-
-
-
 
 function chooseTypeOfTextItem(s: string) {
     let res: string = 'ok';
@@ -668,7 +723,7 @@ const createHighlight = (s: string) => {
 const isValidUrl = (urlString: string) => {
     try {
         const url = new URL(urlString);
-        
+
         if (url.hostname.includes('www.')) {
             return url.hostname.includes('.', 3)
         }
@@ -681,7 +736,7 @@ const isValidUrl = (urlString: string) => {
 
 const isValidRelativeUrl = (urlString: string) => {
     try {
-        return Boolean(new URL(urlString, 'http://localhost:3000'));
+        return Boolean(new URL(urlString, process.env.URL));
     }
     catch (e) {
         return false;
@@ -691,12 +746,12 @@ const isValidRelativeUrl = (urlString: string) => {
 
 
 const isValidFacebookUrl = (urlString: string) => {
-    
+
     return Boolean(urlString.indexOf('https://www.facebook.com') === 0)
 }
 
 const isValidLinkedinUrl = (urlString: string) => {
-    
+
     return Boolean(urlString.indexOf('https://www.linkedin.com') === 0)
 }
 

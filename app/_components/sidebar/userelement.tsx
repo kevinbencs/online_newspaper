@@ -1,28 +1,15 @@
 'use client'
 import { useLogged } from "../islogged/isloggedprovider";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction} from "react";
 import Link from "next/link";
-import useSWR from 'swr'
+import LockedArticle from "./lockedArticle";
+
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const fetcher = async (url: string): Promise<{ number: number }> => {
-    const res = await fetch(url)
-
-    if (!res.ok) {
-        const error = new Error('An error occurred while fetching the data.')
-        error.cause = res.json().then((data: { error: string }) => data.error)
-        console.error(error.cause)
-
-        throw error
-    }
-
-    return res.json()
-}
 
 const UserElement = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
     const { WhoLogged, RoleLogged } = useLogged();
-    const { data, error, } = useSWR('/api/lockedarticlenumber', fetcher,{ refreshInterval: 10000 });
 
     const checked = () => {
         props.setCheckboxValue(false);
@@ -75,12 +62,8 @@ const UserElement = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
     return (
         <>
             {(RoleLogged === 'Admin' || RoleLogged === 'Editor') &&
-                <li><Link onClick={checked} href='/lockedarticle/allarticles' className='pt-1 pb-1 bg-neutral text-neutral-content mt-2 ml-2 mr-2 md:text-xl text-base  rounded-[4px] hover:bg-slate-100 hover:text-black flex justify-center gap-2'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                    </svg>
-                    Locked article ({data && <>{data.number}</>}{!data && <>0</>})
-                </Link></li>}
+                <LockedArticle setCheckboxValue={props.setCheckboxValue}/>
+                }
             <li><Link onClick={checked} href='/writenewsletter' className="pt-1 bg-neutral text-neutral-content mt-2 pb-1 md:text-xl text-base ml-2 mr-2 rounded-[4px] hover:bg-slate-100 hover:text-black flex justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
@@ -135,3 +118,4 @@ const UserElement = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
 }
 
 export default UserElement
+

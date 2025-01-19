@@ -21,7 +21,7 @@ interface DataMainPage {
 }
 
 export const latestNewsMainPage = async () => {
-    const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').eq('important', 'Not important').limit(6).eq('locked',false)
+    const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').eq('important', 'Not important').limit(6).eq('locked',false).order('id',{ascending: false})
 
     if (article.error) return { error: 'Server error' };
     //2024-08-20T14:30:00Z
@@ -36,7 +36,7 @@ export const latestNewsMainPage = async () => {
 }
 
 export const latestNewsRightSide = async () => {
-    const article: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date').eq('important', 'Not important').limit(5).eq('locked',false)
+    const article: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date').eq('important', 'Not important').limit(5).eq('locked',false).order('id',{ascending: false})
 
     if (article.error) return { error: 'Server error' };
 

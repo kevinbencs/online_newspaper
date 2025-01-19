@@ -62,6 +62,10 @@ export const getLockedArticle = async (value: z.infer<typeof getLockArtSchema>) 
                 error: 'Please log in'
             };
 
+            if(account.role !== 'Admin' && account.role!== 'Editor') return {
+                error: 'Please log in'
+            };
+
             const validateFields = getLockArtSchema.safeParse(value);
             if(validateFields.error) return {failed: validateFields.error.errors}
 

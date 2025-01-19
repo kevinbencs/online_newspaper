@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { adminLogin } from '@/actions/adminlogin'
 import { useLogged } from '../_components/islogged/isloggedprovider'
+import { useSocket } from '../_components/socketProvider'
 
 const Client = () => {
     const [email, setEmail] = useState<string>('');
@@ -14,6 +15,7 @@ const Client = () => {
     const [error, setError] = useState<string | undefined>('');
     const [success, setSuccess] = useState<string | undefined>('')
     const { setLogged, setRole } = useLogged();
+    const {auth, setAuth} = useSocket()
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
@@ -26,6 +28,7 @@ const Client = () => {
                     if (res.name) {
                         setLogged(res.name);
                         setRole(res.role)
+                        setAuth(!auth);
                         push('/');
                     }
                 })

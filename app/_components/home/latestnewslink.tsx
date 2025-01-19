@@ -41,8 +41,9 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
       else {
         
         let month: number | string = Number(dateTime.getMonth().toLocaleString());
-        let day: number | string = Number(dateTime.getDay().toLocaleString());
+        let day: number | string = Number(dateTime.toLocaleDateString().slice(10,12));
         month = Month[month];
+
         if (day < 10) day = '0' + day;
 
         setTime(`${month}.${day}.-${dateTime.getHours().toLocaleString()}:${dateTime.getMinutes().toLocaleString()}`);
@@ -66,7 +67,7 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
 
 
   return (
-    <Link prefetch={true} href={props.Article.link} className='min-w-64 w-64 block select-none border-r' draggable='false' onClick={handleClick}>
+    <Link prefetch={true} href={props.Article.link} className='min-w-64 w-64 block select-none border-r overflow-x-hidden' draggable='false' onClick={handleClick}>
       
       <div className='flex gap-1 items-center mb-1'>
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="8" height="8" viewBox="0 0 50 50" className='fill-slate-600 dark:fill-slate-500 mr-1'>
@@ -74,9 +75,8 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
         </svg>
       <div className='text-xs dark:text-slate-400 text-slate-500 w-[100%]'>{time}</div>
       </div>
-
       
-      <h2 className='text-sm font-bold'>{props.Article.header.slice(0, 56)}</h2>
+      <h2 className='text-sm font-bold max-h-10 overflow-y-hidden'>{props.Article.header.slice(0, 56)}</h2>
 
       <div className='w-[60%] h-4 relative bg-gradient-to-r from-transparent via-base-100 to-base-100   -top-4 left-[25%]'></div>
       {props.Article.paywall && <div> <IoLockClosed/> </div>}

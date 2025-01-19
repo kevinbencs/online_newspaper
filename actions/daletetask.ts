@@ -7,6 +7,13 @@ import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { idSchema } from "@/schema";
 import * as z from 'zod'
+import SocketService from "@/service/socketService";
+
+interface TaskType {
+    _id: string,
+    name: string,
+    task: string
+}
 
 interface Decoded extends JwtPayload {
     id: string
@@ -42,6 +49,11 @@ export const DeleteTask = async (value: z.infer<typeof idSchema>) => {
         const id=value.id
 
         await Task.findByIdAndDelete(id)
+
+        const tasks = await Task.find() as TaskType[];
+
+        const socketService = SocketService.getInstance();
+        socketService.emit('deleteTask', { tasks: JSON.parse(JSON.stringify(tasks)) })
 
         
         return {success: 'Success'};

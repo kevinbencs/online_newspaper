@@ -4,13 +4,14 @@ import MainNews from "./_components/home/main";
 import Uk from "./_components/home/uk";
 import Videos from "./_components/home/videos";
 import SectionTwo from "./_components/home/sectionTwo";
+import { latestNewsMainPage } from "@/actions/getlatestnews";
 
 
 export const revalidate = 60
 
 export default async function Page() {
 
- 
+  const res = await latestNewsMainPage()
 
   return (
     <>
@@ -22,7 +23,7 @@ export default async function Page() {
         <h3>Latest</h3>
       </Link>
       
-      <LatestNews/>
+      <LatestNews res={res}/>
 
       <MainNews />
       <SectionTwo />
