@@ -1,10 +1,10 @@
 import Link from "next/link";
 import LatestNews from "./_components/home/latestnews";
 import MainNews from "./_components/home/main";
-import Uk from "./_components/home/uk";
 import Videos from "./_components/home/videos";
 import SectionTwo from "./_components/home/sectionTwo";
 import { latestNewsMainPage } from "@/actions/getlatestnews";
+import SectionThree from "./_components/home/sectionThree";
 
 
 export const revalidate = 60
@@ -28,10 +28,8 @@ export default async function Page() {
       <MainNews />
       <SectionTwo />
 
-      <Uk />
-
       <Videos />
-
+      <SectionThree />
     </>
   );
 }

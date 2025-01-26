@@ -25,10 +25,20 @@ export const mainSection = async () => {
 }
 
 export const sectionTwo = async () => {
-    const articles: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall').eq('important', 'important').limit(13);
+    const articles: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall').eq('important', 'Not important').order('id',{ ascending: false }).limit(13);
 
     if (articles.error ) return { error: 'Server error' };
 
     return { data: articles.data };
 }
+
+
+export const sectionVideo = async () => {
+    const articles: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('title, date, id, category, detail, cover_img_id, paywall').eq('category', 'Video').order('id',{ ascending: false }).limit(2);
+
+    if (articles.error ) return { error: 'Server error' };
+
+    return { data: articles.data };
+}
+
 

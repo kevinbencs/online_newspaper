@@ -237,3 +237,9 @@ export const  WriteCarrierSchema = z.object({
 export const titleSchema = z.object({
     title: z.string().min(1,{ message: 'Title is required' })
 })
+
+
+export const shareSchema = z.object({
+    share: z.string().min(1, {message: 'Share is required'}).refine((value) => value === 'facebook' || value === 'x', {message: 'Share must be facebook or X'}),
+    url: z.string().min(1, {message: 'Url is required'})
+}) 

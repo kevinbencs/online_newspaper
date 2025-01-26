@@ -30,7 +30,7 @@ interface Art {
     time: string,
     id: string,
     paywall_text: string,
-    update: boolean
+    updated: boolean
 }
 
 
@@ -50,7 +50,7 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
 
     const currentDate = new Date().toLocaleDateString();
 
-    const res = await supabase.from('numberClickArticle').insert({
+    const res = await supabase.from('numberclickarticle').insert({
         title: article.data[0].title,
         source: source,
         date: currentDate
@@ -74,7 +74,7 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                 keyword: article.data[0].keyword,
                 time: article.data[0].time,
                 id: article.data[0].id,
-                update: article.data[0].update
+                updated: article.data[0].updated
             }
         }
     }
@@ -97,7 +97,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
             cover_img_id: article.data[0].cover_img_id,
             keyword: article.data[0].keyword,
             time: article.data[0].time,
-            id: article.data[0].id
+            id: article.data[0].id,
+            updated: article.data[0].updated
         }
     };
 
@@ -125,7 +126,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                         cover_img_id: article.data[0].cover_img_id,
                         keyword: article.data[0].keyword,
                         time: article.data[0].time,
-                        id: article.data[0].id
+                        id: article.data[0].id,
+                        updated: article.data[0].updated
                     }
                 };
             }
@@ -146,7 +148,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                         cover_img_id: article.data[0].cover_img_id,
                         keyword: article.data[0].keyword,
                         time: article.data[0].time,
-                        id: article.data[0].id
+                        id: article.data[0].id,
+                        updated: article.data[0].updated
                     }
                 };
             }
@@ -168,7 +171,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                     cover_img_id: article.data[0].cover_img_id,
                     keyword: article.data[0].keyword,
                     time: article.data[0].time,
-                    id: article.data[0].id
+                    id: article.data[0].id,
+                    updated: article.data[0].updated
                 }
             };
 
@@ -186,7 +190,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                     cover_img_id: article.data[0].cover_img_id,
                     keyword: article.data[0].keyword,
                     time: article.data[0].time,
-                    id: article.data[0].id
+                    id: article.data[0].id,
+                    updated: article.data[0].updated
                 }
             };
         }
@@ -205,7 +210,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
                     cover_img_id: article.data[0].cover_img_id,
                     keyword: article.data[0].keyword,
                     time: article.data[0].time,
-                    id: article.data[0].id
+                    id: article.data[0].id,
+                    updated: article.data[0].updated
                 }
             }
         }
@@ -225,7 +231,8 @@ export const getArticle = async (value: z.infer<typeof getArtSchema>) => {
             cover_img_id: article.data[0].cover_img_id,
             keyword: article.data[0].keyword,
             time: article.data[0].time,
-            id: article.data[0].id
+            id: article.data[0].id,
+            updated: article.data[0].updated
         }
     };
 }

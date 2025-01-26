@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ res: 'error' }, { status: 400 })
         }
         
-        if (url.startsWith('/editarticle') && account.role !== 'Author') {
+        if (url.startsWith('/editarticle') && account.role === 'Author') {
             const first_slash_index = url.indexOf("/", 13);
             const second_slash_index = url.indexOf("/", first_slash_index + 1);
             const third_slash_index = url.indexOf("/", second_slash_index + 1);

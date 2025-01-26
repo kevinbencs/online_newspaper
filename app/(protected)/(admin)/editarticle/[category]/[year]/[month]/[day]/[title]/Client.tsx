@@ -228,7 +228,7 @@ const Client = (props: {
                         if (res.success) {
                             setSuccess(res.success);
 
-                            push(`${categoryInput}/${props.params.year}/${props.params.month}/${props.params.day}/${titleInput}`)
+                            push(`${categoryInput}/${props.params.year}/${props.params.month}/${props.params.day}/${decodeURIComponent(titleInput)}`)
 
                         }
                         if (res.error) setError(res.error);

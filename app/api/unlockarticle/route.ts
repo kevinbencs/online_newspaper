@@ -216,7 +216,7 @@ export async function POST(req: NextRequest) {
             if (res.error) console.log(res.error)
         }
         const socketService = SocketService.getInstance();
-        const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').eq('important', 'Not important').limit(6).eq('locked', false).order('id', { ascending: false })
+        const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').limit(6).eq('locked', false).order('id', { ascending: false })
         if (!article.error) {
             article.data.map(val => {
                 val.date = val.date.replaceAll(' ', '').replaceAll('.', '-');

@@ -46,7 +46,7 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoUrlSchema>
             return {error: "Url is in the database"}
         }
 
-        const date = new Date().getDate().toString();
+        /*const date = new Date().getDate().toString();
 
         const NewVideoUrl = new Audio({
             url: audioData.url,
@@ -54,7 +54,7 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoUrlSchema>
             date: date
         })
 
-        await NewVideoUrl.save();
+        await NewVideoUrl.save();*/
 
         return {success: 'Success'}
     }

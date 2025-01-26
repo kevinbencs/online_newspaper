@@ -9,7 +9,7 @@ import Youtube from '@/app/_components/article/embedded/youtube';
 import ChooseTypeOfTextItem from '@/app/_components/article/showArticle';
 import { v4 as uuid } from 'uuid';
 import ShareFacebook from '@/app/_components/article/shareFacebook';
-import ShareX from '@/app/_components/article/embedded/shareX';
+import ShareX from '@/app/_components/article/shareX';
 import CopyLink from '@/app/_components/article/copylink';
 import EditSave from '@/app/_components/article/editSave';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -107,7 +107,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
           <span className='ml-2'>
             {res.data.time}
           </span>
-          {res.data.update &&
+          {res.data.updated &&
             <span className='ml-3'>Updated!</span>
           }
         </div>
@@ -119,9 +119,9 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
               <div className='flex gap-3 items-center'>
                 <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
                 <CopyLink url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
-                <ShareFacebook url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=facebook`}
+                <ShareFacebook url={`/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=facebook`}
                   title={params.title.replaceAll('-', ' ')} />
-                <ShareX url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=x`}
+                <ShareX url={`/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=x`}
                   title={params.title.replaceAll('-', ' ')} />
               </div>
             </div>

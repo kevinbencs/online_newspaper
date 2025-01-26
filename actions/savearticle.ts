@@ -169,7 +169,7 @@ export const getAllSaveArticle = async () => {
         const res: PostgrestSingleResponse<{ title: string, url: string, id: string }[]> = await supabase.from('saveArticle').select('title, url, id').eq('user_email', data.user.email);
 
         if (res.error) {
-            console.log(error)
+            console.log(res.error)
             return { Error: 'Server error' }
         }
 

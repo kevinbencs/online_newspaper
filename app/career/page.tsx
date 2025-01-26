@@ -4,12 +4,12 @@ import Link from "next/link"
 
 
 export const metadata: Metadata = {
-    title: 'Carriers',
+    title: 'Careers',
     description: 'Carriers on World Times',
     openGraph: {
-      title: "Carriers",
-      description: "Carriers on World Times",
-      url: `https://online-newspaper.vercel.app/carrier`,
+      title: "Careers",
+      description: "Careers on World Times",
+      url: `https://online-newspaper.vercel.app/career`,
       images: [
         {
           url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
       ],
     },
     twitter: {
-      title: 'Carriers',
-      description: "Carriers on World Times",
+      title: 'Careers',
+      description: "Careers on World Times",
       site: '',
       images: [
         {
@@ -48,7 +48,7 @@ const Page = async () => {
             }
             {data.success &&
                 <section className="text-xl">
-                    {data.success.map(item => <Link className="mb-4" href={`/carrier/${item.title.replaceAll(' ','_')}`} key={item._id}>{item.title}</Link>)}
+                    {data.success.map(item => <Link className="mb-4" href={`/career/${item.title.replaceAll(' ','_')}`} key={item._id}>{item.title}</Link>)}
                 </section>
             }
         </div>
