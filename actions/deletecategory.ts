@@ -39,7 +39,7 @@ export const deleteCategory = async (category: z.infer<typeof AudioVideoImageCat
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(category);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        await Category.findByIdAndDelete(category.Id)
+        //await Category.findByIdAndDelete(category.Id)
         
         return {success: 'Success'}
     }

@@ -37,6 +37,11 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoUrlSchema>
             return { error: 'Please log in' };
         }
 
+        if(account.role !== 'Admin' && account.role !== 'Editor'){
+
+            return { error: 'Please log in' };
+        }
+
         const validatedFields = AudioVideoUrlSchema.safeParse(audioData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 

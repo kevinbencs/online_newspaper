@@ -38,6 +38,12 @@ export const addNewCategory = async (categoryData: z.infer<typeof CategorySchema
             return { error: 'Please log in' };
         }
 
+        if(account.role !== 'Admin' && account.role !== 'Editor'){
+
+            return { error: 'Please log in' };
+        }
+
+
         const validatedFields = CategorySchema.safeParse(categoryData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
@@ -45,11 +51,11 @@ export const addNewCategory = async (categoryData: z.infer<typeof CategorySchema
 
         if(cate) return {error: 'This category is in the database.'}
 
-        const NewCategory = new Category({
+        /*const NewCategory = new Category({
             name: categoryData.name,
         })
 
-        await NewCategory.save();
+        await NewCategory.save();*/
 
         return {success: 'Success'}
     }

@@ -47,8 +47,8 @@ export const updateVideoUrl = async (videoData: z.infer<typeof AudioVideoUrlUpda
             return { error: 'One information is required for update' };
         }
 
-        if (videoData.title) await Video.findByIdAndUpdate(videoData.id, { title: videoData.title });
-        if (videoData.url) await Video.findByIdAndUpdate(videoData.id, { url: videoData.url });
+        /*if (videoData.title) await Video.findByIdAndUpdate(videoData.id, { title: videoData.title });
+        if (videoData.url) await Video.findByIdAndUpdate(videoData.id, { url: videoData.url });*/
         
         return { success: 'Success' }
     }

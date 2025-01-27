@@ -228,7 +228,7 @@ const Client = (props: {
                         if (res.success) {
                             setSuccess(res.success);
 
-                            push(`${categoryInput}/${props.params.year}/${props.params.month}/${props.params.day}/${decodeURIComponent(titleInput)}`)
+                            push(`/${categoryInput}/${props.params.year}/${props.params.month}/${props.params.day}/${decodeURIComponent(props.params.title)}`) // Title must be changed titleInput.replaceAll(' ','_')
 
                         }
                         if (res.error) setError(res.error);

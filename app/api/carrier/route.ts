@@ -66,7 +66,7 @@ export async function DELETE(request: NextRequest) {
         if(validateFields.error) return NextResponse.json({failed: validateFields.error.errors},{status: 400})
 
 
-        await Carrier.deleteMany({id:{$id: ids}})
+        //await Carrier.deleteMany({id:{$id: ids}})
 
 
         return NextResponse.json({success: 'Carriers are deleted'},{status: 200})

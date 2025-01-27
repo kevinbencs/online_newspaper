@@ -48,12 +48,12 @@ export const WriteCarrier = async (value: z.infer<typeof WriteCarrierSchema>) =>
             if (res !== 'ok') return { error: res }
         }
 
-        const newCarrier = new Carrier({
+        /*const newCarrier = new Carrier({
             title: value.title,
             text: textArra.join('$'),
         })
 
-        await newCarrier.save()
+        await newCarrier.save()*/
 
         return { success: 'Success' }
     }

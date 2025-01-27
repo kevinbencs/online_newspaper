@@ -1,19 +1,11 @@
 'use server'
 
-import { createClient } from "@/utils/supabase/server"
-import { cookies } from "next/headers";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import Token from "@/model/Token";
-import Admin from "@/model/Admin";
-import { connectToMongo } from "@/lib/mongo";
 import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import * as z from 'zod';
 import { getArtSchema } from "@/schema";
 
-interface Decoded extends JwtPayload {
-    id: string
-}
+
 
 interface Art {
     title: string,

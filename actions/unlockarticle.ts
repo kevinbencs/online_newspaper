@@ -146,7 +146,7 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
 
 
 
-        if (value.important === 'Second most important') {
+        /*if (value.important === 'Second most important') {
             const Arts = await supabase.from('article').select().eq('important', 'Second most important').eq('locked',false);
             if (Arts.data?.length === 2) {
                 const Update = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'important').order('id').eq('locked',false).limit(1)
@@ -163,12 +163,12 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
 
             const Art2 = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'Most important').eq('locked',false);
             console.log(Art2.error)
-        }
+        }*/
         
         const currentDate: string = new Date().toISOString().slice(0,10).replaceAll('-','. ')+'.';
         const currentTime: string = new Date().toISOString().slice(11,19);
 
-        const { data, error } = await supabase.from('article').update({
+        /*const { data, error } = await supabase.from('article').update({
             date: currentDate,
             time: currentTime,
             text: textArra.join('$'),
@@ -189,11 +189,11 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
         if (error) {
             console.log(error);
             return { error: 'Server error' }
-        }
+        }*/
 
 
     
-        for(let i = 0; i < value.keyword.length; i++){
+        /*for(let i = 0; i < value.keyword.length; i++){
             const res = await supabase.rpc('settheme',{ p_theme: value.keyword[i]});
             if( res.error) console.log(res.error)
         }
@@ -203,7 +203,7 @@ export const unlockArticle = async (value: z.infer<typeof EditArticleSchema>) =>
         for(let i = 0; i < Title.length; i++){
            const res = await supabase.rpc('settitle', {p_title: Title[i].toLowerCase()})
            if(res.error) console.log(res.error)
-        }
+        }*/
 
 
         return { success: 'Success' }

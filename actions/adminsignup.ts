@@ -59,7 +59,7 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
       const role = values.role;
       const image = values.imageUrl
 
-      let importance: number = 0;
+      /*let importance: number = 0;
 
       if(role === 'Admin') {
         importance = 1;
@@ -75,7 +75,7 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
       const hashPassword = await hash(password, 12);
       const newAdmin = new Admin({ email, password: hashPassword, name, role, image, importance });
 
-      await newAdmin.save();
+      await newAdmin.save();*/
       
       return { success: `${name} created successfully.` }
     }
@@ -85,6 +85,7 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
     }
   }
   catch (error) {
+    console.log(error)
     return { error: 'server error' }
   }
 }

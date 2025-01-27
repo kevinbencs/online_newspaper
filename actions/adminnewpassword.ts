@@ -41,11 +41,11 @@ export const changeAdminPassword = async (values: z.infer<typeof NewPasswordSche
             return { failed: validatedFields.error.errors };
         }
 
-        const newPassword = await hash(values.password, 12);
+        //const newPassword = await hash(values.password, 12);
 
-        const res = await Admin.findByIdAndUpdate(decoded.id, { password: newPassword })
+        //const res = await Admin.findByIdAndUpdate(decoded.id, { password: newPassword })
         
-        if (!res) return { error: 'Please log in' };
+        //if (!res) return { error: 'Please log in' };
 
         return { success: 'Password changed.' }
 

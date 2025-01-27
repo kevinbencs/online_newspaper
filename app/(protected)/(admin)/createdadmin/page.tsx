@@ -33,6 +33,7 @@ const Page = () => {
                         setEmail('');
                         setPassword('');
                         setRole('');
+                        setImageUrl('');
                         setSuccess(res.success);
                     }
                 })
@@ -83,7 +84,7 @@ const Page = () => {
                     <input disabled={isPending} type="text" name='name' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
                 </label>
                 <label className='mb-8'>
-                    <input disabled={isPending} type="text" name='image_url' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Name' value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+                    <input disabled={isPending} type="text" name='image_url' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Image url' value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                 </label>
                 <label className='mb-8'>
                     <input disabled={isPending} type="email" name='email' required className='border-0 border-b-2 w-full border-base-content p-1 pl-2 bg-transparent focus-visible:outline-none dark:text-white' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />

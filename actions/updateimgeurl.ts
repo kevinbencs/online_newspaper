@@ -46,8 +46,8 @@ export const updateImageUrl = async (imageData: z.infer<typeof ImageUrlUpdateSch
             return { error: 'One information is required for update' };
         }
 
-        if (imageData.detail) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.detail });
-        if (imageData.url) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.url });
+        /*if (imageData.detail) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.detail });
+        if (imageData.url) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.url });*/
         
         return { success: 'Success' }
     }

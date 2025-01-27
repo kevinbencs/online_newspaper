@@ -39,7 +39,7 @@ export const updateCategoryDetail = async (category: z.infer<typeof CategoryUpda
         const validatedFields = CategoryUpdateSchema.safeParse(category);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        await Category.findByIdAndUpdate(category.id, {name: category.name});
+        //await Category.findByIdAndUpdate(category.id, {name: category.name});
         
         return {success: 'Success'}
     }

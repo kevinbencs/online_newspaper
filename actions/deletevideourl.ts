@@ -39,7 +39,7 @@ export const deleteVideoUrl = async (videoData: z.infer<typeof AudioVideoImageCa
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(videoData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        await Video.findByIdAndDelete(videoData.Id)
+        //await Video.findByIdAndDelete(videoData.Id)
         
         return {success: 'Success'}
     }

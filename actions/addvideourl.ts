@@ -36,6 +36,11 @@ export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoUrlSchema>
             return { error: 'Please log in' };
         }
 
+        if(account.role !== 'Admin' && account.role !== 'Editor'){
+
+            return { error: 'Please log in' };
+        }
+
         const validatedFields = AudioVideoUrlSchema.safeParse(videoData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
@@ -45,12 +50,12 @@ export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoUrlSchema>
             return {error: "Url is in the database"}
         }
 
-        const NewVideoUrl = new Video({
+        /*const NewVideoUrl = new Video({
             url: videoData.url,
             title: videoData.title
         })
 
-        await NewVideoUrl.save();
+        await NewVideoUrl.save();*/
         
         return {success: 'Success'}
     }

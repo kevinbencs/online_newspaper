@@ -95,12 +95,12 @@ export async function POST(request: NextRequest) {
 
         if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
 
-        const NewImageUrl = new Image({
+        /*const NewImageUrl = new Image({
             url: imageoData.url,
             detail: imageoData.detail
         })
 
-        await NewImageUrl.save();
+        await NewImageUrl.save();*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -139,7 +139,7 @@ export async function DELETE(request: NextRequest) {
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(img);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
-        await Image.findByIdAndDelete(img.Id)
+        //await Image.findByIdAndDelete(img.Id)
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -186,8 +186,8 @@ export async function PUT(request: NextRequest) {
             else return NextResponse.json({ error: 'Server error' }, { status: 500 })
         }
 
-        if (img.detail) await Image.findByIdAndUpdate(img.id, { detail: img.detail });
-        if (img.url) await Image.findByIdAndUpdate(img.id, { detail: img.url });
+        /*if (img.detail) await Image.findByIdAndUpdate(img.id, { detail: img.detail });
+        if (img.url) await Image.findByIdAndUpdate(img.id, { detail: img.url });*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }

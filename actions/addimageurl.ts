@@ -36,6 +36,11 @@ export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) =>
             return { error: 'Please log in' };
         }
 
+        if(account.role !== 'Admin' && account.role !== 'Editor'){
+
+            return { error: 'Please log in' };
+        }
+
         const validatedFields = ImageUrlSchema.safeParse(imageoData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
@@ -43,12 +48,12 @@ export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) =>
 
         if(data) return {error: `Url is in database. Detail: ${data.detail}`}
 
-        const NewImageUrl = new Image({
+        /*const NewImageUrl = new Image({
             url: imageoData.url,
             detail: imageoData.detail
         })
 
-        await NewImageUrl.save();
+        await NewImageUrl.save();*/
 
         return {success: 'Success'}
     }

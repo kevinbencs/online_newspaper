@@ -11,7 +11,6 @@ import { getImageById } from "./getimageurl";
 import { getAudioById } from "./getaudiourl";
 import { getVideoById } from "./getvideourl";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import SocketService from "@/service/socketService";
 
 interface Decoded extends JwtPayload {
     id: string
@@ -148,7 +147,7 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
         const currentTime: string = new Date().toISOString().slice(11,19);
 
         
-        const { data, error } = await supabase.from('article').insert({
+        /*const { data, error } = await supabase.from('article').insert({
             date: currentDate,
             time: currentTime,
             text: textArra.join('$'),
@@ -169,17 +168,9 @@ export const WriteArticle = async (value: z.infer<typeof NewArticleSchema>) => {
         if (error) {
             console.log(error);
             return { error: 'Server error' }
-        }
+        }*/
         
-        const socketService = SocketService.getInstance();
-        const lockeddArticle: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
-        if (!lockeddArticle.data || lockeddArticle.data.length === 0) {
-
-            socketService.emit('writeArticle', { data: 0 })
-        }
-        else {
-            socketService.emit('writeArticle', { data: lockeddArticle.count })
-        }
+        
 
         
         return { success: 'Success' }

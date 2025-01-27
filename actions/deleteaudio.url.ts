@@ -38,7 +38,7 @@ export const deleteAudioUrl = async (audioData: z.infer<typeof AudioVideoImageCa
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(audioData);
         if(validatedFields.error) return {failed: validatedFields.error.errors};
 
-        await Audio.findByIdAndDelete(audioData.Id)
+        //await Audio.findByIdAndDelete(audioData.Id)
         
         return {success: 'Success'}
     }

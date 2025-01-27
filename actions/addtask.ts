@@ -46,6 +46,9 @@ export const AddTask = async (value: z.infer<typeof taskSchema>) => {
         const validatedFields = taskSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors }
 
+        const numb = await Task.find();
+        console.log(numb);
+
         const inputValue = value.task;
 
         const task = new Task({ task: inputValue });

@@ -91,12 +91,12 @@ export async function POST(request: NextRequest) {
 
         if (res) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
 
-        const NewVideoUrl = new Video({
+        /*const NewVideoUrl = new Video({
             url: videoData.url,
             title: videoData.title
         })
 
-        await NewVideoUrl.save();
+        await NewVideoUrl.save();*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -135,7 +135,7 @@ export async function DELETE(request: NextRequest) {
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(vid);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
-        await Video.findByIdAndDelete(vid.Id)
+        /*await Video.findByIdAndDelete(vid.Id)*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -182,8 +182,8 @@ export async function PUT(request: NextRequest) {
             else return NextResponse.json({ error: 'Server error' }, { status: 500 })
         }
 
-        if (video.title) await Video.findByIdAndUpdate(video.id, { title: video.title });
-        if (video.url) await Video.findByIdAndUpdate(video.id, { url: video.url });
+        /*if (video.title) await Video.findByIdAndUpdate(video.id, { title: video.title });
+        if (video.url) await Video.findByIdAndUpdate(video.id, { url: video.url });*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }

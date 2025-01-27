@@ -9,7 +9,6 @@ import Token from '@/model/Token';
 import { v4 as uuid } from 'uuid';
 import { getNumberSaveArticle } from './savearticle';
 import * as z from 'zod';
-import { tokenSchema } from '@/schema';
 import { codeSchema } from '@/schema';
 
 

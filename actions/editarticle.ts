@@ -158,15 +158,15 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
 
 
 
-        if (value.important === 'Second most important') {
+        /*if (value.important === 'Second most important') {
             const Arts = await supabase.from('article').select().eq('important', 'Second most important');
             if (Arts.data?.length === 2) {
                 const Update = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'important').order('id').limit(1)
                 console.log(Update.error)
             }
-        }
+        }*/
 
-        if (value.important === 'Most important') {
+        /*if (value.important === 'Most important') {
             const Arts = await supabase.from('article').select().eq('important', 'Second most important');
             if (Arts.data?.length === 2) {
                 const Update = await supabase.from('article').update({ 'important': 'important' }).eq('important', 'Second most important').order('id').limit(1)
@@ -175,11 +175,11 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
 
             const Art2 = await supabase.from('article').update({ 'important': 'Second most important' }).eq('important', 'Most important');
             console.log(Art2.error)
-        }
+        }*/
 
-        const lastArticle = await supabase.from('article').select('keyword').eq('title', value.lastTitle)
+        //const lastArticle = await supabase.from('article').select('keyword').eq('title', value.lastTitle)
 
-        const { data, error } = await supabase.from('article').update({
+        /*const { data, error } = await supabase.from('article').update({
             text: textArra.join('$'),
             title: value.title,
             first_element: value.first_element,
@@ -198,10 +198,10 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
         if (error) {
             console.log(error);
             return { error: 'Server error' }
-        }
+        }*/
 
 
-        if (lastArticle.data) {
+        /*if (lastArticle.data) {
             for (let i = 0; i < value.keyword.length; i++) {
                 if (!(value.keyword[i] in lastArticle.data[0].keyword)) {
                     const res = await supabase.rpc('settheme', { p_theme: value.keyword[i] });
@@ -229,8 +229,8 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 }
             }
         }
-
-        if (value.title !== value.lastTitle) {
+*/
+        /*if (value.title !== value.lastTitle) {
             const Title: string[] = value.title.split(' ');
             const LastTitle: string[] = value.lastTitle.split(' ');
 
@@ -257,7 +257,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                     if (res.error) console.log(res.error)
                 }
             }
-        }
+        }*/
 
 
         return { success: 'Success' }

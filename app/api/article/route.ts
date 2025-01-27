@@ -65,14 +65,14 @@ export async function DELETE(request: NextRequest) {
         const validateFields = deleteIdsSchema.safeParse(ids);
         if (validateFields.error) return NextResponse.json({ failed: validateFields.error.errors }, { status: 400 })
 
-        for (let i of ids.ids) {
+        /*for (let i of ids.ids) {
             const { error } = await supabase.from('article').delete().eq('id', i);
 
             if (error) {
                 console.log(error);
                 return NextResponse.json({ error: 'Server error' }, { status: 500 });
             }
-        }
+        }*/
 
         return NextResponse.json({ success: 'Articles are deleted' }, { status: 200 })
 

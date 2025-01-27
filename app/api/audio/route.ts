@@ -100,13 +100,13 @@ export async function POST(request: NextRequest) {
         const date = new Date().getDate().toString();
 
 
-        const NewVideoUrl = new Audio({
+        /*const NewVideoUrl = new Audio({
             url: audioData.url,
             title: audioData.title,
             date: date
         })
 
-        await NewVideoUrl.save();
+        await NewVideoUrl.save();*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -151,7 +151,7 @@ export async function DELETE(request: NextRequest) {
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(audio);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
-        await Audio.findByIdAndDelete(audio.Id)
+        //await Audio.findByIdAndDelete(audio.Id)
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }

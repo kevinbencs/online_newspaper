@@ -69,11 +69,11 @@ export async function POST(request: NextRequest) {
 
         if (cate) return NextResponse.json({ error: 'This category is in the database.' },{status: 400})
 
-        const NewCategory = new Category({
+        /*const NewCategory = new Category({
             name: categoryData.name,
         })
 
-        await NewCategory.save();
+        await NewCategory.save();*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -112,7 +112,7 @@ export async function DELETE(request: NextRequest) {
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(category);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors },{status:400});
 
-        await Category.findByIdAndDelete(category.Id)
+        //await Category.findByIdAndDelete(category.Id)
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
