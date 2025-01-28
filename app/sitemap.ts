@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const resArt = await fetch('https://online-newspaper.vercel.app/api/article', { cache: 'no-store' });
     const dataArt: { art: { title: string, date: string, category: string }[] } = await resArt.json();
 
-    const resCar = await fetch('https://online-newspaper.vercel.app/api/carrier', { cache: 'no-store' });
+    const resCar = await fetch('https://online-newspaper.vercel.app/api/career', { cache: 'no-store' });
     const dataCar: { Car: { title: string, date: string }[] } = await resCar.json();
 
     const resAuth = await fetch('https://online-newspaper.vercel.app/api/authors', { cache: 'no-store' });
