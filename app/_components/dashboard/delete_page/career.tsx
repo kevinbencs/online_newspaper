@@ -3,7 +3,7 @@ import { SyntheticEvent, useState } from 'react'
 import useSWR, { preload } from 'swr'
 import { ZodIssue } from 'zod'
 import { v4 as uuid } from 'uuid'
-import CarrierItem from './carrierItem'
+import CareerItem from './careerItem'
 
 
 interface Carrier {
@@ -28,7 +28,7 @@ const fetcher = async (url: string): Promise<{ Car: Carrier[] }> => {
 preload('/api/carrier', fetcher)
 
 const DeleteCarrier = () => {
-    const { data, error, mutate, isLoading } = useSWR('/api/carrier', fetcher)
+    const { data, error, mutate, isLoading } = useSWR('/api/career', fetcher)
     const [filter, setFilter] = useState<string>('');
     const [deleteIds, setDeleteIds] = useState<string[]>([])
     const [Error, setError] = useState<string | undefined>('')
@@ -39,7 +39,7 @@ const DeleteCarrier = () => {
         if (data?.Car) {
             try {
                 mutate({ Car: mutateFilter(data.Car, deleteIds) }, false)
-                const res = await fetch('/api/article', {
+                const res = await fetch('/api/career', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids: deleteIds })
@@ -79,7 +79,7 @@ const DeleteCarrier = () => {
                 <input type="text" name="art_filter" value={filter} onChange={e => setFilter(e.target.value)} placeholder='Filter' className='dark:text-white focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2 mb-3 pb-2' />
                 <ul className='mb-5 h-60 overflow-y-scroll  sidebar   w-[100%] dark:bg-neutral bg-base-200  '>
                     {isLoading && <div>Loading...</div>}
-                    {(data && data.Car) && data.Car.filter(handleFilter).map(item => <CarrierItem key={item._id} title={item.title} id={item._id} setDeleteIds={setDeleteIds} deleteIds={deleteIds} />)}
+                    {(data && data.Car) && data.Car.filter(handleFilter).map(item => <CareerItem key={item._id} title={item.title} id={item._id} setDeleteIds={setDeleteIds} deleteIds={deleteIds} />)}
                 </ul>
                 <input type="submit" value="Delete" className='cursor-pointer bg-slate-600 hover:bg-slate-400 p-2 pt-1 pb-1 rounded text-white' />
             </form>

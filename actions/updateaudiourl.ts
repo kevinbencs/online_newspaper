@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Audio from "@/model/Audio"
 import Admin from "@/model/Admin"
@@ -45,16 +45,16 @@ export const updateAudioUrl = async (videoData: z.infer<typeof AudioVideoUrlUpda
         if (!videoData.title && !videoData.url) {
             
             return { error: 'One information is required for update' };
-        }
+        }*/
 
         /*if (videoData.title) await Audio.findByIdAndUpdate(videoData.id, { detail: videoData.title });
         if (videoData.url) await Audio.findByIdAndUpdate(videoData.id, { detail: videoData.url });*/
 
 
-        
+   /*     
         return { success: 'Success' }
     }
     catch (err) {
         return { error: 'Server error' }
     }
-}
+}*/

@@ -1,4 +1,4 @@
-import { getCarriers } from "@/actions/getcarrier"
+import { getCareers } from "@/actions/getcareer"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -37,7 +37,7 @@ interface Car {
 }
 
 const Page = async () => {
-    const data: { success: Car[], error: undefined } | { success: undefined, error: string } = await getCarriers()
+    const data: { success: Car[], error: undefined } | { success: undefined, error: string } = await getCareers()
 
 
     return (

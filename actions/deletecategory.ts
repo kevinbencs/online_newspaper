@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Category from "@/model/Category"
 import Admin from "@/model/Admin"
@@ -46,4 +46,4 @@ export const deleteCategory = async (category: z.infer<typeof AudioVideoImageCat
     catch(err){
         return {error: 'Server error'}
     }
-}
+}*/

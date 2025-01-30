@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Image from "@/model/Image"
 import Admin from "@/model/Admin"
@@ -47,7 +47,7 @@ export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) =>
         const data = await Image.findOne({url: imageoData.url});
 
         if(data) return {error: `Url is in database. Detail: ${data.detail}`}
-
+*/
         /*const NewImageUrl = new Image({
             url: imageoData.url,
             detail: imageoData.detail
@@ -55,9 +55,9 @@ export const addImageUrl = async (imageoData: z.infer<typeof ImageUrlSchema>) =>
 
         await NewImageUrl.save();*/
 
-        return {success: 'Success'}
+     /*   return {success: 'Success'}
     }
     catch(err){
         return {error: 'Server error'}
     }
-}
+}*/

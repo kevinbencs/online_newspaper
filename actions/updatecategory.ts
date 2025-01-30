@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Category from "@/model/Category"
 import Admin from "@/model/Admin"
@@ -47,4 +47,4 @@ export const updateCategoryDetail = async (category: z.infer<typeof CategoryUpda
         console.log(err)
         return {error: 'Server error'}
     }
-}
+}*/

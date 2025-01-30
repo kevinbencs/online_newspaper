@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Video from "@/model/Video"
 import Admin from "@/model/Admin"
@@ -49,7 +49,7 @@ export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoUrlSchema>
             
             return {error: "Url is in the database"}
         }
-
+*/
         /*const NewVideoUrl = new Video({
             url: videoData.url,
             title: videoData.title
@@ -57,9 +57,9 @@ export const addVideoUrl = async (videoData: z.infer<typeof AudioVideoUrlSchema>
 
         await NewVideoUrl.save();*/
         
-        return {success: 'Success'}
+  /*      return {success: 'Success'}
     }
     catch(err){
         return {error: 'Server error'}
     }
-}
+}*/

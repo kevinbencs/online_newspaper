@@ -1,7 +1,7 @@
 'use server'
 
 import { connectToMongo } from "@/lib/mongo"
-import Carrier from "@/model/Carrier"
+import Career from "@/model/Career"
 import { titleSchema } from "@/schema"
 import { cookies } from "next/headers"
 import * as z from "zod"
@@ -12,10 +12,10 @@ interface Car{
     title: string
 }
 
-export const getCarriers =  async () => {
+export const getCareers =  async () => {
     try {
         await connectToMongo()
-        const res = await Carrier.find({},{id:1, title: 1});
+        const res = await Career.find({},{id:1, title: 1});
 
         return {success: JSON.parse(JSON.stringify(res))}
 
@@ -25,7 +25,7 @@ export const getCarriers =  async () => {
     }
 }
 
-export const getCarrierByTitle =  async (value: z.infer<typeof titleSchema>) => {
+export const getCareerByTitle =  async (value: z.infer<typeof titleSchema>) => {
     try {
         const Cookkie = cookies()
         const validateFields = titleSchema.safeParse(value)
@@ -33,7 +33,7 @@ export const getCarrierByTitle =  async (value: z.infer<typeof titleSchema>) => 
         
         await connectToMongo()
         
-        const res = await Carrier.findOne({title: value.title},{text: 1, title: 1});
+        const res = await Career.findOne({title: value.title},{text: 1, title: 1});
         
         return {success: res}
 

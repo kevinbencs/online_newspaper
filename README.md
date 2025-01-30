@@ -60,6 +60,61 @@ In order to avoid creating a new websocket client during api calls and server ac
 
 ### MongoDB
 
+The connection to the database is made in /lib/mongo.ts, which must be run in instrumentation.ts.
+
+Models:
+
+- Admin
+```
+email: string,
+name: string,
+password: string,
+role: string,
+image: string,
+importance: number,
+```
+
+- Audio
+```
+url: string,
+title: string,
+date: string,   
+```
+
+- Career
+```
+title: string,
+text: string,    
+```
+
+- Category
+```
+name: string
+```
+
+- Image
+```
+url: string,
+detail: string,,
+```
+
+- Task
+```
+task: string,
+name: string
+```
+
+- Token
+```
+token: string
+```
+
+- Video
+```
+url: string,
+title: string,
+```
+
 ### Supabase
 
 Tables:
@@ -379,3 +434,5 @@ Post /auth/provider/twofa/twofausercookie: check the cookie in protected page (/
 Post /auth/provider/twofa/twofasingincookie: check the cookie for 2FA page when user sing in.
 
 ### Server actions
+
+The server actions are in the actions directory.

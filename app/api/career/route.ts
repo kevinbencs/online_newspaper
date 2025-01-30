@@ -1,4 +1,4 @@
-import Carrier from "@/model/Carrier";
+import Career from "@/model/Career";
 import { NextRequest, NextResponse } from "next/server";
 import Token from "@/model/Token";
 import Admin from "@/model/Admin";
@@ -22,7 +22,7 @@ type deleteSchema = z.infer<typeof deleteIdsSchema>
 
 export async function GET(request: NextRequest) {
     try {
-        const Car: Carrie[] = await Carrier.find({},{id:1, title: 1}).sort({title: 1}) ;
+        const Car: Carrie[] = await Career.find({},{id:1, title: 1}).sort({title: 1}) ;
 
         const Car2: {_id: string, title: string, date: string}[] = [];
 
@@ -66,10 +66,10 @@ export async function DELETE(request: NextRequest) {
         if(validateFields.error) return NextResponse.json({failed: validateFields.error.errors},{status: 400})
 
 
-        //await Carrier.deleteMany({id:{$id: ids}})
+        //await Career.deleteMany({id:{$id: ids}})
 
 
-        return NextResponse.json({success: 'Carriers are deleted'},{status: 200})
+        return NextResponse.json({success: 'Careers are deleted'},{status: 200})
 
 
     } catch (error) {

@@ -40,7 +40,7 @@ const DeleteColleague = () => {
         if (data?.Col) {
             try {
                 mutate({ Col: mutateFilter(data.Col, deleteIds) }, false)
-                const res = await fetch('/api/article', {
+                const res = await fetch('/api/colleague', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids: deleteIds })

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose
 
-const CarrierSchema = new Schema({
+const CareerSchema = new Schema({
     title:{
         type: String,
         required: 'Title is required'
@@ -15,4 +15,4 @@ const CarrierSchema = new Schema({
 })
 
 
-export default mongoose.models.Carrier || mongoose.model("Carrier", CarrierSchema);
+export default mongoose.models.Career || mongoose.model("Career", CareerSchema);

@@ -2,7 +2,7 @@
 
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
-const CarrierItem = (props: {  title: string, id: string, setDeleteIds: Dispatch<SetStateAction<string[]>>, deleteIds: string[] }) => {
+const CareerItem = (props: {  title: string, id: string, setDeleteIds: Dispatch<SetStateAction<string[]>>, deleteIds: string[] }) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.target.checked ? props.setDeleteIds([...props.deleteIds, props.id]) : props.setDeleteIds(props.deleteIds.filter((item) => item !== props.id));
     }
@@ -19,4 +19,4 @@ const CarrierItem = (props: {  title: string, id: string, setDeleteIds: Dispatch
     )
 }
 
-export default CarrierItem
+export default CareerItem

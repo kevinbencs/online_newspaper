@@ -2,7 +2,6 @@
 
 import React, { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
 import { ZodIssue } from 'zod';
-import { addVideoUrl } from '@/actions/addvideourl';
 import VideoOptgroup from '../optgroup/videogroup';
 import { v4 as uuid } from 'uuid';
 import useSWR from 'swr'
@@ -82,19 +81,6 @@ const VideoUrl = (props: { place: string, setPlace: Dispatcher<string>, success:
                 console.error('Error ', err);
                 props.setError('Failed to connect to the server.');
             }
-            addVideoUrl({ title: addTitleVideo, url: addUrlVideo })
-                .then(res => {
-
-                    if (res.success) {
-                        props.setSuccess(res.success);
-                        setAddUrlVideo('');
-                        setAddTitleVideo('');
-                        setChanged(!changed);
-                    }
-
-                    props.setError(res.error);
-                    props.setFailed(res.failed)
-                })
         })
 
     }

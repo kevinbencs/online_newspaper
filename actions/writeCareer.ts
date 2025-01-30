@@ -6,14 +6,14 @@ import { cookies } from 'next/headers';
 import jwt, { JwtPayload } from "jsonwebtoken"
 import * as z from 'zod'
 import { WriteCarrierSchema } from "@/schema";
-import Carrier from "@/model/Carrier";
+import Carrier from "@/model/Career";
 
 interface Decoded extends JwtPayload {
     id: string
 }
 
 
-export const WriteCarrier = async (value: z.infer<typeof WriteCarrierSchema>) => {
+export const WriteCareer = async (value: z.infer<typeof WriteCarrierSchema>) => {
     const cookie = cookies().get('admin-log');
     if (!cookie) return { error: 'Please log in' };
 

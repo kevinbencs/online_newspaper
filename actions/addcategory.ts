@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Category from "@/model/Category"
 import Admin from "@/model/Admin"
@@ -50,16 +50,16 @@ export const addNewCategory = async (categoryData: z.infer<typeof CategorySchema
         const cate = await Category.findOne({name: categoryData.name});
 
         if(cate) return {error: 'This category is in the database.'}
-
+*/
         /*const NewCategory = new Category({
             name: categoryData.name,
         })
 
         await NewCategory.save();*/
 
-        return {success: 'Success'}
+     /*   return {success: 'Success'}
     }
     catch(err){
         return {error: 'Server error'}
     }
-}
+}*/

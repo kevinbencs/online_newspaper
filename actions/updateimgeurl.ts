@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Image from "@/model/Image"
 import Admin from "@/model/Admin"
@@ -45,13 +45,13 @@ export const updateImageUrl = async (imageData: z.infer<typeof ImageUrlUpdateSch
             
             return { error: 'One information is required for update' };
         }
-
+*/
         /*if (imageData.detail) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.detail });
         if (imageData.url) await Image.findByIdAndUpdate(imageData.id, { detail: imageData.url });*/
         
-        return { success: 'Success' }
+   /*     return { success: 'Success' }
     }
     catch (err) {
         return { error: 'Server error' }
     }
-}
+}*/

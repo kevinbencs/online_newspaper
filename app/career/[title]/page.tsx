@@ -1,4 +1,4 @@
-import { getCarrierByTitle } from "@/actions/getcarrier"
+import { getCareerByTitle } from "@/actions/getcareer"
 import  ChooseTypeOfTextItem from "@/app/_components/carrier/showCarrierSSR";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -42,7 +42,7 @@ export async function generateMetadata({params}:{params:{title: string}}, parent
 }
 
 const Page = async ({params}:{params:{title: string}}) => {
-  const {success, error} = await getCarrierByTitle({title: decodeURIComponent(params.title.replaceAll('_', ' '))})
+  const {success, error} = await getCareerByTitle({title: decodeURIComponent(params.title.replaceAll('_', ' '))})
 
   if(error) notFound();
 

@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { chooseTypeOfTextItem } from '@/app/_components/carrier/showCarrier';
 import Bold_italic from '../../../_components/newArticle/bold_italic';
 import List_embedded from '../../../_components/newArticle/list_embedded';
-import { WriteCarrier } from '@/actions/writeCarrier';
+import { WriteCareer } from '@/actions/writeCareer';
 import * as z from 'zod';
 
 
@@ -71,7 +71,7 @@ const Page = () => {
         setFailed([]);
         if (titleInput !== '' && text.join('$') !== '') {
             startTransition(() => {
-                WriteCarrier({
+                WriteCareer({
                     text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput,
 
                 })

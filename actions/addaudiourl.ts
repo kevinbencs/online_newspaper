@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Audio from "@/model/Audio"
 import Admin from "@/model/Admin"
@@ -49,7 +49,7 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoUrlSchema>
         if(audio) {
 
             return {error: "Url is in the database"}
-        }
+        }*/
 
         /*const date = new Date().getDate().toString();
 
@@ -61,9 +61,9 @@ export const addAudioUrl = async (audioData: z.infer<typeof AudioVideoUrlSchema>
 
         await NewVideoUrl.save();*/
 
-        return {success: 'Success'}
+/*        return {success: 'Success'}
     }
     catch(err){
         return {error: 'Server error'}
     }
-}
+}*/

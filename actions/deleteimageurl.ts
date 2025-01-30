@@ -1,4 +1,4 @@
-'use server'
+/*'use server'
 
 import Image from "@/model/Image"
 import Admin from "@/model/Admin"
@@ -47,4 +47,4 @@ export const deleteImageUrl = async (imageData: z.infer<typeof AudioVideoImageCa
     catch(err){
         return {error: 'Server error'}
     }
-}
+}*/
