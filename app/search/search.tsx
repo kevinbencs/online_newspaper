@@ -7,7 +7,30 @@ import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/dark.css';
 import OptgroupSearch from '../_components/optgroup/optgroup';
 import { getAuthor } from '@/actions/getauthor';
-import { getCategory } from '@/actions/getcategory';
+import useSWR, {preload} from 'swr';
+
+
+interface Cat {
+    _id: string,
+    name: string
+  }
+  
+  const fetcher = async (url: string): Promise<{ success: Cat[] | undefined }> => {
+    const res = await fetch(url)
+    
+    if(!res.ok){
+      const error = new Error('An error occurred while fetching the data.')
+      error.cause = await res.json().then((res:{error: string})=> res.error)
+      console.error(error.cause)
+  
+      throw error
+    }
+    
+    return res.json()
+  }
+  
+  preload('/api/category', fetcher)
+  
 
 const Search = () => {
     const [textInput, setTextInput] = useState<string>('');
@@ -16,12 +39,13 @@ const Search = () => {
     const [fromDate, setFromDate] = useState<string>('');
     const [toDate, setToDate] = useState<string>('');
     const [Author, setAuthor] = useState<{text: string, id: string}[]>([])
-    const [Category, setCategory] = useState<{text: string, id: string}[]>([])
     const { theme } = useTheme();
 
     const FromRef = useRef<null | HTMLInputElement>(null);
     const ToRef = useRef<null | HTMLInputElement>(null);
     const router = useRouter();
+
+    const { data, error, isLoading } = useSWR<{ success: Cat[] | undefined }, Error>('/api/category', fetcher);
 
     useEffect(() => {
         getAuthor()
@@ -36,17 +60,6 @@ const Search = () => {
             }
         })
 
-        getCategory()
-        .then(res => {
-            if(res.success){
-                const arr: {text: string, id: string}[] = []
-                for(let i = 0; i< res.success.length; i++){
-                    const obj: {text: string, id: string} = {text: res.success[i].name, id: res.success[i]._id};
-                    arr.push(obj)
-                }
-                setCategory(arr)
-            }
-        })
     },[])
 
 
@@ -131,7 +144,12 @@ const Search = () => {
             </label>
             <div className='mt-10  flex gap-5 flex-col lg:flex-row items-start flex-wrap'>
                 <OptgroupSearch optElement={Author} optInput={authorInput} setOptInput={setAuthorInput} placeHolder='Author'/>
-                <OptgroupSearch optElement={Category} optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
+                {(data && data.success) &&
+                <OptgroupSearch optElement={ data.success.map(item => ({id: item._id, text: item.name} )) } optInput={categoryInput} setOptInput={setCategoryInput} placeHolder='Category'/>
+                
+
+                }
+                
 
                 <label className='lg:w-[30%] w-full  block'>
                     <input type="text" ref={FromRef}  readOnly  placeholder='From' className='pl-2 mb-2 dark:text-white border-b-2 input-bordered focus-within:outline-none bg-transparent w-full ' />

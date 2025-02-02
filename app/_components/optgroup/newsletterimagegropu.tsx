@@ -1,8 +1,11 @@
 'use client'
-import { getImageUrls } from '@/actions/getimageurl';
+
 import { useRef, useState, ChangeEvent, KeyboardEvent, useEffect, Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 import ImgItem from './imgitem';
+import useSWR from 'swr';
+
+
 
 interface imageUrl {
     url: string,
@@ -11,26 +14,32 @@ interface imageUrl {
     _id: string
 }
 
+const fetcher = async (url: string): Promise<{success: imageUrl[]}> => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        const error = new Error('An error occurred while fetching the data.')
+        error.cause = await res.json().then((res: { error: string }) => res.error)
+        console.error(error.cause)
+
+        throw error
+    }
+
+    return res.json()
+}
+
+
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
 const NewsLetterImgOptgroup = (props: { imageCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setError: Dispatch<SetStateAction<string >>, setSuccess: Dispatch<SetStateAction<string | undefined>>, isPending: boolean, reset: boolean }) => {
     const [optInput, setOptInput] = useState<string>('');
-    const [optElement, setOptElement] = useState<imageUrl[]>([]);
     const [optClass, setOptClass] = useState<string>('h-0')
     const [imageId, setImageId] = useState<string>('');
 
     const optRef = useRef<null | HTMLInputElement>(null);
 
-    useEffect(() => {
-        getImageUrls()
-            .then(res => {
-                if (res.success) {
-                    setOptElement(res.success)
-                }
-                if (res.error) props.setError(res.error)
+    const {data, error, isLoading} = useSWR<{success: imageUrl[]}, Error>('/api/img',fetcher)
 
-            })
-    }, [])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOptInput(e.target.value)
@@ -71,7 +80,7 @@ const NewsLetterImgOptgroup = (props: { imageCopyMessage: string, setImageCopyMe
             <label className='relative w-full mb-4 block'>
                 <input ref={optRef} type="text" name='search_image' onFocus={() => setOptClass('h-52')} onBlur={() => setOptClass('h-0')} className='focus-within:outline-none input-bordered border-b-2 block w-full bg-transparent pl-2' placeholder='Image' value={optInput} onChange={handleChange} disabled={props.isPending} />
                 <ul className={`${optClass} overflow-y-scroll absolute sidebar z-10  w-[100%] dark:bg-neutral bg-base-200 duration-100 `} onFocus={() => setOptClass('h-52')}  onBlur={() => {setOptClass('h-0');}}>
-                    {optElement.filter(handleFilter).map((item) => <ImgItem setImageId={setImageId}  key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
+                    {data?.success.filter(handleFilter).map((item) => <ImgItem setImageId={setImageId}  key={item._id} item={item} setOptClass={setOptClass} setOptInput={setOptInput} optRef={optRef} />
                     )}
                 </ul>
             </label>

@@ -67,6 +67,8 @@ const Page = async ({ searchParams }: {
     filter: searchParams.filter
   })
 
+  console.log(res.lastPage)
+
   let filt = res.filt
 
   const searchParams2 = {
@@ -111,7 +113,7 @@ const Page = async ({ searchParams }: {
             {res.success?.data.data && res.success.data.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
               link={`/${item.category}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_')}`} />)}
           </div>
-          {(res.lastPage && res.lastPage > 0) && <Pagination searchParams={searchParams2} filter={filt} lastPage={res.lastPage} />}
+          {(res.lastPage !== undefined && res.lastPage > 0) && <Pagination searchParams={searchParams2} filter={filt} lastPage={res.lastPage} />}
         </div>
         <div className="lg:w-80">
           <Rightsidebar />

@@ -190,7 +190,7 @@ Tables:
 Functions:
 - select_article_by_text16
 ```
-CREATE OR REPLACE FUNCTION select_article_by_text16(
+CREATE OR REPLACE FUNCTION select_article_by_text17(
     search_text TEXT ,
     author_filter TEXT DEFAULT NULL,
     start_date TEXT DEFAULT NULL,
@@ -206,11 +206,12 @@ RETURNS TABLE (
     cover_img_id TEXT,
     author TEXT,
     category TEXT,
-    paywall BOOLEAN
+    paywall BOOLEAN,
+    locked BOOLEAN
 )AS $$
 BEGIN
   RETURN QUERY
-  SELECT article.id, article.date, article.title, article.detail, article.cover_img_id, article.author, article.category, article.paywall
+  SELECT article.id, article.date, article.title, article.detail, article.cover_img_id, article.author, article.category, article.paywall, article.locked
   FROM article
   WHERE 
     (article.text LIKE '%' || search_text || '%')

@@ -97,7 +97,8 @@ export const searchNews = async (value: z.infer<typeof searchArtSchema>) => {
 
     const resTitle: PostgrestSingleResponse<Data[]> = await queryTitle;
     const resTheme: PostgrestSingleResponse<Data[]> = await queryTheme;
-    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text16', params).order('id', { ascending: false }).eq('locked',false)
+    const resText: PostgrestSingleResponse<Data[]> = await supabase.rpc('select_article_by_text17', params).order('id', { ascending: false }).eq('locked',false)
+
 
     if (resText.error || resTheme.error || resTitle.error) return { error: 'Server error', filt: 'none', lastPage: 0 }
 

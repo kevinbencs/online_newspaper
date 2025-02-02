@@ -151,13 +151,13 @@ export async function PUT(request: NextRequest) {
         const validatedFields = CategoryUpdateSchema.safeParse(category);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors },{status:400});
 
-        const cate = await Category.findByIdAndUpdate(category.id, { name: category.name });
+        /*const cate = await Category.findByIdAndUpdate(category.id, { name: category.name });
 
         if(cate.error) {
             console.log(cate.error);
             if(cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' },{status: 400})
             else return NextResponse.json({ error: 'Server error' },{status: 400})
-        }
+        }*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }

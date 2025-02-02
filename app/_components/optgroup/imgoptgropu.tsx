@@ -1,5 +1,5 @@
 'use client'
-import { getImageUrls } from '@/actions/getimageurl';
+
 import { useRef, useState, ChangeEvent, KeyboardEvent, useEffect, Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 import ImgItem from './imgitem';

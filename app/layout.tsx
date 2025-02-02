@@ -15,6 +15,16 @@ export const metadata: Metadata = {
     template: '%s | World Times',
     default: "World Times",
   },
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        {
+          url: '/api/feed',
+          title: 'RSS Feed',
+        },
+      ],
+    },
+  },
   description: "News of the world",
   openGraph: {
     title: {
