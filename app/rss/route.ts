@@ -2,6 +2,8 @@ import RSS from 'rss';
 import { getPosts } from '@/lib/posts';
 import { NextResponse } from 'next/server';
 
+//export const revalidate = 3600;
+
 
 export async function GET() {
   const feed = new RSS({
@@ -20,7 +22,7 @@ export async function GET() {
     feed.item({
       title: post.title,
       description: post.detail,
-      url: `${process.env.URL}/${post.category.toLowerCase()}/${post.date.slice(0,4)}/${post.date.slice(6,8)}/${post.date.slice(10,12)}/${post.title.replaceAll(' ','_')}`,
+      url: `${process.env.URL}/${post.category.toLowerCase()}/${post.date.slice(0,4)}/${post.date.slice(6,8)}/${post.date.slice(10,12)}/${post.title.replaceAll(' ','_').replace('?','nb20')}`,
       categories: [post.category],
       date: post.date,
     });

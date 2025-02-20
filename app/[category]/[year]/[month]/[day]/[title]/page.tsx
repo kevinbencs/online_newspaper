@@ -14,13 +14,15 @@ import CopyLink from '@/app/_components/article/copylink';
 import EditSave from '@/app/_components/article/editSave';
 import { Metadata, ResolvingMetadata } from 'next';
 import { getArticleMetadata } from '@/actions/getArticleMetadata';
+import ClickOnArt from '@/app/_components/article/clickOnArt';
+import { getArtUrl } from '@/actions/getArtUrl';
 
 export async function generateMetadata({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }, parent: ResolvingMetadata): Promise<Metadata> {
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-  const res = await getArticleMetadata({ Article: params.title.replaceAll('_', ' '), date, source: searchParams.source });
+  const res = await getArticleMetadata({ Article: decodeURIComponent(params.title.replaceAll('_', ' ').replace('nb20','?')), date, source: searchParams.source });
 
   return {
-    title: params.title.replaceAll('_', ' '),
+    title: decodeURIComponent(params.title.replaceAll('_', ' ')),
     description: res.data?.description,
     keywords: res.data?.keyword,
     category: res.data?.category,
@@ -70,13 +72,27 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
 }
 
 
-export const revalidate = 30
+export async function generateStaticParams() {
+  const res = await getArtUrl();
+
+  return res.data?.map((item) => ({
+    category: item.category,
+    year: item.date.slice(0,4),
+    month: item.date.slice(6,8),
+    day: item.date.slice(10,12),
+    title: item.title.replace(' ','_').replace('?','nb20')
+  })) ?? []
+}
+
+export const dynamic = 'force-static'
+export const dynamicParams = true;
+//export const revalidate = 60
 
 const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }) => {
 
   const date = params.year + '. ' + params.month + '. ' + params.day + '.'
-  const res = await getArticle({ Article: decodeURIComponent(params.title.replaceAll('_', ' ')), date, source: searchParams.source });
-
+  const res = await getArticle({ Article: decodeURIComponent(params.title.replaceAll('_', ' ').replace('nb20','?')), date, source: searchParams.source });
+  
   if (res.error) notFound();
 
   if (res.data)
@@ -95,7 +111,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
             <Youtube url={res.data.first_element_url} />
           </div>
         }
-        <h1 className='mt-20 text-4xl mb-8 font-bold'>{params.title.replaceAll('_', ' ')}</h1>
+        <h1 className='mt-20 text-4xl mb-8 font-bold'>{decodeURIComponent(params.title.replaceAll('_', ' ').replace('nb20','?'))}</h1>
 
         <div>
           <Link href={`/category/${res.data.category.toLowerCase()}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >
@@ -115,9 +131,10 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
         <div className="lg:flex mt-12 mb-10 lg:gap-32 lg:flex-wrap">
           <div className="lg:w-[calc(100%-450px)] mb-8">
             <div className='mb-5 flex justify-between items-center'>
-              <Link href={`/authors/${res.data.author.replaceAll(' ', '_')}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1'>{res.data.author}</Link>
+              <Link href={`/authors/${res.data.author.replaceAll(' ', '_')}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pr-2 pl-2 pt-1 pb-1'>{res.data.author}</Link>
               <div className='flex gap-3 items-center'>
-                <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
+                <ClickOnArt title={params.title} date={date} source={searchParams.source}/>
+                <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} title={params.title.replaceAll('_', ' ').replaceAll('nb20','?')} />
                 <CopyLink url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
                 <ShareFacebook url={`/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=facebook`}
                   title={params.title.replaceAll('-', ' ')} />
@@ -129,7 +146,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
             {res.data.paywall &&
               <Paywall />
             }
-            <section className='flex gap-3'>
+            <section className='flex gap-3 mt-10'>
               {res.data.keyword.map(item => <li className='list-none dark:bg-white bg-slate-950 pl-2 pr-2 pt-1 pb-1' key={uuid()}>
                 <Link className=' dark:text-gray-950  text-gray-50 hover:text-gray-300 dark:hover:text-stone-400' href={`/search?text=${item.replaceAll(' ', '_')}&filter=theme`}>{item}</Link>
               </li>)}

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
           allow: ['/', '/newsletter/unsubscribe'],
           disallow: ['/api/','/singin/twofa/','/resetpassword/','/newsletter/unsubscribe/','/dhdhdhsefgsgerhtrherwgerhagfws/','/auth/','/about/','/dashboard/','/createdadmin/','/editarticle/','/lockedarticle/','/newarticle','/writecarrier','/writenewsletter']
         },
-        sitemap: 'https://online-newspaper.vercel.app/sitemap.xml',
+        sitemap: `${process.env.URL}/sitemap.xml`,
       }
 }

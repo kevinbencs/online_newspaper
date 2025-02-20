@@ -25,7 +25,7 @@ const Pagination = (props: { searchParams: { page: number }, lastPage: number, p
       </>}
       {props.lastPage > 2 && <Link href={`/category/${props.params.name}?page=${props.searchParams.page < props.lastPage ? props.searchParams.page == 1 ? 3 : Number(props.searchParams.page) + 1 : props.lastPage}`} className="join-item btn btn-square">{props.searchParams.page < props.lastPage ? props.searchParams.page == 1 ? 3 : Number(props.searchParams.page) + 1 : props.lastPage}</Link>}
       {props.searchParams.page < props.lastPage &&
-        <Link href={`/search?page=${Number(props.searchParams.page) + 1}`} className="join-item btn btn-square">
+        <Link href={`/category?page=${Number(props.searchParams.page) + 1}`} className="join-item btn btn-square">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
             <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
           </svg>

@@ -1,5 +1,5 @@
 import Latest_important from "../_components/category_menu_search/latest_important";
-import Pagination from "./pagination";
+import Pagination from "../_components/category_menu_search/pagination";
 import Rightsidebar from "../_components/category_menu_search/rightsidebar";
 import { latestNews, numberOfLatestNews } from "@/actions/getlatest";
 import { Metadata } from "next";
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://online-newspaper.vercel.app'),
   title: 'Latest news',
   description: 'Latest news',
-  alternates:{
-    canonical:'/latest'
+  alternates: {
+    canonical: '/latest'
   },
   openGraph: {
     title: "Latest news",
@@ -37,34 +37,38 @@ export const metadata: Metadata = {
 }
 
 
-const Page = async ({searchParams}: {searchParams:{page: number}}) => {
+
+//export const fetchCache = 'force-cache'
+
+
+const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
   const lastPage = await numberOfLatestNews()
 
-  const res = await latestNews({page: searchParams.page})
+  const res = await latestNews({ page: searchParams.page === undefined ? undefined : Number(searchParams.page) })
 
-  if(res.error) return(
+  if (res.error) return (
     <div>{res.error}</div>
   )
-  if(res.success)
-  return (
-    <div className="relative">
+  if (res.success)
+    return (
+      <div className="relative">
 
-      <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">Latest</h1>
+        <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">Latest</h1>
 
-      <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
-        <div className="lg:w-[calc(100%-450px)] text-center">
-          <div className="mb-10">
-             {res.success.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category}  imageId={item.cover_img_id} title={item.title} key={item.id}
-             link={`/${item.category}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`}/>)}
+        <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
+          <div className="lg:w-[calc(100%-450px)] text-center">
+            <div className="mb-10">
+              {res.success.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
+                link={`/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?', 'nb20')}`} />)}
+            </div>
+            {lastPage.success && <Pagination url='latest?' searchParams={searchParams} lastPage={Math.ceil(lastPage.success / 20)} />}
           </div>
-          {lastPage.success && <Pagination searchParams={searchParams} lastPage={Math.round(lastPage.success/20)} />}
-        </div>
-        <div className="lg:w-80">
-          <Rightsidebar/>
+          <div className="lg:w-80">
+            <Rightsidebar />
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
 
 }
 

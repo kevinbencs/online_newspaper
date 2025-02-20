@@ -1,17 +1,12 @@
 import Image from "@/model/Image"
-import Admin from "@/model/Admin"
-import Token from "@/model/Token"
 import { cookies } from 'next/headers';
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 import { ImageUrlSchema } from "@/schema"
 import * as z from 'zod'
 import { AudioVideoImageCategoryDeleteUrlSchema } from "@/schema"
 import { ImageUrlUpdateSchema } from "@/schema"
+import { Eligibility } from "@/utils/mongo/eligibility";
 
-interface Decoded extends JwtPayload {
-    id: string
-}
 
 interface img {
     url: string,
@@ -27,34 +22,16 @@ type imageUpdate = z.infer<typeof ImageUrlUpdateSchema>
 
 
 export async function GET(request: NextRequest) {
-    const Cookie = cookies().get('admin-log');
-    if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
-
     try {
-        const token = await Token.findOne({ token: Cookie.value });
-        if (!token) {
+        const Cookie = cookies().get('admin-log');
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
+        const coll = await Eligibility(Cookie.value)
 
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
-        }
-
-        const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) {
-
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
-        }
-
-        const account = await Admin.findById(decoded.id);
-        if (!account) {
-
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
-        }
-
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
         const image: img[] = await Image.find();
 
         return NextResponse.json({ success: image }, { status: 200 })
-
-
     }
     catch (err) {
         console.log(err)
@@ -63,29 +40,14 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-
-    const Cookie = request.cookies.get('admin-log');
-    if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-
     try {
+        const Cookie = request.cookies.get('admin-log');
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
 
-        const token = await Token.findOne({ token: Cookie.value });
-        if (!token) {
+        const coll = await Eligibility(Cookie.value)
 
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
-        const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) {
-
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
-
-        const account = await Admin.findById(decoded.id);
-        if (!account) {
-
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
         const body = await request.json()
         const imageoData: imageoData = ImageUrlSchema.parse(body);
         const validatedFields = ImageUrlSchema.safeParse(imageoData);
@@ -95,7 +57,7 @@ export async function POST(request: NextRequest) {
 
         if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
 
-        /*const NewImageUrl = new Image({
+       /* const NewImageUrl = new Image({
             url: imageoData.url,
             detail: imageoData.detail
         })
@@ -112,28 +74,14 @@ export async function POST(request: NextRequest) {
 
 
 export async function DELETE(request: NextRequest) {
-
-    const Cookie = request.cookies.get('admin-log');
-    if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
-
     try {
-        const token = await Token.findOne({ token: Cookie.value });
-        if (!token) {
+        const Cookie = request.cookies.get('admin-log');
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
+        const coll = await Eligibility(Cookie.value)
 
-        const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) {
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
-
-        const account = await Admin.findById(decoded.id);
-        if (!account) {
-
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
         const body = await request.json();
         const img: image = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(img);
@@ -151,28 +99,15 @@ export async function DELETE(request: NextRequest) {
 
 
 export async function PUT(request: NextRequest) {
-
-    const Cookie = request.cookies.get('admin-log');
-    if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
-
     try {
-        const token = await Token.findOne({ token: Cookie.value });
-        if (!token) {
+        const Cookie = request.cookies.get('admin-log');
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
+        const coll = await Eligibility(Cookie.value)
 
-        const decoded = await jwt.verify(Cookie.value, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) {
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
 
-        const account = await Admin.findById(decoded.id);
-        if (!account) {
-
-            return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
-        }
         const body = await request.json()
         const img: imageUpdate = ImageUrlUpdateSchema.parse(body)
         const validatedFields = ImageUrlUpdateSchema.safeParse(img);

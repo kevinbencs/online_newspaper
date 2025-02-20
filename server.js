@@ -73,11 +73,17 @@ app.prepare().then(() => {
     })
 
     socket.on('authenticate', async () => {
-      const cookie = parseCookies(socket.handshake.headers.cookie);
-      if (cookie) {
-        const res = await validate(cookie['admin-log'])
-        if (res === 'success') {
-          clients.push(socket.id)
+      const index = clients[socket.id]
+      if (index > -1) {
+        clients.splice(index, 1)
+      }
+      else {
+        const cookie = parseCookies(socket.handshake.headers.cookie);
+        if (cookie) {
+          const res = await validate(cookie['admin-log'])
+          if (res === 'success') {
+            clients.push(socket.id)
+          }
         }
       }
     })

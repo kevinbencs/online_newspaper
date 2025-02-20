@@ -13,13 +13,13 @@ import { loginGithub } from '@/actions/loginGithub'
 import { loginDiscord } from '@/actions/loginDiscord'
 
 const Client = () => {
-    const [email, setEmail] = useState<string>('');
+    const [email, setEmailInput] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const { push } = useRouter();
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | undefined>('');
     const [success, setSuccess] = useState<string | undefined>('')
-    const { RoleLogged, setRole, setNumOfSavedArt } = useLogged();
+    const { RoleLogged, setRole, setSaveArtUrls, setSubscribe, setEmail, setLogged } = useLogged();
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
@@ -29,9 +29,12 @@ const Client = () => {
             login({ email, password })
                 .then((data) => {
                     setError(data.error);
-                    if (data.numberOfArt) {
+                    if (data.success) {
                         setRole('user');
-                        setNumOfSavedArt(data.numberOfArt)
+                        setLogged(data.success.name);
+                        setSaveArtUrls(data.success.saveArt);
+                        setSubscribe(data.success.subscribe);
+                        setEmail(data.success.email)
                     }
                     if (data.redirect) push('/signin/twofa');
                 })
@@ -75,7 +78,7 @@ const Client = () => {
 
                     <label className='text-sm'>
                         Email address
-                        <input type="email" name="email" autoComplete='email' disabled={isPending} className='dark:text-white block w-[100%] pl-2 rounded-md dark:bg-[#121212] mt-1 pt-1 pb-1 focus-within:outline-none' required value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input type="email" name="email" autoComplete='email' disabled={isPending} className='dark:text-white block w-[100%] pl-2 rounded-md dark:bg-[#121212] mt-1 pt-1 pb-1 focus-within:outline-none' required value={email} onChange={(e) => setEmailInput(e.target.value)} />
                     </label>
                     <div className='relative mt-6 mb-6'>
                         <Link href='/forgotpassword' className='absolute right-0 text-xs dark:text-slate-400 text-slate-800'>Forgot password?</Link>

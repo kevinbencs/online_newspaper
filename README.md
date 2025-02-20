@@ -6,7 +6,7 @@ Page: https://online-newspaper.vercel.app/
 
 Admin Page: https://online-newspaper.vercel.app/dhdhdhsefgsgerhtrherwgerhagfws
 
-Technologies used: `next.js, typeScript, tailwindCSS, supabase, mongodb, mongoose, bcrypt, sendgrid, chart.js, jsonwebtoken, react-chartjs-2, socket.io, socket.io-client, speakeasy, srw, zod, cross-env, flatpickr, react-social-media-embed, react-tweet, sharp, qrcode.`
+Technologies used: `next.js, typeScript, tailwindCSS, supabase, mongodb, mongoose, bcrypt, sendgrid, chart.js, jsonwebtoken, react-chartjs-2, socket.io, socket.io-client, speakeasy, srw, zod, cross-env, flatpickr, react-social-media-embed, react-tweet, sharp, qrcode, rss.`
 
 
 ## Using guide
@@ -139,7 +139,7 @@ Tables:
 - detail: text,
 - update: boolean,
 - locked: boolean,
-- audio: text
+- search_art: text
 ```
 
 - newsletter
@@ -188,9 +188,37 @@ Tables:
 ```
 
 Functions:
-- select_article_by_text16
+-select_article_by_theme
 ```
-CREATE OR REPLACE FUNCTION select_article_by_text17(
+CREATE OR REPLACE FUNCTION select_article_by_theme(
+  search_text TEXT
+)
+RETURNS TABLE (
+  id INT8,
+  date TEXT,
+  title TEXT,
+  detail TEXT,
+  cover_img_id TEXT,
+  author TEXT,
+  category TEXT,
+  paywall BOOLEAN,
+  locked BOOLEAN
+)AS $$
+BEGIN
+  RETURN QUERY
+  select article.id, article.date, article.title, article.detail, article.cover_img_id, article.author, article.category, article.paywall, article.locked from article
+  where exists (
+    SELECT 1 FROM unnest(article.keyword) AS elem
+    WHERE elem ilike '%' || search_text || '%'
+  );
+END;
+$$ LANGUAGE plpgsql;
+```
+
+
+- select_article_by_text18
+```
+CREATE OR REPLACE FUNCTION select_article_by_text19(
     search_text TEXT ,
     author_filter TEXT DEFAULT NULL,
     start_date TEXT DEFAULT NULL,
@@ -214,12 +242,17 @@ BEGIN
   SELECT article.id, article.date, article.title, article.detail, article.cover_img_id, article.author, article.category, article.paywall, article.locked
   FROM article
   WHERE 
-    (article.text LIKE '%' || search_text || '%')
+    (article.search_art ILIKE '%' || search_text || '%')
     AND (author_filter IS NULL OR article.author = author_filter)
     AND (start_date IS NULL OR article.date >= start_date)
     AND (end_date IS NULL OR article.date <= end_date)
-    AND (NOT (search_text = ANY(article.keyword)))
-    AND NOT (article.title LIKE '%' || search_text || '%')
+    AND (NOT 
+      exists (
+    SELECT 1 FROM unnest(article.keyword) AS elem
+    WHERE elem ilike '%' || search_text || '%'
+    )
+    )
+    AND NOT (article.title ILIKE '%' || search_text || '%')
     AND (category_filter IS NULL OR category_filter = article.category)
     ORDER BY article.id DESC
     LIMIT 20
@@ -416,8 +449,6 @@ Get /api/search: get category, authors, editors, admins, themes of articles, and
 
 Get /api/search/sitemap: get themes of articles
 
-Post /api/unlockarticle: unlock and edit the articles
-
 Get /api/user: get the list of users
 
 Delete /api/user: delete users by id
@@ -434,6 +465,11 @@ Post /auth/provider/twofa/twofausercookie: check the cookie in protected page (/
 
 Post /auth/provider/twofa/twofasingincookie: check the cookie for 2FA page when user sing in.
 
+Get /rss: get the rss
+
 ### Server actions
 
 The server actions are in the actions directory.
+
+
+The resource http://localhost:3000/about/api/islogged was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.

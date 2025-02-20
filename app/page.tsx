@@ -4,15 +4,14 @@ import MainNews from "./_components/home/main";
 import Videos from "./_components/home/videos";
 import SectionTwo from "./_components/home/sectionTwo";
 import { latestNewsMainPage } from "@/actions/getlatestnews";
-import SectionThree from "./_components/home/sectionThree";
 
 
-export const revalidate = 60
+//export const revalidate = 60
 
 export default async function Page() {
 
   const res = await latestNewsMainPage()
-
+  
   return (
     <>
 
@@ -29,7 +28,6 @@ export default async function Page() {
       <SectionTwo />
 
       <Videos />
-      <SectionThree />
     </>
   );
 }

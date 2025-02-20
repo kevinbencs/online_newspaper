@@ -54,7 +54,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
   const [focus, setFocus] = useState<boolean>(false);
   const router = useRouter();
 
-  const { data, error, isLoading } = useSWR<Res, Error>('/api/search', fetcher);
+  const { data, error, isLoading } = useSWR<Res, Error>('/api/search', fetcher,{refreshInterval: 60000});
 
   const categoryFilter = (arrayItem: Cat) => {
     const arr = arrayItem.name.toLowerCase().split(' ')

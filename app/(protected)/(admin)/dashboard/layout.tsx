@@ -15,7 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Link className='border-zinc-500 border hover:dark:bg-slate-500 hover:text-white hover:dark:text-white hover:bg-gray-700 text-center inline-block p-2 min-w-32' href={'/dashboard/category_image_audio_video'}> Category, image, audio, video</Link>
         }
         {RoleLogged === 'Admin' &&
-          <Link className='border-zinc-500 border hover:dark:bg-slate-500 hover:text-white hover:dark:text-white hover:bg-gray-700 text-center inline-block p-2 min-w-32' href={'/dashboard/delete_user_article_colleague_carrier'}> Delete user, article, colleague or carrier</Link>
+          <Link className='border-zinc-500 border hover:dark:bg-slate-500 hover:text-white hover:dark:text-white hover:bg-gray-700 text-center inline-block p-2 min-w-32' href={'/dashboard/delete_user_article_colleague_career'}> Delete user, article, colleague or career</Link>
         }
         <Link className='border-zinc-500 border hover:dark:bg-slate-500 hover:text-white hover:dark:text-white hover:bg-gray-700 text-center inline-block p-2 min-w-32' href={'/dashboard/task'}>Tasks</Link>
         <AdminLogout />

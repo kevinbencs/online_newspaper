@@ -1,9 +1,7 @@
 'use server'
 
-import Admin from "@/model/Admin"
-import Token from "@/model/Token"
-import { cookies } from 'next/headers';
-import jwt, { JwtPayload } from "jsonwebtoken"
+
+import jwt from "jsonwebtoken"
 import * as z from 'zod';
 import { NewsletterSchema } from "@/schema";
 import sgMail from '@sendgrid/mail';
@@ -13,32 +11,12 @@ import path from 'path';
 import { getImageById } from "./getimageurl";
 
 
-interface Decoded extends JwtPayload {
-    id: string
-}
 
 
 export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchema>) => {
-    const cookie = cookies().get('admin-log');
-    if (!cookie) return { error: 'Please log in' }
+
     try {
-        const token = await Token.findOne({ token: cookie.value });
-        if (!token) {
 
-            return { error: 'Please log in' };
-        }
-
-        const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) {
-
-            return { error: 'Please log in' };
-        }
-
-        const admin = await Admin.findById(decoded.id);
-        if (!admin) {
-
-            return { error: 'Please log in' };
-        }
 
         const validatedFields = NewsletterSchema.safeParse(newsletter);
         if (validatedFields.error) return { failed: validatedFields.error.errors }

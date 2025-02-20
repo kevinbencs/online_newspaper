@@ -8,7 +8,7 @@ const Client = () => {
     const [error, setError] = useState<string | undefined>('');
     const [code, setCode] = useState<string | undefined>('');
     const [isPending, startTransition] = useTransition();
-    const { RoleLogged, setRole, setNumOfSavedArt } = useLogged();
+    const { RoleLogged, setRole, setSaveArtUrls, setSubscribe, setEmail, setLogged } = useLogged();
     const { push } = useRouter();
 
     const handleSubmit = (e: SyntheticEvent) => {
@@ -21,20 +21,18 @@ const Client = () => {
                         else {
 
                             if (res.error) setError(res.error)
-                            else {
+                            if (res.success) {
                                 setRole('user');
-                                if (res.numberOfArt) {
-                                    setNumOfSavedArt(res.numberOfArt)
-                                }
-                                else {
-                                    setNumOfSavedArt(0)
-                                }
-
+                                setLogged(res.success.name);
+                                setSaveArtUrls(res.success.saveArt);
+                                setSubscribe(res.success.subscribe);
+                                setEmail(res.success.email)
                             }
+
                         }
 
                     })
-                    .catch(error =>{
+                    .catch(error => {
                         console.log(error);
                         setError('Something went wrong, please try again')
                     })

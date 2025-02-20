@@ -20,6 +20,7 @@ const AudioElement = (props: { Id: string }) => {
             if(res.success){
                 setUrl(res.success.url);
                 setTitle(res.success.title);
+                console.log(res.success)
                 setDate(res.success.date);
             }
         })

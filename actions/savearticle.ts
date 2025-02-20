@@ -6,7 +6,7 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { cookies } from "next/headers";
 import Token from "@/model/Token";
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { urlSchema } from "@/schema";
+import { urlPathnameSchema} from "@/schema";
 import * as z from 'zod'
 
 
@@ -16,10 +16,9 @@ interface Decoded extends JwtPayload {
 }
 
 
-export const saveArticle = async (value: z.infer<typeof urlSchema>) => {
+export const saveArticle = async (value: z.infer<typeof urlPathnameSchema>) => {
     try {
-
-        const validateFields = urlSchema.safeParse(value);
+        const validateFields = urlPathnameSchema.safeParse(value);
         if(validateFields.error) return({failed: validateFields.error.errors})
 
         const url = value.url;
@@ -66,7 +65,7 @@ export const saveArticle = async (value: z.infer<typeof urlSchema>) => {
 
         const saveArt = await supabase.from('saveArticle').insert({
             user_email: email,
-            title: title.replaceAll('_', ' '),
+            title: title.replaceAll('_', ' ').replaceAll('nb20','?'),
             url
         })
 
@@ -84,10 +83,10 @@ export const saveArticle = async (value: z.infer<typeof urlSchema>) => {
 }
 
 
-export const deleteArticle = async (value: z.infer<typeof urlSchema>) => {
+export const deleteArticle = async (value: z.infer<typeof urlPathnameSchema>) => {
     try {
 
-        const validateFields = urlSchema.safeParse(value);
+        const validateFields = urlPathnameSchema.safeParse(value);
         if(validateFields.error) return({failed: validateFields.error.errors})
 
         const url = value.url;
@@ -121,7 +120,7 @@ export const deleteArticle = async (value: z.infer<typeof urlSchema>) => {
         const title = url.slice(fourth_slash + 1, url.length);
 
         const email = data.user.email;
-        const delArt = await supabase.from('saveArticle').delete().eq('title', title.replaceAll('_', ' ')).eq('user_email', email)
+        const delArt = await supabase.from('saveArticle').delete().eq('title', title.replaceAll('_', ' ').replaceAll('nb20','?')).eq('user_email', email)
 
         if (delArt.error) {
             console.log(delArt.error)
@@ -166,7 +165,7 @@ export const getAllSaveArticle = async () => {
             if (decoded.id !== data.user.id) return { error: 'Please log in' };
         }
 
-        const res: PostgrestSingleResponse<{ title: string, url: string, id: string }[]> = await supabase.from('saveArticle').select('title, url, id').eq('user_email', data.user.email);
+        const res: PostgrestSingleResponse<{ title: string, url: string,  }[]> = await supabase.from('saveArticle').select('title, url').eq('user_email', data.user.email);
 
         if (res.error) {
             console.log(res.error)
@@ -181,47 +180,3 @@ export const getAllSaveArticle = async () => {
     }
 }
 
-
-export const getNumberSaveArticle = async () => {
-    const Cookie = cookies()
-    try {
-        const supabase_user = createClient();
-        const { data, error } = await supabase_user.auth.getUser();
-
-        if (error) {
-            console.log(error)
-            return { Error: 'Server error' }
-        }
-
-        if (!data || !data.user) { return { Error: 'Please log in' } }
-
-        const Cookie = cookies().get('user-log-2fa');
-
-        if (data.user?.app_metadata.twofa === 'true') {
-            if (!Cookie) return { error: 'Please log in' };
-
-            const tokenRes = await Token.find({ token: Cookie.value });
-
-            if (!tokenRes) return { error: 'Please log in' };
-
-            if (!process.env.TwoFA_URI) return { error: 'process.env.TwoFA_URI is missing' }
-
-            const decoded = await jwt.verify(Cookie.value, process.env.TwoFA_URI!) as Decoded;
-
-            if (decoded.id !== data.user.id) return { error: 'Please log in' };
-        }
-
-        const res: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('saveArticle').select('id', { count: 'exact' }).eq('user_email', data.user.email);
-
-        if (res.error) {
-            console.log(error)
-            return { Error: 'Server error' }
-        }
-
-        return { count: res.count }
-
-    } catch (error) {
-        console.log(error)
-        return { Error: 'Server error' }
-    }
-}

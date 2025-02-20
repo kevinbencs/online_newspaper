@@ -2,7 +2,6 @@
 
 import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { authorArt } from "@/schema";
 import { authorArtNumber } from "@/schema";
 import * as z from 'zod'
@@ -18,8 +17,6 @@ interface Data {
 }
 
 export const authorArticle = async (value: z.infer<typeof authorArt>) => {
-    // disable cache for this server action
-    const _cookie = cookies();
 
     const validatedFields = authorArt.safeParse(value);
     if(validatedFields.error) return{failed: validatedFields.error.errors}
@@ -41,8 +38,6 @@ export const authorArticle = async (value: z.infer<typeof authorArt>) => {
 }
 
 export const numberOfAuthorArticle = async (value: z.infer<typeof authorArtNumber>) => {
-    // disable cache for this server action
-    const _cookie = cookies();
 
     const validatedFields = authorArtNumber.safeParse(value);
     if(validatedFields.error) return {failed: validatedFields.error.errors}

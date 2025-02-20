@@ -1,25 +1,47 @@
 'use client'
 
-import { AddName } from '@/actions/addnametask'
-import { DeleteTask } from '@/actions/daletetask'
 import React, { Dispatch, SetStateAction } from 'react'
 
-const TaskItem = (props: { name: string, id: string, task: string, setError: Dispatch<SetStateAction<string>> }) => {
+const TaskItem = (props: { name: string, id: string, task: string, setError: Dispatch<SetStateAction<string | undefined>> }) => {
     const handleDelete = async () => {
         props.setError('');
-        DeleteTask({id: props.id})
-        .then(val => {
-            if(val.error) props.setError(val.error)
-        })
+        try {
+            const res = await fetch(`/api/task/${props.id}`,{
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'}
+            })
+
+            const resJSON = await res.json() as {error: string | undefined, success: string | undefined};
+
+            if(res.status !== 200){
+                props.setError(resJSON.error)
+            }
+
+        } catch (error) {
+            console.log(error);
+            props.setError('Error, please try again')
+        }
     }
 
-    const changeName = () => {
+    const changeName = async () => {
         props.setError('');
-        console.log(props.id)
-        AddName({id: props.id})
-        .then(val => {
-            if(val.error) props.setError(val.error)
-        })
+
+        try {
+            const res = await fetch(`/api/task/${props.id}`,{
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'}
+            })
+
+            const resJSON = await res.json() as {error: string | undefined, success: string | undefined};
+
+            if(res.status !== 200){
+                props.setError(resJSON.error)
+            }
+        } catch (error) {
+            console.log(error);
+            props.setError('Error, please try again')
+        }
+
     }
     return (
         <div className=' bg-gray-200 mb-2 text-black rounded-lg shadow-3xl shadow-black dark:shadow-none dark:bg-slate-700 dark:text-white'>

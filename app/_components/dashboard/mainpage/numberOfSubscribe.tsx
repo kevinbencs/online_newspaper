@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 const NumberOfSubscribers = (props: { number: number }) => {
     const [number, setNumber] = useState<number>(0)
-
+    console.log(props.number)
     useEffect(() => {
         for(let i = 0; i <= props.number; i++){
             setTimeout(() => {

@@ -5,7 +5,7 @@ import { BiMinusCircle } from "react-icons/bi";
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 
-const DeleteSavedArticle = (props: { title: string, articles:{title:string, id:string}[], setDeleteArticles: Dispatcher<{ title: string }[]>, setArticles: Dispatcher<{ title: string, id: string }[]>, deleteArticle:{title:string}[] }) => {
+const DeleteSavedArticle = (props: { title: string, articles:{title:string, url:string}[], setDeleteArticles: Dispatcher<{ title: string }[]>, setArticles: Dispatcher<{ title: string, url: string }[]>, deleteArticle:{title:string}[] }) => {
     const handleClick = () => {
         props.setDeleteArticles([...props.deleteArticle, {title:props.title}])
         props.setArticles(props.articles.filter(item=> item.title !== props.title))

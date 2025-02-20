@@ -1,41 +1,15 @@
 'use server'
 
-import Admin from "@/model/Admin"
-import Token from "@/model/Token"
-import { cookies } from 'next/headers';
-import jwt, { JwtPayload } from "jsonwebtoken"
+
 import * as z from 'zod'
 import { WriteCarrierSchema } from "@/schema";
 import Carrier from "@/model/Career";
 
-interface Decoded extends JwtPayload {
-    id: string
-}
 
 
 export const WriteCareer = async (value: z.infer<typeof WriteCarrierSchema>) => {
-    const cookie = cookies().get('admin-log');
-    if (!cookie) return { error: 'Please log in' };
 
     try {
-
-        const token = await Token.findOne({ token: cookie.value });
-        if (!token) {
-
-            return { error: 'Please log in' };
-        }
-
-        const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
-        if (!decoded) {
-
-            return { error: 'Please log in' };
-        }
-
-        const account = await Admin.findById(decoded.id);
-        if (!account) {
-
-            return { error: 'Please log in' };
-        }
 
         const validatedFields = WriteCarrierSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors };

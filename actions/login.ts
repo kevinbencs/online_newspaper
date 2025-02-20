@@ -7,7 +7,7 @@ import Token from '@/model/Token';
 import jwt from 'jsonwebtoken';
 
 import { createClient } from '@/utils/supabase/server'
-import { getNumberSaveArticle } from './savearticle';
+import { getAllSaveArticle } from './savearticle';
 
 export const login = async (values: z.infer<typeof LoginShcema>) => {
   try {
@@ -34,7 +34,7 @@ export const login = async (values: z.infer<typeof LoginShcema>) => {
         { expiresIn: '2m' }
       )
 
-      const newToken =  new Token({token})
+      const newToken = new Token({ token })
 
       await newToken.save()
 
@@ -42,18 +42,15 @@ export const login = async (values: z.infer<typeof LoginShcema>) => {
       return { redirect: '2FA' };
     }
 
-    const res = await getNumberSaveArticle()
+    const res = await getAllSaveArticle()
+    const newsletter = await supabase.from('newsletter').select().eq('email', data.user?.email)
 
-    if(res.count) return { numberOfArt: res.count }
-
-    return { error: 'Server error' }
+    return {success: { name: data.user?.user_metadata.name, email: data.user.email || '', saveArt: res.data || [], subscribe: newsletter.data?.length !== 0 ? true : false }}
   }
   catch (err) {
     console.log(err);
     return { error: 'Server error' }
   }
-
-
 }
 
 

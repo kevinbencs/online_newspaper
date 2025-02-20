@@ -59,25 +59,24 @@ const Page = async ({ searchParams }: {
 
   const res = await searchNews({
     category: searchParams.category,
-    text: searchParams.text.replaceAll('_', ' '),
+    text: decodeURIComponent(searchParams.text.replaceAll('_', ' ')),
     date_from: searchParams.date_from,
     date_to: searchParams.date_to,
     author: searchParams.author,
-    page: searchParams.page,
+    page:  searchParams.page !== null && searchParams.page !== undefined ? Number(searchParams.page) : searchParams.page,
     filter: searchParams.filter
   })
 
-  console.log(res.lastPage)
-
   let filt = res.filt
 
+
   const searchParams2 = {
-    category: searchParams.category,
+    category: searchParams.category ? searchParams.category: '',
     text: searchParams.text,
-    date_from: searchParams.date_from,
-    date_to: searchParams.date_to,
-    author: searchParams.author,
-    page: searchParams.page
+    date_from: searchParams.date_from ? searchParams.date_from: '',
+    date_to: searchParams.date_to ? searchParams.date_to: '',
+    author: searchParams.author ? searchParams.author: '',
+    page: searchParams.page !== null && searchParams.page !== undefined ? Number(searchParams.page) : searchParams.page
   }
 
 
@@ -105,13 +104,13 @@ const Page = async ({ searchParams }: {
         }
       </section>
 
-      <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">{filt}: {searchParams.text.replaceAll('_', ' ')}</h1>
+      <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">{typeof filt !== 'undefined' ? filt+':' : ''} {decodeURIComponent(searchParams.text.replaceAll('_', ' '))}</h1>
 
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
           <div className="mb-10">
             {res.success?.data.data && res.success.data.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
-              link={`/${item.category}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_')}`} />)}
+              link={`/${item.category.toLowerCase()}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}`} />)}
           </div>
           {(res.lastPage !== undefined && res.lastPage > 0) && <Pagination searchParams={searchParams2} filter={filt} lastPage={res.lastPage} />}
         </div>

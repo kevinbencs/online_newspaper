@@ -117,7 +117,7 @@ const AudioElement2 = (props: { Id: string }) => {
     return (
         <>
 
-            <div className='w-[100%]  bg-slate-500 mt-10 p-4 pr-6 pt-6 rounded-xl' ref={displayAudiRef}>
+            <div className='w-[100%]  bg-slate-500 mt-10 p-4 pr-6 pt-6 rounded-xl mb-10' ref={displayAudiRef}>
                 <div className='flex before:h-[2px] before:w-[calc(100%-32px-160px)] before:bg-slate-950  before:block items-center pl-8 before:mr-8 mb-6'>
                     <Link href='/category/podcast' className=' bg-white text-gray-900 font-bold p-2 block  rounded text-center  w-40'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 inline">

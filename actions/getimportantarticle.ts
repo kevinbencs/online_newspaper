@@ -2,7 +2,6 @@
 
 import { supabase } from "@/utils/supabase/article"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
-import { cookies } from "next/headers"
 import { pageSchema } from "@/schema";
 import * as z from 'zod'
 
@@ -27,15 +26,13 @@ interface DataRightSide {
 }
 
 export const importantArticle = async (value: z.infer<typeof pageSchema>) => {
-    // disable cache for this server action
-    const _cookie = cookies()
 
     const validatedFields = pageSchema.safeParse(value);
     if(validatedFields.error) return {failed: validatedFields.error.errors}
 
     const page = value.page
     if (typeof page !== 'undefined') {
-        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall, important').neq('important', 'Not important').range((page-1)*20,page*20).order('id',{ ascending: false }).eq('locked',false);
+        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall, important').neq('important', 'Not important').range((page-1)*20,page*20 - 1).order('id',{ ascending: false }).eq('locked',false);
 
         if (res.error) return { error: 'Server error' }
         return { success: res.data }
@@ -57,8 +54,6 @@ export const numberOfImportantArticle = async () => {
 
 
 export const importantNewsRightSide = async () => {
-    // disable cache for this server action
-    const _cookie = cookies()
     
     const res: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Most important').eq('locked',false); 
     const res2: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Second most important').order('id',{ ascending: false }).eq('locked',false);

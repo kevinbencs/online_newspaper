@@ -83,6 +83,7 @@ const Client = (props: {
     const [paywallText, setPaywallText] = useState<(string | JSX.Element)[]>(['']);
     const [paragPaywallPlaceholder, setParagPaywallPlaceholder] = useState<string>('placeholder');
     const [textError, setTextError] = useState<string>('');
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
     const [success, setSuccess] = useState<string | undefined>('');
     const [error, setError] = useState<string | undefined>('');
@@ -140,7 +141,7 @@ const Client = (props: {
 
         if (props.res.data) {
             setTitleInput(props.res.data.title);
-            setPaywall(props.res.data.paywall ? 'Paywall yes' : 'Paywall no');
+            setPaywall(props.res.data.paywall ? 'Paywall: yes' : 'Paywall: no');
             setParagraphInput(props.res.data.text.split('$').join('\n\n'));
             setParagraphPaywallInput(props.res.data.paywall_text.split('$').join('\n\n'));
             setFirstElementUrl(props.res.data.first_element_url);
@@ -160,6 +161,15 @@ const Client = (props: {
         if (props.res.failed) setFailed(props.res.failed);
 
     }, [])
+
+    useEffect(() => {
+        if(props.res.data && firstLoad){
+            if (PaywallParagRef.current) {PaywallParagRef.current.innerText = `${props.res.data.paywall_text.split('$').join('\n')}`
+            if(props.res.data.paywall_text.split('$').join('\n') !== '') setParagPaywallPlaceholder('');
+            setFirstLoad(false);}
+        }
+        
+    },[paywall])
 
 
     useEffect(() => {
@@ -220,16 +230,14 @@ const Client = (props: {
             startTransition(() => {
                 editArticle({
                     text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
-                    paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
+                    paywall: paywall === 'Paywall: yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
                     paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: props.params.title.replaceAll('_', ' ')
 
                 })
                     .then((res) => {
                         if (res.success) {
                             setSuccess(res.success);
-
-                            push(`/${categoryInput}/${props.params.year}/${props.params.month}/${props.params.day}/${decodeURIComponent(props.params.title)}`) // Title must be changed titleInput.replaceAll(' ','_')
-
+                            push(`/${categoryInput}/${props.params.year}/${props.params.month}/${props.params.day}/${titleInput.replaceAll(' ','_').replace('?','nb20')}`) 
                         }
                         if (res.error) setError(res.error);
                         if (res.failed) setFailed(res.failed);

@@ -102,7 +102,7 @@ const LatestNews = (props: {
   return (
     <div>
 
-      {error !== '' &&
+      {(error !== '' && error !== undefined)&&
         <div>{error}</div>
       }
 
@@ -116,7 +116,7 @@ const LatestNews = (props: {
         onTouchEnd={handleTouchEnd}
         ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {data && data?.map(item => <LatestNewsLink Article={{ header: item.title, paywall: item.paywall, date: item.date, link: `/${item.category.toLowerCase()}/${item.date.slice(0, 4)}/${item.date.slice(5, 7)}/${item.date.slice(8, 10)}/${item.title.replaceAll(' ', '_')}` }} key={item.id} isDragging={isDragging} />)}
+          {data && data?.map(item => <LatestNewsLink Article={{ header: item.title, paywall: item.paywall, date: item.date, link: `/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(5, 7)}/${item.date.slice(8, 10)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}` }} key={item.id} isDragging={isDragging} />)}
         </section>
       </div>
     </div>

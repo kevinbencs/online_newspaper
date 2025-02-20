@@ -76,9 +76,9 @@ const LatestNewsLink = (props: { Article: Data, isDragging: boolean }) => {
       <div className='text-xs dark:text-slate-400 text-slate-500 w-[100%]'>{time}</div>
       </div>
       
-      <h2 className='text-sm font-bold max-h-10 overflow-y-hidden'>{props.Article.header.slice(0, 56)}</h2>
+      <h2 className='text-sm font-bold max-h-10 overflow-hidden h-10'>{props.Article.header.slice(0, 56)}</h2>
 
-      <div className='w-[60%] h-4 relative bg-gradient-to-r from-transparent via-base-100 to-base-100   -top-4 left-[25%]'></div>
+      <div className='w-[60%] h-4 relative bg-gradient-to-r from-transparent via-base-100 to-base-100   -top-[18px] left-[40%]'></div>
       {props.Article.paywall && <div> <IoLockClosed/> </div>}
     </Link>
   )

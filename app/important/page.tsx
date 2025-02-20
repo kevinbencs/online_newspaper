@@ -35,6 +35,32 @@ export const metadata: Metadata = {
   },
 }
 
+
+export async function generateStaticParams() {
+
+  const numberOfNews = await numberOfImportantArticle()
+
+  const lastPage = Math.ceil(numberOfNews.success ? numberOfNews.success/20 : 1);
+
+  const arr = []
+
+  arr.push('')
+
+  for(let i = 1 ; i<=lastPage; i++){
+    arr.push(i);
+  }
+
+  return arr.map((item) => {
+    item === '' ? '' : {searchParams : {page: item}}
+  })
+}
+
+export const dynamic = 'force-static'
+export const dynamicParams = true
+export const revalidate = 3600
+
+
+
 const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
 
   const lastPage = await numberOfImportantArticle();
@@ -71,7 +97,7 @@ const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
           <div className="lg:w-[calc(100%-450px)] text-center">
             <div className="mb-10">
               {res.success.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
-                link={`/${item.category}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_')}`} />)}
+                link={`/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}`} />)}
             </div>
             {lastPage.success && <Pagination searchParams={searchParams} lastPage={Math.round(lastPage.success/20)} />}
           </div>

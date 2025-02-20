@@ -3,8 +3,12 @@ import Rightsidebar from "../../_components/category_menu_search/rightsidebar";
 import { getCategoryArticle, numberOfCategoryArticle } from "@/actions/getcategoryarticles";
 import Category_menu_articles from "@/app/_components/category_menu_search/category_menu_articles";
 import { Metadata, ResolvingMetadata } from "next";
+import { getCategory } from "@/actions/getCategory";
 
-
+interface Cat {
+  name: string,
+  _id: string
+}
 
 //export const revalidate = 60
 
@@ -47,6 +51,45 @@ export async function generateMetadata({ params, searchParams }: { params: { nam
 }
 
 
+
+
+/*export async function generateStaticParams() {
+  const authors = await getCategory()
+
+  const arrAUthNumbNews = []
+  if (authors.success) {
+    for (let i of authors.success) {
+      const numberOfNews = await numberOfCategoryArticle(i.name)
+      arrAUthNumbNews.push({ author: i.name, number: Math.ceil(numberOfNews.success ? numberOfNews.success / 20 : 1) })
+    }
+
+
+    const arr = []
+
+    for (let i = 0; i < authors.success.length; i++) {
+      arr.push({ author: authors.success[i].name, num: '' });
+      for (let j = 1; j <= arrAUthNumbNews[i].number; j++) {
+        arr.push({ author: authors.success[i].name, num: j });
+      }
+    }
+
+
+    return arr.map((item) => {
+      item.num === '' ? { name: item.author.replaceAll(' ', '_') } : { name: item.author.replaceAll(' ', '_'), searchParams: { page: item.num } }
+    })
+  }
+
+  return []
+}*/
+
+
+//export const dynamic = 'force-static'
+//export const dynamicParams = true
+//export const revalidate = 3600
+
+
+
+
 const Page = async ({ params, searchParams }: { params: { name: string }, searchParams: { page: number } }) => {
 
 
@@ -81,7 +124,7 @@ const Page = async ({ params, searchParams }: { params: { name: string }, search
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
           <div className="mb-10">
-            {res.success.data.map(item => <Category_menu_articles paywall={item.paywall} link={'/' + params.name.toLowerCase() + '/' + item.date.slice(0, 4) + '/' + item.date.slice(6, 8) + '/' + item.date.slice(10, 12) + '/' + item.title.replaceAll(' ', '_')}
+            {res.success.data.map(item => <Category_menu_articles paywall={item.paywall} link={'/' + params.name.toLowerCase().replaceAll(' ', '').replace('&', '_') + '/' + item.date.slice(0, 4) + '/' + item.date.slice(6, 8) + '/' + item.date.slice(10, 12) + '/' + item.title.replaceAll(' ', '_').replace('?', 'nb20')}
               date={item.date} detail={item.detail} category_name={item.author} category_name_link={`/authors/${item.author.replaceAll(' ', '_')}`} imageId={item.cover_img_id} title={item.title} key={item.id} />)}
           </div>
           {lastPage.success && <Pagination searchParams={searchParams} lastPage={Math.round(lastPage.success / 20)} params={params} />}

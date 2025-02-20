@@ -37,7 +37,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         socket.on('lastMainPageNews', setMainMessage);
-        socket.on("numberOfLockedArticle",setSidebarNotification);
+        socket.on("numberOfLockedArticle",(data) => {setSidebarNotification(data.data);});
         socket.on('task', (data) => {
             setTask(data.tasks)
         })

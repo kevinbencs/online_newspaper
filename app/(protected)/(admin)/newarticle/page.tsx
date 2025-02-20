@@ -11,7 +11,6 @@ import Optgroup from '../../../_components/optgroup/optgroup';
 import OptgroupWithOutFilter from '../../../_components/optgroup/optgroupwithoutfilter';
 import Themes from '../../../_components/newArticle/themes';
 import Paywall from '../../../_components/paywall';
-import { WriteArticle } from '@/actions/writearticle';
 import * as z from 'zod';
 import ImgOptgroup from '@/app/_components/optgroup/articleimggroup';
 import AudioOptgroup from '@/app/_components/optgroup/articleaudiogroup';
@@ -163,28 +162,37 @@ const Page = () => {
     setError('');
     setFailed([]);
     if (titleInput !== '' && categoryInput !== '' && importantInput !== '' && paywall !== '' && sidebar !== '' && themes.length !== 0 && text.join('$') !== '' && detail !== '') {
-      startTransition(() => {
-        WriteArticle({
-          text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
-          paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
-          paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail
-
-        })
-          .then((res) => {
-            if (res.success) {
-              setSuccess(res.success);
-
-              setText([]);
-              reset(
-                setText, setCategoryInput, setImportantInput, setFirstElementInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
-                setSidebar, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef,
-                setDetail, setCoverImageId
-              )
-
-            }
-            if (res.error) setError(res.error);
-            if (res.failed) setFailed(res.failed);
+      startTransition(async () => {
+        
+        const res = await fetch('/api/writearticle',{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
+            paywall: paywall === 'Paywall: yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
+            paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail
+  
           })
+        })
+
+        const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: z.ZodIssue[] | undefined };
+
+        if (res.status === 200) {
+          setSuccess(resJson.success);
+          reset(
+            setText, setCategoryInput, setImportantInput, setFirstElementInput, setThemes, setTitleInput, setFirstElementUrl, setPaywall,
+            setSidebar, setParagraphInput, setParagraphPaywallInput, setParagPlaceholder, setReset, Reset1, setPaywallText, setParagPaywallPlaceholder, setTextError, TextEnterRef,
+            setDetail, setCoverImageId
+          )
+          
+      }
+      else if (res.status === 400) {
+          if (resJson.failed) setFailed(resJson.failed);
+          else setError(resJson.error);
+      }
+      else {
+          setError(resJson.error);
+      }
 
       })
     }

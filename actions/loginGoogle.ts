@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 export const loginGoogle = async () => {
     const supabase = createClient();
 
-    const redirectUrl = 'https://online-newspaper.vercel.app/auth/callback';
+    const redirectUrl = `${process.env.URL}/auth/callback`;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',

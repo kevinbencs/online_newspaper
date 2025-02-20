@@ -1,22 +1,27 @@
 
-import { getUserData } from "@/actions/getuserdata";
-import { getAllSaveArticle } from "@/actions/savearticle";
+'use client'
+
 import Link from "next/link";
+import { v4 as uuid } from "uuid";
+import { useLogged } from "@/app/_components/islogged/isloggedprovider";
+import { useSearchParams } from 'next/navigation'
 
-const Page = async ({ searchParams }: { searchParams: { message: string } }) => {
 
+export default function Page () {
 
-  const { name, email, subscribe, error } = await getUserData();
+  const { WhoLogged, email, saveArtUrls, subscribe } = useLogged()
 
-  const {data, Error} = await getAllSaveArticle()
+  const searchParams = useSearchParams()
+ 
+  const search = searchParams.get('message')
 
 
   return (
     <div className="w-full lg:w-[60%]">
       <div className="ml-3 lg:ml-0">
-        {searchParams.message &&
+        {search &&
           <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 font-bold'>
-            {searchParams.message.replaceAll('-', ' ')}
+            {search}
           </div>
         }
 
@@ -27,7 +32,7 @@ const Page = async ({ searchParams }: { searchParams: { message: string } }) => 
           </svg>
           Name
         </h3>
-        <p className="mb-5 border-b input-bordered p-2">{name}</p>
+        <p className="mb-5 border-b input-bordered p-2">{WhoLogged}</p>
 
         <h3 className="pl-2 flex gap-2 items-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
@@ -50,8 +55,7 @@ const Page = async ({ searchParams }: { searchParams: { message: string } }) => 
 
         <h2 className="mb-5 text-2xl border-b dark:border-white border-black font-bold">Favorite articles</h2>
         <ul className="pl-2">
-          {Error && <li className="mb-1">{Error}</li>}
-          {data && data.map(item => <li key={`${item.id}-${item.title}`} className="mb-1"><Link href={`/${item.url}`}>{item.title}</Link> </li>)}
+          {saveArtUrls.map(item => <li key={`${uuid()}-${item.title}`} className="mb-1"><Link href={`/${item.url}`}>{item.title}</Link> </li>)}
         </ul>
 
         <div className="text-end mt-20">
@@ -62,4 +66,3 @@ const Page = async ({ searchParams }: { searchParams: { message: string } }) => 
   )
 }
 
-export default Page

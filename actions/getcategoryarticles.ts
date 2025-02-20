@@ -2,7 +2,6 @@
 
 import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { getCatArtSchema } from "@/schema";
 import * as z from 'zod'
 
@@ -18,8 +17,6 @@ interface Data {
 }
 
 export const getCategoryArticle = async (value: z.infer<typeof getCatArtSchema>) => {
-    // disable cache for this server action
-    const _cookie = cookies()
 
     const validateFields = getCatArtSchema.safeParse(value);
     if(validateFields.error) return {failed: validateFields.error.errors};
@@ -41,8 +38,6 @@ export const getCategoryArticle = async (value: z.infer<typeof getCatArtSchema>)
 }
 
 export const numberOfCategoryArticle = async (name: string) => {
-    // disable cache for this server action
-    const _cookie = cookies()
 
     const res: number | null = (await supabase.from('article').select('*', { count: 'exact' }).eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).eq('locked',false)).count;
 

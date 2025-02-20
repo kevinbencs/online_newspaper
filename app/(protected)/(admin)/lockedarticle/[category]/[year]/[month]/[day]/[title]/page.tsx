@@ -5,9 +5,8 @@ import Client from './client';
 
 const Page = async ({params}: {params: {category: string, year: string, month: string, day: string, title: string}}) => {
   const date = params.year + '. ' + params.month + '. ' + params.day + '.';
-  const res = await getLockedArticle({ title: decodeURIComponent(params.title.replaceAll('_', ' ')), date })
-
-
+  const res = await getLockedArticle({ title: decodeURIComponent(params.title.replaceAll('_', ' ').replace('nb20','?')), date })
+  
   return (
     <div className='mb-20'>
       <h1 className='mt-8 mb-10 text-5xl text-center'>Unlock article</h1>

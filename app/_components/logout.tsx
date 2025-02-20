@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { SyntheticEvent } from "react"
 
 export default function Logout() {
-    const { setLogged, setRole } = useLogged();
+    const { setLogged, setRole, setEmail, setSubscribe, setSaveArtUrls } = useLogged();
     const { push } = useRouter();
 
     const handleSubmit = (e: SyntheticEvent) => {
@@ -16,7 +16,10 @@ export default function Logout() {
                 if (val) {
                     setLogged('');
                     setRole('');
-                    push('/')
+                    setEmail('');
+                    setSaveArtUrls([]);
+                    setSubscribe(false);
+                    push('/');
                 }
             })
     }

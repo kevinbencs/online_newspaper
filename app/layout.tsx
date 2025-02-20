@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     types: {
       'application/rss+xml': [
         {
-          url: '/api/feed',
+          url: `${process.env.URL}/rss`,
           title: 'RSS Feed',
         },
       ],
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     },
     description: "News of the world",
     type: 'website',
-    url: `https://online-newspaper.vercel.app`,
+    url: `${process.env.URL}`,
     images: [
       {
         url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',

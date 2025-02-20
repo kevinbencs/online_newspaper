@@ -13,31 +13,29 @@ interface Decoded extends JwtPayload {
 }
 
 export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) => {
-
-
   try {
 
     const Cookies = cookies().get('admin-log');
-    if (!Cookies) return { error: 'Please sign in.' }
+    if (!Cookies) return { error: 'Please log in as admin.' }
 
     const token = await Token.findOne({ token: Cookies.value })
 
     if (!token) {
       
-      return { error: "PLease log in" };
+      return { error: "PLease log in as admin." };
     }
 
     const decoded = jwt.verify(Cookies.value, process.env.SECRET_CODE!) as Decoded;
 
     if (!decoded) {
       
-      return { error: "PLease log in" };
+      return { error: "PLease log in as admin." };
     }
 
     const account = await Admin.findById(decoded.id,{role: 1})
     if (!account) {
       
-      return { error: "PLease log in" };
+      return { error: "PLease log in as admin." };
     }
 
     if (account.role === 'Admin') {

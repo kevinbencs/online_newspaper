@@ -133,6 +133,10 @@ export const urlSchema = z.object({
     url: z.string().url({ message: 'Url is required' })
 })
 
+export const urlPathnameSchema = z.object({
+    url: z.string({ message: 'Url pathname is required' })
+})
+
 export const idSchema = z.object({
     id: z.string().min(1, { message: 'Id is required' })
 })

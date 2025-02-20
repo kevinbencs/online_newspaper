@@ -21,7 +21,6 @@ import Vid from '@/app/_components/newArticle/vid';
 import Img2 from '@/app/_components/newArticle/img2';
 import ArticleCategoryGroup from '@/app/_components/optgroup/articlecategory';
 import { useRouter } from 'next/navigation';
-import { unlockArticle } from '@/actions/unlockarticle';
 
 
 
@@ -85,6 +84,7 @@ const Client = (props: {
     const [paywallText, setPaywallText] = useState<(string | JSX.Element)[]>(['']);
     const [paragPaywallPlaceholder, setParagPaywallPlaceholder] = useState<string>('placeholder');
     const [textError, setTextError] = useState<string>('');
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
     const [success, setSuccess] = useState<string | undefined>('');
     const [error, setError] = useState<string | undefined>('');
@@ -139,7 +139,7 @@ const Client = (props: {
     useEffect(() => {
         if (props.res.data) {
             setTitleInput(props.res.data.title);
-            setPaywall(props.res.data.paywall ? 'Paywall yes' : 'Paywall no');
+            setPaywall(props.res.data.paywall ? 'Paywall: yes' : 'Paywall: no');
             setParagraphInput(props.res.data.text.split('$').join('\n\n'));
             setParagraphPaywallInput(props.res.data.paywall_text.split('$').join('\n\n'));
             setFirstElementUrl(props.res.data.first_element_url);
@@ -150,16 +150,25 @@ const Client = (props: {
             setThemes(props.res.data.keyword)
             if (TextEnterRef.current) TextEnterRef.current.innerText = `${props.res.data.text.split('$').join('\n')}`
             setParagPlaceholder('');
-            if (props.res.data.paywall_text !== '') setParagPaywallPlaceholder('');
             setImportantInput(props.res.data.important);
             setCategoryInput(props.res.data.category);
             setDetail(props.res.data.detail);
+            
         }
 
         if (props.res.error) push('/')
         if (props.res.failed) setFailed(props.res.failed);
 
     }, [])
+
+    useEffect(() => {
+        if(props.res.data && firstLoad){
+            if (PaywallParagRef.current) {PaywallParagRef.current.innerText = `${props.res.data.paywall_text.split('$').join('\n')}`
+            if(props.res.data.paywall_text.split('$').join('\n') !== '') setParagPaywallPlaceholder('');
+            setFirstLoad(false);}
+        }
+        
+    },[paywall])
 
 
     useEffect(() => {
@@ -218,37 +227,30 @@ const Client = (props: {
         setFailed([]);
         if (titleInput !== '' && categoryInput !== '' && importantInput !== '' && paywall !== '' && sidebar !== '' && themes.length !== 0 && text.join('$') !== '' && detail !== '') {
             startTransition(async () => {
-                try {
-                    const res = await fetch('/api/unlockarticle', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
-                            paywall: paywall === 'Paywall yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
-                            paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: decodeURIComponent(props.params.title.replaceAll('_', ' '))
-                        })
-                    });
 
-                    const resJson = await res.json() as { success: string | undefined, error: string | undefined, failed: z.ZodIssue[] | undefined };
+                const res = await fetch('/api/unlockarticle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
+                        paywall: paywall === 'Paywall: yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
+                        paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: titleInput
+                    })
+                });
 
-                    if (res.status === 200) {
-                        setSuccess(resJson.success);
-                        push(`/${props.params.category}/${props.params.year}/${props.params.month}/${props.params.day}/${titleInput.replaceAll(' ', '_')}`)
-                    }
-                    else if (res.status === 400) {
-                        if (resJson.failed) setFailed(resJson.failed);
-                        else setError(resJson.error);
-                    }
-                    else {
-                        setError(resJson.error);
-                    }
+                const resJson = await res.json() as { success: string | undefined, date: string | undefined, error: string | undefined, failed: z.ZodIssue[] | undefined };
 
-                } catch (error) {
-                    console.error('Unclocking article error: ', error);
-                    setError('Unclocking article error: api error')
+                if (res.status === 200) {
+                    setSuccess(resJson.success);
+                    if(resJson.date) push(`/${categoryInput.toLowerCase().replaceAll(' & ','_')}/${resJson.date.slice(0, 4)}/${resJson.date.slice(6, 8)}/${resJson.date.slice(10, 12)}/${titleInput.replaceAll(' ', '_').replace('?','nb20')}`)
                 }
-
-
+                else if (res.status === 400) {
+                    if (resJson.failed) setFailed(resJson.failed);
+                    else setError(resJson.error);
+                }
+                else {
+                    setError(resJson.error);
+                }
             })
         }
         else {

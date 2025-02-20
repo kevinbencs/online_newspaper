@@ -16,7 +16,7 @@ const Page = async () => {
 
       {data.data &&
         <section>
-          {data.data.map(item => <Link key={`locked-${item.id}`} className="block text-xl mb-2" href={`/lockedarticle/${item.category.replaceAll(' ','').replace('&','_').toLowerCase()}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_')}`}>{item.title}</Link> )}
+          {data.data.map(item => <Link key={`locked-${item.id}`} className="block text-xl mb-2" href={`/lockedarticle/${item.category.replaceAll(' ','').replace('&','_').toLowerCase()}/${item.date.slice(0,4)}/${item.date.slice(6,8)}/${item.date.slice(10,12)}/${item.title.replaceAll(' ','_').replace('?','nb20')}`}>{item.title}</Link> )}
         </section>
       }
 
