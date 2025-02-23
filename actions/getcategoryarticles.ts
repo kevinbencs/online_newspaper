@@ -1,6 +1,6 @@
 'use server'
 
-/*import { supabase } from "@/utils/supabase/article";
+import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { getCatArtSchema } from "@/schema";
 import * as z from 'zod'
@@ -44,4 +44,4 @@ export const numberOfCategoryArticle = async (name: string) => {
     if (!res) return { error: 'Server error' }
 
     return { success: res }
-}*/
+}

@@ -25,7 +25,7 @@ interface DataRightSide {
 
 }
 
-/*export const importantArticle = async (value: z.infer<typeof pageSchema>) => {
+export const importantArticle = async (value: z.infer<typeof pageSchema>) => {
 
     const validatedFields = pageSchema.safeParse(value);
     if(validatedFields.error) return {failed: validatedFields.error.errors}
@@ -51,7 +51,7 @@ export const numberOfImportantArticle = async () => {
 
     return {success: res};
 }
-*/
+
 
 export const importantNewsRightSide = async () => {
     

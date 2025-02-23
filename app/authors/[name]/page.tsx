@@ -43,38 +43,6 @@ export async function generateMetadata({ params, searchParams }: { params: { nam
   }
 }
 
-export async function generateStaticParams() {
-
-  const authors = await getAuthor()
-
-  const arrAUthNumbNews = []
-
-  for(let i of authors.success){
-    const numberOfNews = await numberOfAuthorArticle({ author: i.name })
-    arrAUthNumbNews.push({author: i.name, number: Math.ceil(numberOfNews.success ? numberOfNews.success/20 : 1)})
-  }
-
-
-  const arr = []
-
-  for(let i = 0; i <  authors.success.length; i++){
-    arr.push({author: authors.success[i].name, num: ''});
-    for(let j = 1; j <= arrAUthNumbNews[i].number; j++ ){
-      arr.push({author: authors.success[i].name, num: j});
-    }
-  }
-
-
-  return arr.map((item) => {
-    item.num === '' ?  {name: item.author.replaceAll(' ','_')} : {name: item.author.replaceAll(' ','_'), searchParams : {page: item.num}}
-  })
-}
-
-export const dynamic = 'force-static'
-export const dynamicParams = true
-export const revalidate = 3600
-
-
 const Page = async ({ params, searchParams }: { params: { name: string }, searchParams: { page: number } }) => {
 
   const lastPage = await numberOfAuthorArticle({ author: params.name.replaceAll('_', ' ') })
