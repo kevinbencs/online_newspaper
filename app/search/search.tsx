@@ -121,7 +121,7 @@ const Search = () => {
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         if (textInput !== '') {
-            router.push(`/search?text=${textInput.replaceAll(' ', '_')}&date_from=${fromDate.replaceAll('/','-')}&date_to=${toDate.replaceAll('/','-')}&category=${categoryInput.replaceAll(' ','').replaceAll('&','-').toLowerCase()}&author=${authorInput.replaceAll(' ','_')}`);
+            router.push(`/search?text=${textInput.replaceAll(' ', '_').replaceAll('+','10b10')}&date_from=${fromDate.replaceAll('/','-')}&date_to=${toDate.replaceAll('/','-')}&category=${categoryInput.replaceAll(' ','').replaceAll('&','-').toLowerCase()}&author=${authorInput.replaceAll(' ','_')}`);
         }
     }
 

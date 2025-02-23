@@ -23,7 +23,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
         const coll = await Eligibility(Cookie?.value)
 
-        if (coll.role === '') return {error: 'Please log in as admin' };
+        if (coll.role === '') return {error: 'Please log in as admin or editor or author' };
 
         const validatedFields = NewsletterSchema.safeParse(newsletter);
         if (validatedFields.error) return { failed: validatedFields.error.errors }

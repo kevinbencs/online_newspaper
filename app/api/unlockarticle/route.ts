@@ -8,6 +8,7 @@ import SocketService from "@/service/socketService";
 import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio, searchVideo } from "@/lib/checkArt";
 import { Eligibility } from "@/utils/mongo/eligibility";
 import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
+import { revalidateTag } from 'next/cache'
 
 
 
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
         const body = await req.json();
         const value = EditArticleSchema.parse(body);
@@ -189,6 +190,20 @@ export async function POST(req: NextRequest) {
             console.log(error);
             return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
+
+        revalidateTag('latestNtag')
+        revalidateTag('latestNewNumtag')
+
+        revalidateTag('latestNewSidebar1tag')
+        revalidateTag('AuthNtag')
+        revalidateTag('AuthNewNumtag')
+        revalidateTag('CatNtag')
+        revalidateTag('catNewNumtag')
+        revalidateTag('impNtag')
+        revalidateTag('impNewNumtag')
+        revalidateTag('impNewNumSidebar1tag')
+        revalidateTag('impNewNumSidebar2tag')
+        revalidateTag('impNewNumSidebar2tag')
 
 
 

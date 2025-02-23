@@ -30,10 +30,19 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
 
         const coll = await Eligibility(Cookie?.value)
 
+        
         if (coll.role === '') return { error: 'Please log in as admin' };
 
         const validatedFields = EditArticleSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors };
+
+        const article: PostgrestSingleResponse<{author: string}[]> = await supabase.from('article').select('author').eq('title', value.lastTitle.replaceAll('_', ' '));
+
+        if(article.data){
+            if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== article.data[0].author) return { error: 'Please log in as admin' };
+        }
+        
+        else return { error: 'No article' };
 
         let res: string = 'ok';
         const textArra: string[] = value.text.split('$');

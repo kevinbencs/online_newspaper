@@ -112,7 +112,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
 
         <div>
           <Link href={`/category/${res.data.category.toLowerCase()}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >
-            {res.data.category}
+            {res.data.category.replace( ' & ', '_')}
           </Link>
           <span className='ml-3'>
             {res.data.date.replaceAll(' ', '')}
@@ -142,7 +142,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
             {res.data.text.split('$').map((s: string) => <ChooseTypeOfTextItem key={res.data.id} s={s} />)}
             <section className='flex gap-3 mt-10'>
               {res.data.keyword.map(item => <li className='list-none dark:bg-white bg-slate-950 pl-2 pr-2 pt-1 pb-1' key={uuid()}>
-                <Link className=' dark:text-gray-950  text-gray-50 hover:text-gray-300 dark:hover:text-stone-400' href={`/search?text=${item.replaceAll(' ', '_')}&filter=theme`}>{item}</Link>
+                <Link className=' dark:text-gray-950  text-gray-50 hover:text-gray-300 dark:hover:text-stone-400' href={`/search?text=${item.replaceAll(' ', '_').replaceAll('+','10b10')}&filter=theme`}>{item}</Link>
               </li>)}
             </section>
           </div>

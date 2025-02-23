@@ -399,6 +399,8 @@ Get /api/article: article urls for sitemap
 
 Delete /api/article: delete articles
 
+Get /api/article/ispaywall/[category]/[year]/[month]/[day]/[title]: check article has paywall
+
 Get /api/articlesaved/[category]/[year]/[month]/[day]/[title]: checking user saved the article
 
 Get /api/audio: get audio title, url, id, date
@@ -409,6 +411,12 @@ Put /api/audio: update audio title or url
 
 Delete /api/audio: delete audio
 
+Get /api/authors: get authors, editors and admins in order of importance and alphabet.
+
+Get /api/career: get careers title 
+
+Delete /api/career: delete careers by ids
+
 Get /api/category: get category with id 
 
 Post /api/category: add category
@@ -416,6 +424,10 @@ Post /api/category: add category
 Put /api/category: update category
 
 Delete /api/category: delete category
+
+Get /api/colleague: get authors, editors and admins
+
+Delete /api/colleague: delete authors, editors or admins by id
 
 Get /api/img: get image url, id, detail
 
@@ -425,6 +437,26 @@ Put /api/img: update image url or detail
 
 Delete /api/img: delete image
 
+Get api/islogged: check the user is logged
+
+Get /api/lockedarticlenumber: get the number of locked article
+
+Get /api/search: get category, authors, editors, admins, themes of articles, and words od titles of articles
+
+Get /api/search/sitemap: get themes of articles
+
+Post aoi/task: write task (admin, author, editor)
+
+Delete api/task/[id]: delete task
+
+Put api/task/[id]: change the name of owner of the task
+
+Post api/unlockarticle: uclock article (editor or admin)
+
+Get /api/user: get the list of users
+
+Delete /api/user: delete users by id
+
 Get /api/video: get video url, id, title
 
 Post /api/video: add video url, title
@@ -433,25 +465,7 @@ Put /api/video: update video url or title
 
 Delete /api/video: delete video
 
-Get /api/authors: get authors, editors and admins in order of importance and alphabet.
-
-Get /api/career: get careers title 
-
-Delete /api/career: delete careers by ids
-
-Get /api/colleague: get authors, editors and admins
-
-Delete /api/colleague: delete authors, editors or admins by id
-
-Get /api/lockedarticlenumber: get the number of locked article
-
-Get /api/search: get category, authors, editors, admins, themes of articles, and words od titles of articles
-
-Get /api/search/sitemap: get themes of articles
-
-Get /api/user: get the list of users
-
-Delete /api/user: delete users by id
+Post /api/writearticle: write article (author, editor, admin)
 
 Get /auth/callback: supabase oauth (e.g.: google, github...),
 

@@ -2,8 +2,7 @@
 
 import { supabase } from "@/utils/supabase/article"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
-import { pageSchema } from "@/schema";
-import * as z from 'zod'
+import { unstable_cache } from "next/cache";
 
 interface Data {
     id: string,
@@ -25,39 +24,31 @@ interface DataRightSide {
 
 }
 
-export const importantArticle = async (value: z.infer<typeof pageSchema>) => {
 
-    const validatedFields = pageSchema.safeParse(value);
-    if(validatedFields.error) return {failed: validatedFields.error.errors}
 
-    const page = value.page
-    if (typeof page !== 'undefined') {
-        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall, important').neq('important', 'Not important').range((page-1)*20,page*20 - 1).order('id',{ ascending: false }).eq('locked',false);
+const getImpNewsNumCache1 = unstable_cache(
+  async () => supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Most important').eq('locked',false),
+  [`impNewNumSidebar1`],
+  { tags: ["impNewNumSidebar1tag"] }
+)
 
-        if (res.error) return { error: 'Server error' }
-        return { success: res.data }
-    }
+const getImpNewsNumCache2 = unstable_cache(
+    async () => supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Second most important').order('id',{ ascending: false }).eq('locked',false),
+    [`impNewNumSidebar2`],
+    { tags: ["impNewNumSidebar2tag"] }
+  )
 
-    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall, important').neq('important', 'Not important').limit(20).order('id',{ ascending: false }).eq('locked',false);
-
-    if (res.error) return { error: 'Server error' }
-    return { success: res.data }
-}
-
-export const numberOfImportantArticle = async () => {
-    const res:number | null = (await supabase.from('article').select('*',{count: 'exact'}).neq('important', 'Not important').eq('locked',false)).count
-
-    if(!res) return{error: 'Server error'}
-
-    return {success: res};
-}
-
+  const getImpNewsNumCache3 = unstable_cache(
+    async () => supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Important').limit(2).order('id',{ ascending: false }).eq('locked',false),
+    [`impNewNumSidebar3`],
+    { tags: ["impNewNumSidebar3tag"] }
+  )
 
 export const importantNewsRightSide = async () => {
     
-    const res: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Most important').eq('locked',false); 
-    const res2: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Second most important').order('id',{ ascending: false }).eq('locked',false);
-    const res3: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date, important').eq('important', 'Important').limit(2).order('id',{ ascending: false }).eq('locked',false);
+    const res: PostgrestSingleResponse<DataRightSide[]> = await getImpNewsNumCache1() 
+    const res2: PostgrestSingleResponse<DataRightSide[]> = await getImpNewsNumCache2()
+    const res3: PostgrestSingleResponse<DataRightSide[]> = await getImpNewsNumCache3();
     
     if(res.error || res2.error || res3.error) return {error: 'Server error'};
 

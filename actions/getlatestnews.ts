@@ -2,6 +2,7 @@
 
 import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
 
 interface DataRightSide {
     id: string,
@@ -24,7 +25,7 @@ export const latestNewsMainPage = async () => {
     const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').limit(6).eq('locked',false).order('id',{ascending: false})
 
     if (article.error) return { error: 'Server error' };
-    //2024-08-20T14:30:00Z
+    
 
     article.data.map(val => {
         val.date = val.date.replaceAll(' ', '').replaceAll('.', '-');
@@ -35,9 +36,14 @@ export const latestNewsMainPage = async () => {
     return { data: article.data };
 }
 
-export const latestNewsRightSide = async () => {
-    const article: PostgrestSingleResponse<DataRightSide[]> = await supabase.from('article').select('title, cover_img_id, id, category, date').eq('important', 'Not important').limit(5).eq('locked',false).order('id',{ascending: false})
+const getLatestNewsCache1 = unstable_cache(
+  async () => supabase.from('article').select('title, cover_img_id, id, category, date').eq('important', 'Not important').limit(5).eq('locked',false).order('id',{ascending: false}),
+  [`latestNewSidebar1`],
+  { tags: ["latestNewSidebar1tag"] }
+)
 
+export const latestNewsRightSide = async () => {
+    const article: PostgrestSingleResponse<DataRightSide[]> = await getLatestNewsCache1();
     if (article.error) return { error: 'Server error' };
 
     return { success: article.data };

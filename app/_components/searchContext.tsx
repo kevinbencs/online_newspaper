@@ -1,8 +1,6 @@
 'use client'
-import { SyntheticEvent, useState, Dispatch, SetStateAction, createContext, useContext, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, ReactNode } from 'react';
 import useSWR from 'swr';
-import Link from 'next/link';
 
 interface Cat {
     name: string,

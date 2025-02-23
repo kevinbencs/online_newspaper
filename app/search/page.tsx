@@ -58,8 +58,8 @@ const Page = async ({ searchParams }: {
 }) => {
 
   const res = await searchNews({
-    category: searchParams.category,
-    text: decodeURIComponent(searchParams.text.replaceAll('_', ' ')),
+    category: searchParams.category?.replace('_', ' & '),
+    text: decodeURIComponent(searchParams.text.replaceAll('_', ' ').replaceAll('10b10','+')),
     date_from: searchParams.date_from,
     date_to: searchParams.date_to,
     author: searchParams.author,
