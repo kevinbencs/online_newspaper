@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-const Pagination = (props: {url: string ,searchParams: { page: number }, lastPage: number }) => {
+const Pagination = (props: {url: string ,searchParams: { page: number | undefined }, lastPage: number }) => {
   if (props.searchParams.page === undefined) props.searchParams.page = 1;
   return (
     <section className="join mb-10">

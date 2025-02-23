@@ -1,5 +1,5 @@
 'use client'
-import { SyntheticEvent, useState, Dispatch, SetStateAction, } from 'react';
+import { SyntheticEvent, useState, Dispatch, SetStateAction, createContext, useContext, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import Link from 'next/link';
@@ -49,12 +49,29 @@ const fetcher = async (url: string): Promise<Res> => {
     return await res.json()
 }
 
-const SearchContext = () => {
+type SearchContextType = {
+    data: Res | undefined,
+    error: Error | undefined,
+    isLoading: boolean
+}
+
+const searchContext = createContext<SearchContextType | undefined>(undefined);
+
+export const SearchProvider = ({ children }: { children: ReactNode }) => {
 
     const { data, error, isLoading } = useSWR<Res, Error>('/api/search', fetcher, { refreshInterval: 60000 });
     return (
-        <div>SearchContext</div>
+        <searchContext.Provider value={{data, error, isLoading}}>
+            {children}
+        </searchContext.Provider>
     )
 }
 
-export default SearchContext
+export const useSearch = () => {
+    const context = useContext(searchContext);
+  if (context === undefined) {
+    throw new Error('useSearch must be used within an SearchProvider');
+  }
+  return context;
+}
+

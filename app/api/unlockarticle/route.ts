@@ -7,6 +7,7 @@ import { getVideoById } from "@/actions/getvideourl";
 import SocketService from "@/service/socketService";
 import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio, searchVideo } from "@/lib/checkArt";
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
 
 
 
@@ -159,6 +160,12 @@ export async function POST(req: NextRequest) {
         const currentDate: string = new Date().toISOString().slice(0, 10).replaceAll('-', '. ') + '.';
         const currentTime: string = new Date().toISOString().slice(11, 19);
 
+        const searchArt = [];
+
+        for (let i = 0; i < textArra.length; i++) {
+            searchArt.push(chooseTypeOfTextItemSearch(textArra[i]))
+        }
+
         /*const { error } = await supabase.from('article').update({
             date: currentDate,
             time: currentTime,
@@ -174,7 +181,8 @@ export async function POST(req: NextRequest) {
             cover_img_id,
             keyword: value.keyword,
             detail: value.detail,
-            locked: false
+            locked: false,
+            search_art:searchArt.join(' ')
         }).eq('title', value.lastTitle)
 
         if (error) {

@@ -7,7 +7,9 @@ import { getImageById } from "./getimageurl";
 import { getVideoById } from "./getvideourl";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio, searchVideo } from "@/lib/checkArt";
-
+import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
+import { cookies } from "next/headers";
+import { Eligibility } from "@/utils/mongo/eligibility";
 
 interface Theme {
     id: string,
@@ -15,7 +17,7 @@ interface Theme {
     number: number
 }
 
-interface Title{
+interface Title {
     id: string,
     title: string,
     number: number
@@ -23,6 +25,12 @@ interface Title{
 
 export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
     try {
+
+        const Cookie = cookies().get('admin-log');
+
+        const coll = await Eligibility(Cookie?.value)
+
+        if (coll.role === '') return { error: 'Please log in as admin' };
 
         const validatedFields = EditArticleSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors };
@@ -128,6 +136,13 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
 
 
 
+        const searchArt = [];
+
+        for (let i = 0; i < textArra.length; i++) {
+            searchArt.push(chooseTypeOfTextItemSearch(textArra[i]))
+        }
+
+
 
 
         /*if (value.important === 'Second most important') {
@@ -164,7 +179,8 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
             cover_img_id,
             keyword: value.keyword,
             detail: value.detail,
-            updated: true
+            updated: true,
+            search_art:searchArt.join(' ')
         }).eq('title', value.lastTitle)
 
         if (error) {

@@ -7,7 +7,7 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 import Admin from '@/model/Admin';
 import { hash } from 'bcrypt'
 import Token from '@/model/Token';
-
+import { Eligibility } from "@/utils/mongo/eligibility";
 
 interface Decoded extends JwtPayload {
     id: string
@@ -18,21 +18,11 @@ export const changeAdminPassword = async (values: z.infer<typeof NewPasswordSche
 
     try {
         const Cookies = cookies().get('admin-log');
-        if (!Cookies) return { error: 'Please log in' };
 
-        const token = await Token.findOne({ token: Cookies.value });
+        const coll = await Eligibility(Cookies?.value)
 
-        if (!token) {
-            
-            return { error: "PLease log in" };
-        }
-
-        const decoded = jwt.verify(token.token, process.env.SECRET_CODE!) as Decoded;
-
-        if (!decoded) {
-             
-            return { error: 'Please log in' };
-        }
+        if (coll.role === '') return { error: 'Please log in as admin, author, editor' };
+        
 
         const validatedFields = NewPasswordSchema.safeParse(values);
 

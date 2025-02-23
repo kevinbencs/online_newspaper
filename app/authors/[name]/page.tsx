@@ -1,4 +1,4 @@
-import Pagination from "./pagination";
+import Pagination from "@/app/_components/category_menu_search/pagination";
 import Rightsidebar from "../../_components/category_menu_search/rightsidebar";
 import { authorArticle, numberOfAuthorArticle } from "@/actions/getarthurarticle";
 import Category_menu_articles from "@/app/_components/category_menu_search/category_menu_articles";
@@ -92,7 +92,7 @@ const Page = async ({ params, searchParams }: { params: { name: string }, search
           <div className="mb-10">
             {res.error}
           </div>
-          {lastPage.success && <Pagination searchParams={searchParams} lastPage={lastPage.success} params={params} />}
+          {lastPage.success && <Pagination url={`${params.name}?`} searchParams={searchParams} lastPage={lastPage.success} />}
         </div>
         <div className="lg:w-80">
           <Rightsidebar />
@@ -114,7 +114,7 @@ const Page = async ({ params, searchParams }: { params: { name: string }, search
                 detail={item.detail} category_name={item.category} category_name_link={`/category/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}`} date={item.date}
                 link={`/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}`} key={item.id} />)}
             </div>
-            {lastPage.success && <Pagination searchParams={searchParams} lastPage={Math.ceil(lastPage.success/20)} params={params} />}
+            {lastPage.success && <Pagination url={`authors/${params.name}?`} searchParams={searchParams} lastPage={Math.ceil(lastPage.success/20)}  />}
           </div>
           <div className="lg:w-80">
             <Rightsidebar />

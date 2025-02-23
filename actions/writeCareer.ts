@@ -4,12 +4,19 @@
 import * as z from 'zod'
 import { WriteCarrierSchema } from "@/schema";
 import Carrier from "@/model/Career";
-
+import { cookies } from "next/headers";
+import { Eligibility } from "@/utils/mongo/eligibility";
 
 
 export const WriteCareer = async (value: z.infer<typeof WriteCarrierSchema>) => {
 
     try {
+
+        const Cookie = cookies().get('admin-log');
+
+        const coll = await Eligibility(Cookie?.value)
+
+        if (coll.role === '') return { error: 'Please log in as admin' };
 
         const validatedFields = WriteCarrierSchema.safeParse(value);
         if (validatedFields.error) return { failed: validatedFields.error.errors };

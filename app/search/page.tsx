@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Pagination from "./pagination";
+import Pagination from "../_components/category_menu_search/pagination";
 import Search from "./search";
 import Rightsidebar from "../_components/category_menu_search/rightsidebar";
 import Latest_important from "../_components/category_menu_search/latest_important";
@@ -112,7 +112,7 @@ const Page = async ({ searchParams }: {
             {res.success?.data.data && res.success.data.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
               link={`/${item.category.toLowerCase()}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}`} />)}
           </div>
-          {(res.lastPage !== undefined && res.lastPage > 0) && <Pagination searchParams={searchParams2} filter={filt} lastPage={res.lastPage} />}
+          {(res.lastPage !== undefined && res.lastPage > 0) && <Pagination url={`search?category=${searchParams2.category}&filter=${filt}&text=${searchParams2.text}&date_from=${searchParams2.date_from}&date_to=${searchParams2.date_to}&`} searchParams={{'page': searchParams2.page}}  lastPage={res.lastPage} />}
         </div>
         <div className="lg:w-80">
           <Rightsidebar />

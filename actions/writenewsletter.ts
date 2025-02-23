@@ -9,6 +9,8 @@ import { supabase } from "@/utils/supabase/article";
 import fs from 'fs';
 import path from 'path';
 import { getImageById } from "./getimageurl";
+import { cookies } from "next/headers";
+import { Eligibility } from "@/utils/mongo/eligibility";
 
 
 
@@ -17,6 +19,11 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
     try {
 
+        const Cookie = cookies().get('admin-log');
+
+        const coll = await Eligibility(Cookie?.value)
+
+        if (coll.role === '') return {error: 'Please log in as admin' };
 
         const validatedFields = NewsletterSchema.safeParse(newsletter);
         if (validatedFields.error) return { failed: validatedFields.error.errors }
@@ -40,16 +47,16 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
         const dayArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDate: string = new Date().toLocaleDateString();
         const day: number = new Date().getDay();
-        
+
         const emailTextArray = newsletter.text.split('\n').filter(item => item !== '')
         const emailNewTextArr: string[] = [];
-        for(let i= 0; i < emailTextArray.length; i++){
+        for (let i = 0; i < emailTextArray.length; i++) {
             emailNewTextArr[i] = await chooseTypeOfTextItem(emailTextArray[i]);
-            if(emailNewTextArr[i] === "Error in Italic" || emailNewTextArr[i]  === "Error in Bold" || 
-                emailNewTextArr[i]  === "Error in Anchor" || emailNewTextArr[i]  === "Error in Text" || 
-                emailNewTextArr[i]  === "Error in Image" || emailNewTextArr[i]  === "Error in Highlight" ||
-                emailNewTextArr[i]  === "Error: id is not in database or error in connection" || emailNewTextArr[i]  === "Error in Link") {
-                return{error: emailNewTextArr[i]}
+            if (emailNewTextArr[i] === "Error in Italic" || emailNewTextArr[i] === "Error in Bold" ||
+                emailNewTextArr[i] === "Error in Anchor" || emailNewTextArr[i] === "Error in Text" ||
+                emailNewTextArr[i] === "Error in Image" || emailNewTextArr[i] === "Error in Highlight" ||
+                emailNewTextArr[i] === "Error: id is not in database or error in connection" || emailNewTextArr[i] === "Error in Link") {
+                return { error: emailNewTextArr[i] }
             }
         }
 

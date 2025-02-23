@@ -7,6 +7,7 @@ import SocketService from "@/service/socketService";
 import { NextRequest, NextResponse } from "next/server";
 import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio, searchVideo } from "@/lib/checkArt";
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
 
 
 export async function POST(req: NextRequest) {
@@ -127,39 +128,46 @@ export async function POST(req: NextRequest) {
         const currentDate: string = new Date().toISOString().slice(0, 10).replaceAll('-', '. ') + '.';
         const currentTime: string = new Date().toISOString().slice(11, 19);
 
+        const searchArt = [];
 
-       /* const { data, error } = await supabase.from('article').insert({
-            date: currentDate,
-            time: currentTime,
-            text: textArra.join('$'),
-            title: value.title,
-            first_element: value.first_element,
-            first_element_url: firstElementUrl,
-            author: coll.name,
-            category: value.category,
-            important: value.important,
-            paywall: value.paywall,
-            paywall_text: paywallTextArr.join('$'),
-            sidebar: value.sidebar,
-            cover_img_id,
-            keyword: value.keyword,
-            detail: value.detail
-        })
-
-        if (error) {
-            console.log(error);
-            return NextResponse.json({ error: 'Server error' }, { status: 500 });
+        for (let i = 0; i < textArra.length; i++) {
+            searchArt.push(chooseTypeOfTextItemSearch(textArra[i]))
         }
 
-        const socketService = SocketService.getInstance();
 
-        const lockeddArticle: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
-        if (!lockeddArticle.data || lockeddArticle.data.length === 0) {
-            socketService.emit('writeArticle', { data: 0 })
-        }
-        else {
-            socketService.emit('writeArticle', { data: lockeddArticle.count })
-        }*/
+        /* const { data, error } = await supabase.from('article').insert({
+             date: currentDate,
+             time: currentTime,
+             text: textArra.join('$'),
+             title: value.title,
+             first_element: value.first_element,
+             first_element_url: firstElementUrl,
+             author: coll.name,
+             category: value.category,
+             important: value.important,
+             paywall: value.paywall,
+             paywall_text: paywallTextArr.join('$'),
+             sidebar: value.sidebar,
+             cover_img_id,
+             keyword: value.keyword,
+             detail: value.detail,
+             search_art:searchArt.join(' ')
+         })
+ 
+         if (error) {
+             console.log(error);
+             return NextResponse.json({ error: 'Server error' }, { status: 500 });
+         }
+ 
+         const socketService = SocketService.getInstance();
+ 
+         const lockeddArticle: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
+         if (!lockeddArticle.data || lockeddArticle.data.length === 0) {
+             socketService.emit('writeArticle', { data: 0 })
+         }
+         else {
+             socketService.emit('writeArticle', { data: lockeddArticle.count })
+         }*/
 
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })

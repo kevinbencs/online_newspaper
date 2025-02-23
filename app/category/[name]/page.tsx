@@ -1,9 +1,11 @@
-import Pagination from "./pagination";
+import Pagination from "@/app/_components/category_menu_search/pagination";
 import Rightsidebar from "../../_components/category_menu_search/rightsidebar";
-import { getCategoryArticle, numberOfCategoryArticle } from "@/actions/getcategoryarticles";
+//import { getCategoryArticle, numberOfCategoryArticle } from "@/actions/getcategoryarticles";
 import Category_menu_articles from "@/app/_components/category_menu_search/category_menu_articles";
 import { Metadata, ResolvingMetadata } from "next";
-import { getCategory } from "@/actions/getCategory";
+import { unstable_cache } from "next/cache";
+import { supabase } from "@/utils/supabase/article";
+
 
 interface Cat {
   name: string,
@@ -51,41 +53,17 @@ export async function generateMetadata({ params, searchParams }: { params: { nam
 }
 
 
+const getLCatNewsCache = unstable_cache(
+    async (page: number | undefined, name: string) => page === undefined ?
+        supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).limit(20).order('id', { ascending: false }).eq('locked', false) :
+        supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).range((page - 1) * 20, page * 20 - 1).order('id', { ascending: false }).eq('locked', false),
+    [`CatN`]
+);
 
-
-/*export async function generateStaticParams() {
-  const authors = await getCategory()
-
-  const arrAUthNumbNews = []
-  if (authors.success) {
-    for (let i of authors.success) {
-      const numberOfNews = await numberOfCategoryArticle(i.name)
-      arrAUthNumbNews.push({ author: i.name, number: Math.ceil(numberOfNews.success ? numberOfNews.success / 20 : 1) })
-    }
-
-
-    const arr = []
-
-    for (let i = 0; i < authors.success.length; i++) {
-      arr.push({ author: authors.success[i].name, num: '' });
-      for (let j = 1; j <= arrAUthNumbNews[i].number; j++) {
-        arr.push({ author: authors.success[i].name, num: j });
-      }
-    }
-
-
-    return arr.map((item) => {
-      item.num === '' ? { name: item.author.replaceAll(' ', '_') } : { name: item.author.replaceAll(' ', '_'), searchParams: { page: item.num } }
-    })
-  }
-
-  return []
-}*/
-
-
-//export const dynamic = 'force-static'
-//export const dynamicParams = true
-//export const revalidate = 3600
+const getCatNewsNumCache = unstable_cache(
+    async (name: string) => supabase.from('article').select('*', { count: 'exact' }).eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).eq('locked', false),
+    [`catNewNum`]
+)
 
 
 
@@ -93,9 +71,9 @@ export async function generateMetadata({ params, searchParams }: { params: { nam
 const Page = async ({ params, searchParams }: { params: { name: string }, searchParams: { page: number } }) => {
 
 
-  const res = await getCategoryArticle({ page: searchParams.page, name: params.name.replace('_', ' & ') })
+  const res = await getLCatNewsCache(searchParams.page === undefined ? searchParams.page : Number(searchParams.page), params.name.replace('_', ' & ') )
 
-  const lastPage = await numberOfCategoryArticle(params.name)
+  const lastPage =  (await getCatNewsNumCache(params.name)).count
 
   if (res.error) return (
     <div className="relative">
@@ -107,7 +85,6 @@ const Page = async ({ params, searchParams }: { params: { name: string }, search
           <div className="mb-10">
             Server error
           </div>
-          {lastPage.success && <Pagination searchParams={searchParams} lastPage={lastPage.success} params={params} />}
         </div>
         <div className="lg:w-80">
           <Rightsidebar />
@@ -116,7 +93,7 @@ const Page = async ({ params, searchParams }: { params: { name: string }, search
     </div>
   )
 
-  if (res.success) return (
+  if (res.data) return (
     <div className="relative">
 
       <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name.replace('_', ' & ')}</h2>
@@ -124,10 +101,10 @@ const Page = async ({ params, searchParams }: { params: { name: string }, search
       <div className="lg:flex mt-10 mb-10 lg:gap-32 lg:flex-wrap">
         <div className="lg:w-[calc(100%-450px)] text-center">
           <div className="mb-10">
-            {res.success.data.map(item => <Category_menu_articles paywall={item.paywall} link={'/' + params.name.toLowerCase().replaceAll(' ', '').replace('&', '_') + '/' + item.date.slice(0, 4) + '/' + item.date.slice(6, 8) + '/' + item.date.slice(10, 12) + '/' + item.title.replaceAll(' ', '_').replace('?', 'nb20')}
+            {res.data.map(item => <Category_menu_articles paywall={item.paywall} link={'/' + params.name.toLowerCase().replaceAll(' ', '').replace('&', '_') + '/' + item.date.slice(0, 4) + '/' + item.date.slice(6, 8) + '/' + item.date.slice(10, 12) + '/' + item.title.replaceAll(' ', '_').replace('?', 'nb20')}
               date={item.date} detail={item.detail} category_name={item.author} category_name_link={`/authors/${item.author.replaceAll(' ', '_')}`} imageId={item.cover_img_id} title={item.title} key={item.id} />)}
           </div>
-          {lastPage.success && <Pagination searchParams={searchParams} lastPage={Math.round(lastPage.success / 20)} params={params} />}
+          {lastPage !== null && <Pagination url={`category/${params.name}?`} searchParams={searchParams} lastPage={Math.round(lastPage / 20)} />}
         </div>
         <div className="lg:w-80">
           <Rightsidebar />
