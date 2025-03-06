@@ -37,8 +37,8 @@ const fetcher = async (url: string): Promise<{role: string, name: string, email:
   return res.json()
 }
 
-preload('api/islogged',{ as: 'fetch' })
-preconnect('api/islogged', { crossOrigin: "anonymous"})
+preload('/api/islogged',{ as: 'fetch' })
+preconnect('/api/islogged', { crossOrigin: "anonymous"})
 
 
 
