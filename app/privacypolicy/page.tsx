@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Privacy policy",
     description: "Privacy policy of World Times",
-    url: `https://online-newspaper.vercel.app/privacypolicy`,
+    url: `${process.env.URL}/privacypolicy`,
     images: [
       {
         url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',

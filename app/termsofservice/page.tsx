@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Terms of Service',
         description: 'Terms of service on World Times',
-        url: `https://online-newspaper.vercel.app/singin`,
+        url: `${process.env.URL}/termofservice`,
         images: [
             {
                 url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',

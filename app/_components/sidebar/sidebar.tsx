@@ -53,8 +53,8 @@ const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
         <nav className="pl-5 border-b border-gray-500">
           <ul className="menu text-lg marker:text-green-600 text-base-content pr-0 list-inside list-disc">
             <li className="menu-title border-b border-gray-500 rounded-none pl-0 pb-2"><h3 className=" text-base-content md:text-2xl text-lg">Menu</h3></li>
-            <li><Link onClick={checked} className="border-b rounded-none before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3 dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base" href='/latest'>latest</Link></li>
-            <li><Link onClick={checked} className="border-b rounded-none before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3 dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base" href='/important'>important</Link></li>
+            <li><Link onClick={checked} className="border-b rounded-none before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3 dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base" href='/latest/1'>latest</Link></li>
+            <li><Link onClick={checked} className="border-b rounded-none before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3 dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base" href='/important/1'>important</Link></li>
             <li><Link onClick={checked} className="border-b-1 rounded-none before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3 dark:text-sky-200 text-base-content  pt-3 pb-2 pl-3 text-sm md:text-base" href='/authors'>authors</Link></li>
           </ul>
         </nav>
@@ -69,7 +69,7 @@ const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
                 {data.success.map(item => <li key={item._id}>
                   <Link onClick={checked}
                     className="border-t rounded-none  dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3"
-                    href={`/category/${item.name.toLowerCase().replaceAll(' ', '').replaceAll('&', '_')}`}>
+                    href={`/category/${item.name.toLowerCase().replaceAll(' ', '').replaceAll('&', '_')}/1`}>
                     {item.name.toLowerCase()}
                   </Link>
                 </li>)}

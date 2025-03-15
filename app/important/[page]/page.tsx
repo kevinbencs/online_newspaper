@@ -1,21 +1,21 @@
-import { unstable_cache } from "next/cache";
-import Latest_important from "../_components/category_menu_search/latest_important";
-import Pagination from "../_components/category_menu_search/pagination";
-import Rightsidebar from "../_components/category_menu_search/rightsidebar";
+import Latest_important from "../../_components/category_menu_search/latest_important";
+import Pagination from "../../_components/category_menu_search/pagination2";
+import Rightsidebar from "../../_components/category_menu_search/rightsidebar";
 import { Metadata } from "next";
-import { supabase } from "@/utils/supabase/article";
+import { impArt, impArtNum } from "@/actions/getimportantarticle";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://online-newspaper.vercel.app'),
+  metadataBase: new URL(`${process.env.URL}`),
   title: 'Important news',
   description: 'Important news',
   alternates: {
-    canonical: '/important'
+    canonical: '/important/1'
   },
   openGraph: {
     title: "Important news",
     description: "Important news",
-    url: `https://online-newspaper.vercel.app/important`,
+    url: `${process.env.URL}/important/1`,
     images: [
       {
         url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
@@ -37,27 +37,32 @@ export const metadata: Metadata = {
 }
 
 
-const getImpNewsCache = unstable_cache(
-  async (page: number | undefined) => page === undefined ?
-    supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').neq('important', 'Not important').limit(20).order('id', { ascending: false }).eq('locked', false) :
-    supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').neq('important', 'Not important').range((page - 1) * 20, page * 20 - 1).order('id', { ascending: false }).eq('locked', false),
-  [`impN`],
-  {tags: ["impNtag"]}
-);
+export async function generateStaticParams() {
+  const lastPage = await impArtNum() 
+  const arr: number[] = []
+  for(let i = 1; i<= Math.ceil(lastPage.numb / 20) ; i++){
+    arr.push(i)
+  }
 
-const getImpNewsNumCache = unstable_cache(
-  async () => supabase.from('article').select('*', { count: 'exact' }).neq('important', 'Not important').eq('locked', false),
-  [`impNewNum`],
-  {tags: ["impNewNumtag"]}
-)
+  return arr.map(item => ({page: String(item)}))?? []
+}
 
 
+export const dynamic = 'force-static'
+export const dynamicParams = true;
+//export const revalidate = 60
 
-const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
 
-  const lastPage = (await getImpNewsNumCache()).count
+const Page = async ({ params }: { params: {page: number  }}) => {
 
-  const res = await getImpNewsCache(searchParams.page === undefined ? searchParams.page : Number(searchParams.page))
+  if(!Number.isInteger(Number(params.page))) notFound();
+  if(Number(params.page) < 1) notFound();
+
+  const lastPage = await impArtNum() 
+
+  if(Number(params.page) > Math.ceil(lastPage.numb / 20)) notFound();
+
+  const res = (await impArt(Number(params.page))).res 
 
   if (res.error) return (
 
@@ -70,7 +75,6 @@ const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
           <div className="mb-10">
             Server error
           </div>
-          {lastPage !== null && <Pagination url='important?' searchParams={searchParams} lastPage={lastPage} />}
         </div>
         <div className="lg:w-80">
           <Rightsidebar />
@@ -78,6 +82,7 @@ const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
       </div>
     </div>
   )
+
 
   if (res.data)
     return (
@@ -91,7 +96,7 @@ const Page = async ({ searchParams }: { searchParams: { page: number } }) => {
               {res.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
                 link={`/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?', 'nb20')}`} />)}
             </div>
-            {lastPage && <Pagination url='important?' searchParams={searchParams} lastPage={Math.round(lastPage / 20)} />}
+            {lastPage && <Pagination url='important' page={params.page} lastPage={Math.ceil(lastPage.numb / 20)} />}
           </div>
           <div className="lg:w-80">
             <Rightsidebar />

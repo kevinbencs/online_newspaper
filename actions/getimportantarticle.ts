@@ -54,3 +54,20 @@ export const importantNewsRightSide = async () => {
 
     return {success: [...res.data,...res2.data, ...res3.data]}
 }
+
+
+
+export const impArt = async (page: number) => {
+  const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').neq('important', 'Not important').range((page - 1) * 20, page * 20 - 1).order('id', { ascending: false }).eq('locked', false)
+  
+  return {res}
+}
+
+
+export const impArtNum = async () => {
+  const res: number | null = (await supabase.from('article').select('*', { count: 'exact' }).neq('important', 'Not important').eq('locked', false)).count;
+
+  if(res === null) return {numb: 0}
+
+  return {numb: res}
+}

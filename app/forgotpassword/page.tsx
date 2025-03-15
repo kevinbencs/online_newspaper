@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Reset password",
     description: "Reset password for an account of Word Times",
-    url: `https://online-newspaper.vercel.app/forgotpassword`,
+    url: `${process.env.URL}/forgotpassword`,
     images: [
       {
         url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',

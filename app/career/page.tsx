@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     openGraph: {
       title: "Careers",
       description: "Careers on World Times",
-      url: `https://online-newspaper.vercel.app/career`,
+      url: `${process.env.URL}/career`,
       images: [
         {
           url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',
@@ -35,6 +35,8 @@ interface Car {
     _id: string,
     title: string
 }
+
+//export const revalidate = 60
 
 const Page = async () => {
     const data: { success: Car[], error: undefined } | { success: undefined, error: string } = await getCareers()

@@ -5,6 +5,7 @@ import { CategorySchema, CategoryUpdateSchema } from "@/schema"
 import * as z from 'zod'
 import { AudioVideoImageCategoryDeleteUrlSchema } from "@/schema"
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { unstable_cache, revalidateTag } from "next/cache";
 
 
 interface Cat {
@@ -17,11 +18,17 @@ type categoryData = z.infer<typeof CategorySchema>
 type category = z.infer<typeof AudioVideoImageCategoryDeleteUrlSchema>
 type categoryUpdate = z.infer<typeof CategoryUpdateSchema>
 
+const getCatNewsNumCache = unstable_cache(
+    async () => Category.find({}, { _id: 1, name: 1 }).sort({ name: 1 }),
+    [`catNewNum`],
+    { tags: ["catNewNumtag"] }
+)
+
 export async function GET(request: NextRequest) {
 
     try {
         await connectToMongo();
-        const category: Cat[] = await Category.find({}, { _id: 1, name: 1 }).sort({ name: 1 });
+        const category: Cat[] = await getCatNewsNumCache()
 
         return NextResponse.json({ success: category }, { status: 200 })
     }
@@ -55,6 +62,8 @@ export async function POST(request: NextRequest) {
 
         await NewCategory.save();*/
 
+        revalidateTag('catNewNumtag')
+
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
     catch (err) {
@@ -78,6 +87,8 @@ export async function DELETE(request: NextRequest) {
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
         //await Category.findByIdAndDelete(category.Id)
+
+        revalidateTag('catNewNumtag')
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -110,6 +121,8 @@ export async function PUT(request: NextRequest) {
             if(cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' },{status: 400})
             else return NextResponse.json({ error: 'Server error' },{status: 400})
         }*/
+
+        revalidateTag('catNewNumtag')
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }

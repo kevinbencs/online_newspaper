@@ -8,7 +8,6 @@ import SocketService from "@/service/socketService";
 import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio, searchVideo } from "@/lib/checkArt";
 import { Eligibility } from "@/utils/mongo/eligibility";
 import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
-import { revalidateTag } from 'next/cache'
 
 
 
@@ -191,21 +190,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Server error' }, { status: 500 });
         }
 
-        revalidateTag('latestNtag')
-        revalidateTag('latestNewNumtag')
 
-        revalidateTag('latestNewSidebar1tag')
-        revalidateTag('AuthNtag')
-        revalidateTag('AuthNewNumtag')
-        revalidateTag('CatNtag')
-        revalidateTag('catNewNumtag')
-        revalidateTag('impNtag')
-        revalidateTag('impNewNumtag')
-        revalidateTag('impNewNumSidebar1tag')
-        revalidateTag('impNewNumSidebar2tag')
-        revalidateTag('impNewNumSidebar2tag')
-
-
+       
 
         for (let i = 0; i < value.keyword.length; i++) {
             const res = await supabase.rpc('settheme', { p_theme: value.keyword[i] });

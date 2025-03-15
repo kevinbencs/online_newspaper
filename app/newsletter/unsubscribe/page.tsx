@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Unsubscribe from newsletters",
     description: "Unsubscribe from newsletters of World Times",
-    url: `https://online-newspaper.vercel.app/newsletter`,
+    url: `${process.env.URL}/newsletter/unsubscribe`,
     images: [
       {
         url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',

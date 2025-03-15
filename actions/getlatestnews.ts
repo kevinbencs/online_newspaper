@@ -21,6 +21,19 @@ interface DataMainPage {
     paywall: boolean
 }
 
+
+interface Data {
+    id: string,
+    date: string,
+    title: string,
+    detail: string,
+    cover_img_id: string
+    author: string,
+    category: string,
+    paywall: boolean
+}
+
+
 export const latestNewsMainPage = async () => {
     const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').limit(6).eq('locked',false).order('id',{ascending: false})
 
@@ -47,4 +60,18 @@ export const latestNewsRightSide = async () => {
     if (article.error) return { error: 'Server error' };
 
     return { success: article.data };
+}
+
+
+export const LatestArt = async (page:number) => {
+    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, date, title, detail, cover_img_id, author, category, paywall').range((page - 1) * 20, page * 20 - 1).order('id', { ascending: false }).eq('locked', false);
+
+    return {res}
+}
+
+export const LatestArtNum = async () => {
+    const res = (await supabase.from('article').select('*', { count: 'exact' }).eq('locked', false)).count;
+
+    if(res === null) return {res: 0}
+    return {res}
 }

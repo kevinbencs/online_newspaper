@@ -16,7 +16,7 @@ export async function generateMetadata({ searchParams }: {
   }}, parent: ResolvingMetadata): Promise<Metadata> {
 
   return {
-    metadataBase: new URL('https://online-newspaper.vercel.app'),
+    metadataBase: new URL(`${process.env.URL}`),
     title: `${searchParams.text.replaceAll('_', ' ')} news`,
     description: `Search ${searchParams.text.replaceAll('_', ' ')} news on Word Times`,
     alternates: {
@@ -27,7 +27,7 @@ export async function generateMetadata({ searchParams }: {
       title: `${searchParams.text.replaceAll('_', ' ')} news`,
       description: `Search ${searchParams.text.replaceAll('_', ' ')} news on Word Times`,
       type: 'article',
-      url: `https://online-newspaper.vercel.app/search?text=${searchParams.text}`,
+      url: `${process.env.URL}/search?text=${searchParams.text}`,
       images: [
         {
           url: 'https://www.dropbox.com/scl/fi/fdbmbhk9caauk7aysp2a5/cover.png?rlkey=d4ypc3jz596br56jnauvi4wlx&dl=1',

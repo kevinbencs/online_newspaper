@@ -32,7 +32,7 @@ export async function generateMetadata({ params, searchParams }: { params: { cat
       description: res.data?.description,
       type: 'article',
       publishedTime: res.data?.date,
-      url: `https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`,
+      url: `${process.env.URL}/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`,
       images: [
         {
           url: res.data ? res.data?.cover_img_id.split(';')[0] : '',
