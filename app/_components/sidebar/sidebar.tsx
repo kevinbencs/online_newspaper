@@ -4,7 +4,7 @@ import CurrentDate from "../date/currentdate";
 import { Dispatch, SetStateAction } from "react";
 import UserElement from "./userelement";
 import useSWR from 'swr';
-import { preconnect, preload } from "react-dom";
+import { preload } from "react-dom";
 
 interface Cat {
   _id: string,
@@ -25,8 +25,7 @@ const fetcher = async (url: string): Promise<{ success: Cat[] | undefined }> => 
   return res.json()
 }
 
-preload('/api/category', {as: 'fetch'});
-preconnect('/api/category', { crossOrigin: "anonymous"})
+preload('/api/category', {as: 'fetch', crossOrigin: "anonymous"});
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {

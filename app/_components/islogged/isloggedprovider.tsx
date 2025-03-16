@@ -2,7 +2,7 @@
 
 import { useState, createContext, ReactNode, useEffect, useContext,use } from "react"
 import useSWR from 'swr'
-import { preload,preconnect } from "react-dom";
+import { preload } from "react-dom";
 
 interface Art{
     url: string,
@@ -37,8 +37,7 @@ const fetcher = async (url: string): Promise<{role: string, name: string, email:
   return res.json()
 }
 
-preload('/api/islogged',{ as: 'fetch' })
-preconnect('/api/islogged', { crossOrigin: "anonymous"})
+preload('/api/islogged',{ as: 'fetch', crossOrigin: "anonymous"})
 
 
 
