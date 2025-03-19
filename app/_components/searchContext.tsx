@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useContext, ReactNode } from 'react';
 import useSWR from 'swr';
+import { preload } from 'react-dom';
 
 interface Cat {
     name: string,
@@ -32,6 +33,8 @@ interface Res {
         theme: Theme[]
     }
 }
+
+preload('/api/search', {as: 'fetch', crossOrigin: 'anonymous'})
 
 const fetcher = async (url: string): Promise<Res> => {
     const res = await fetch(url)

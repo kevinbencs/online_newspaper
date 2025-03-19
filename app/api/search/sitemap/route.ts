@@ -7,6 +7,7 @@ interface Theme{
     theme: string,
 }
 
+//export const revalidate = 60
 
 export async function GET (request: NextRequest){
 
