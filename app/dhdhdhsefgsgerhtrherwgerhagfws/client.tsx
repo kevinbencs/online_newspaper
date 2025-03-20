@@ -66,6 +66,7 @@ const Client = () => {
                     <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg   p-2 cursor-pointer  dark:bg-base-300 bg-slate-400 hover:bg-slate-100  dark:hover:bg-base-100' />
                 </form>
             </div>
+            <h2 className='text-center text-2xl mb-4 mt-4'>Among the permissions, only sending emails, creating and deleting tasks are available</h2>
             <section className='max-w-[600px] mt-20 mb-32 flex flex-col items-start gap-5'>
                 <ul>
                     <li>
@@ -75,7 +76,7 @@ const Client = () => {
                         Password: Admin1234*
                     </li>
                     <li>
-                        Can do: create new articles, admins, editors, authors, edit articles, delete articles, editors, authors, admins and write newsletters.
+                        Can do: create new articles, admins, editors, authors, tasks, edit articles, delete articles, tasks, editors, authors, admins and write newsletters.
                     </li>
                 </ul>
                 <ul>
@@ -86,7 +87,7 @@ const Client = () => {
                         Password: Admin1234*
                     </li>
                     <li>
-                        Can do: create, edit, delete articles, and write newsletters.
+                        Can do: create, edit, delete articles, tasks and write newsletters.
                     </li>
                 </ul>
                 <ul>
@@ -97,7 +98,7 @@ const Client = () => {
                         Password: Admin1234*
                     </li>
                     <li>
-                        Can do: create articles, edit, delete own articles, and write newsletters.
+                        Can do: create articles, tasks, edit, delete own articles,, delete tasks and write newsletters.
                     </li>
                 </ul>
             </section>
