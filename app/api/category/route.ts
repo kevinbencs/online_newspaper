@@ -5,7 +5,8 @@ import { CategorySchema, CategoryUpdateSchema } from "@/schema"
 import * as z from 'zod'
 import { AudioVideoImageCategoryDeleteUrlSchema } from "@/schema"
 import { Eligibility } from "@/utils/mongo/eligibility";
-import { unstable_cache, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
+import { CatCache } from "@/cache/cache";
 
 
 interface Cat {
@@ -18,17 +19,13 @@ type categoryData = z.infer<typeof CategorySchema>
 type category = z.infer<typeof AudioVideoImageCategoryDeleteUrlSchema>
 type categoryUpdate = z.infer<typeof CategoryUpdateSchema>
 
-const getCatNewsNumCache = unstable_cache(
-    async () => Category.find({}, { _id: 1, name: 1 }).sort({ name: 1 }),
-    [`catNewNum`],
-    { tags: ["catNewNumtag"] }
-)
+
 
 export async function GET(request: NextRequest) {
 
     try {
         await connectToMongo();
-        const category: Cat[] = await getCatNewsNumCache()
+        const category: Cat[] = await CatCache()
 
         return NextResponse.json({ success: category }, { status: 200 })
     }
@@ -60,9 +57,9 @@ export async function POST(request: NextRequest) {
             name: categoryData.name,
         })
 
-        await NewCategory.save();*/
+        await NewCategory.save();
 
-        revalidateTag('catNewNumtag')
+        revalidateTag('catNewNumtag')*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -88,7 +85,7 @@ export async function DELETE(request: NextRequest) {
 
         //await Category.findByIdAndDelete(category.Id)
 
-        revalidateTag('catNewNumtag')
+        //revalidateTag('catNewNumtag')
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -122,7 +119,7 @@ export async function PUT(request: NextRequest) {
             else return NextResponse.json({ error: 'Server error' },{status: 400})
         }*/
 
-        revalidateTag('catNewNumtag')
+        //revalidateTag('catNewNumtag')
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }

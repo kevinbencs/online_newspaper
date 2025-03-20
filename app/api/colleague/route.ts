@@ -3,6 +3,7 @@ import Admin from "@/model/Admin";
 import { deleteIdsSchema } from "@/schema";
 import * as z from 'zod'
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { revalidateTag } from "next/cache";
 
 
 interface Colleague {
@@ -52,6 +53,8 @@ export async function DELETE(request: NextRequest) {
 
 
         //await Admin.deleteMany({id:{$id: ids}})
+
+        //revalidateTag('authCacheSearchTag')
 
 
         return NextResponse.json({ success: 'Articles are deleted' }, { status: 200 })
