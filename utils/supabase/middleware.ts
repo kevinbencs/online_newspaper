@@ -240,6 +240,62 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
+
+  if ((user && user.app_metadata.twofa === 'true' && Cookie) &&
+    request.nextUrl.pathname.split('/').length === 6
+  ) {
+
+    const resCookie = await fetch(`${request.nextUrl.origin}/auth/provider/twofa/twofausercookie`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: Cookie.value, id: user.id })
+    })
+
+    const resCookieJson: { res: boolean } = await resCookie.json()
+
+    if (resCookieJson.res) {
+      const newUrl = request.nextUrl.pathname;
+      const res = await fetch(`${request.nextUrl.origin}/api/article/ispaywall/${newUrl}`);
+      const resJSON: { res: boolean } = await res.json();
+
+      if (resJSON.res) {
+        const url = request.nextUrl.clone()
+        url.pathname = `${newUrl}/paywall`
+        return NextResponse.redirect(url)
+      }
+    }
+  }
+
+  /*if (user && user.app_metadata.twofa === 'true' &&
+    (
+      request.nextUrl.pathname.startsWith('/about')
+    )) {
+    if (!Cookie) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+    else {
+      const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa/twofausercookie`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: Cookie.value, id: user.id })
+      })
+
+      const resJSON: { res: string } = await res.json()
+      if (resJSON.res === 'false') {
+
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)
+      }
+    }
+  }*/
+
+
+
+
+
   if (user && !TWOFA && !Cookie && user.app_metadata.twofa === 'true') {
     if (request.nextUrl.pathname.startsWith('/signin/twofa')) {
       //The browser gets the cookie slowly 
@@ -303,8 +359,8 @@ export async function updateSession(request: NextRequest) {
         body: JSON.stringify({ token: Cookie.value, id: user.id })
       })
 
-      const resJSON: { res: string } = await res.json()
-      if (resJSON.res === 'false') {
+      const resJSON: { res: boolean } = await res.json()
+      if (resJSON.res === false) {
 
         const url = request.nextUrl.clone()
         url.pathname = '/'
@@ -396,18 +452,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return supabaseResponse
 }

@@ -471,11 +471,11 @@ Get /auth/callback: supabase oauth (e.g.: google, github...),
 
 Get /auth/confirm/resetpassword: redirect /resetpassword or the error page
 
-Get /auth/mongomiddleware: check the admin privileges for protected pages.
+Post /auth/mongomiddleware/paywall: check the admin privileges for protected pages.
 
 Post /auth/provider/twofa: check the token in the url for 2FA page when user sing in with provider.
 
-Post /auth/provider/twofa/twofausercookie: check the cookie in protected page (/about) for user who has 2FA 
+Post /auth/provider/twofa/twofausercookie: check the cookie in protected page for user who has 2FA 
 
 Post /auth/provider/twofa/twofasingincookie: check the cookie for 2FA page when user sing in.
 
