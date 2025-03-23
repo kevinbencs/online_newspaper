@@ -60,7 +60,7 @@ const searchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
 
-    const { data, error, isLoading } = useSWR<Res, Error>('/api/search', fetcher, { refreshInterval: 60000 });
+    const { data, error, isLoading } = useSWR<Res, Error>('/api/search', fetcher, { revalidateOnFocus: false });
     return (
         <searchContext.Provider value={{data, error, isLoading}}>
             {children}
