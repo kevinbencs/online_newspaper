@@ -37,7 +37,7 @@ interface Res {
 preload('/api/search', {as: 'fetch', crossOrigin: 'anonymous'})
 
 const fetcher = async (url: string): Promise<Res> => {
-    const res = await fetch(url)
+    const res = await fetch(url, { next: {revalidate: 3600} })
 
     if (!res.ok) {
         const error = new Error()

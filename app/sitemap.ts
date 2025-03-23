@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     for(let item of dataAuth.res){
       ResArray.push({
-        url: `${process.env.URL}/authors/${item.name.replaceAll(' ','_')}`,
+        url: `${process.env.URL}/authors/${item.name.replaceAll(' ','_')}/1`,
         lastModified: new Date(),
         changeFrequency: 'hourly',
         priority: 0.8,
@@ -53,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     for(let item of dataCategory.success){
       ResArray.push({
-        url: `${process.env.URL}/category/${item.name.replaceAll(' ','').replaceAll('&','_').toLowerCase()}`,
+        url: `${process.env.URL}/category/${item.name.replaceAll(' ','').replaceAll('&','_').toLowerCase()}/1`,
         lastModified: new Date(),
         changeFrequency: 'hourly',
         priority: 0.8,
@@ -115,13 +115,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.5,
       },
       {
-        url: `${process.env.URL}/latest`,
+        url: `${process.env.URL}/latest/1`,
         lastModified: new Date(),
         changeFrequency: 'hourly',
         priority: 0.8,
       },
       {
-        url: `${process.env.URL}/important`,
+        url: `${process.env.URL}/important/1`,
         lastModified: new Date(),
         changeFrequency: 'hourly',
         priority: 0.8,
@@ -188,13 +188,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.5,
       },
       {
-        url: `${process.env.URL}/latest`,
+        url: `${process.env.URL}/latest/1`,
         lastModified: new Date(),
         changeFrequency: 'hourly',
         priority: 0.8,
       },
       {
-        url: `${process.env.URL}/important`,
+        url: `${process.env.URL}/important/1`,
         lastModified: new Date(),
         changeFrequency: 'hourly',
         priority: 0.8,

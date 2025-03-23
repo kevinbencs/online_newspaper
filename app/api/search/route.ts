@@ -1,7 +1,9 @@
 
 import { NextRequest, NextResponse, } from 'next/server';
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { AuthCache, CatCache, ThemCache, TitCache } from "@/cache/cache";
+import { supabase } from "@/utils/supabase/article";
+import Category from "@/model/Category";
+import Admin from "@/model/Admin";
 
 
 interface Cat{
@@ -26,17 +28,17 @@ interface Theme{
     number: number
 }
 
-export const dynamic = 'force-dynamic'
+//export const dynamic = 'force-dynamic'
 
 
 
 export async function GET (request: NextRequest){
 
     try{
-        const category: Cat[] = await CatCache();
-        const author: Author[] = await AuthCache();
-        const title: PostgrestSingleResponse<Title[]> = await TitCache();
-        const theme: PostgrestSingleResponse<Theme[]> = await ThemCache();
+        const category: Cat[] = await Category.find({},{_id: 1, name: 1}).sort({name: 1});
+        const author: Author[] = await Admin.find({},'_id name').sort({name: 1});
+        const title: PostgrestSingleResponse<Title[]> = await supabase.from('titles').select('id, title, number').order('number', {ascending: false});
+        const theme: PostgrestSingleResponse<Theme[]> = await supabase.from('themes').select('id, theme, number').order('number', {ascending: false});
 
         return NextResponse.json({res: {category, author, title:title.data, theme: theme.data}},{status: 200})
     }
