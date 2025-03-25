@@ -33,6 +33,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
         if (data.error) return { error: 'Supabase error' }
 
         if(!process.env.SENDGRID_API_KEY) return {error: "SENDGRID_API_KEY missing for Sendgrid"}
+        if(!process.env.EMAIL) return {error: "EMAIL missing for Sendgrid"}
 
         /*const facebookImage = fs.readFileSync(path.join(process.cwd(), 'public/image/facebook.png')).toString('base64');
         const instagramImage = fs.readFileSync(path.join(process.cwd(), 'public/image/instagram.png')).toString('base64');
