@@ -114,7 +114,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
         <h1 className='mt-20 text-4xl mb-8 font-bold'>{decodeURIComponent(params.title.replaceAll('_', ' ').replace('nb20','?'))}</h1>
 
         <div>
-          <Link href={`/category/${res.data.category.toLowerCase()}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >
+          <Link href={`/category/${res.data.category.toLowerCase()}/1`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pl-2 pr-2 pt-1 pb-1' >
             {res.data.category.replace( ' & ', '_')}
           </Link>
           <span className='ml-3'>
@@ -131,7 +131,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
         <div className="lg:flex mt-12 mb-10 lg:gap-32 lg:flex-wrap">
           <div className="lg:w-[calc(100%-450px)] mb-8">
             <div className='mb-5 flex justify-between items-center'>
-              <Link href={`/authors/${res.data.author.replaceAll(' ', '_')}`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pr-2 pl-2 pt-1 pb-1'>{res.data.author}</Link>
+              <Link href={`/authors/${res.data.author.replaceAll(' ', '_')}/1`} className='dark:bg-white dark:text-gray-950 bg-slate-950 text-gray-50 hover:text-gray-300 dark:hover:text-stone-400 pr-2 pl-2 pt-1 pb-1'>{res.data.author}</Link>
               <div className='flex gap-3 items-center'>
                 <ClickOnArt title={params.title} date={date} source={searchParams.source}/>
                 <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} title={params.title.replaceAll('_', ' ').replaceAll('nb20','?')} />
