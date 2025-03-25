@@ -17,7 +17,7 @@ import tiktok from '@/image/tik-tok(1).png';
 import email from '@/image/email.png';
 import CurrentDate from '@/app/_components/date/currentdate';
 import NewsLetterImgOptgroup from '@/app/_components/optgroup/newsletterimagegropu';
-import { env } from 'process';
+import Link from 'next/link';
 
 const Page = () => {
   const [paragPlaceholder, setParagPlaceholder] = useState<string>('placeholder');
@@ -49,7 +49,7 @@ const Page = () => {
     setSuccess('');
   }
 
-  const handleSubmit = (e: SyntheticEvent) => {e.preventDefault()}
+  const handleSubmit = (e: SyntheticEvent) => { e.preventDefault() }
 
   const handleSubmitClick = async () => {
     setSuccess('');
@@ -73,6 +73,10 @@ const Page = () => {
           if (res.error) setError(res.error)
           if (res.failed) setFailed(res.failed)
         })
+        .catch(err => {
+          console.log(err)
+          setError('Something went wrong. Please try again')
+        })
     })
   }
 
@@ -80,11 +84,11 @@ const Page = () => {
     const Text = paragraphInput.split('\n').filter(item => item !== '');
     setError('');
     const Text2: (string | JSX.Element)[] = [];
-    for(let i = 0; i < Text.length; i++){
-      if(Text[i] !== lastText[i]){
+    for (let i = 0; i < Text.length; i++) {
+      if (Text[i] !== lastText[i]) {
         Text2[i] = chooseTypeOfTextItem(Text[i], setError)
       }
-      else{
+      else {
         Text2[i] = text[i]
       }
     }
@@ -98,19 +102,19 @@ const Page = () => {
       <form onSubmit={handleSubmit}>
         <input type="text" disabled={isPending} name="subject" className='focus-within:outline-none border-t-0 border-r-0 border-l-0 w-full border border-b p-3 bg-transparent input-bordered' placeholder='Subject' value={subject} onChange={(e) => { setSubject(e.target.value); setSuccess('') }} />
         <input type='text' disabled={isPending} name="title" className='mt-5 mb-16 focus-within:outline-none border-t-0 border-r-0 border-l-0 w-full border border-b p-3 bg-transparent input-bordered' placeholder='Title' value={title} onChange={(e) => { setTitle(e.target.value); setSuccess('') }} />
-        
-      <div className='flex gap-5 flex-wrap mb-8'>
-        <NewsLetterImgOptgroup reset={Reset1}   setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} imageCopyMessage={imageCopyMessage} setSuccess={setSuccess} />
-      </div>
 
-      <section className='flex gap-2 mb-10 flex-wrap'>
-        {bold_italic.map((item: string) => <Bold_italic text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
-        {link_anchor.map((item: string) => <Link_Anchor text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
-        {list_embedded.map(item => <List_embedded TextEnterRef={TextEnterRef} text={item.text} textElem={item.textElem} key={uuid()} />)}
-      </section>
-        
+        <div className='flex gap-5 flex-wrap mb-8'>
+          <NewsLetterImgOptgroup reset={Reset1} setError={setError} setImageCopyMessage={setImageCopyMessage} isPending={isPending} imageCopyMessage={imageCopyMessage} setSuccess={setSuccess} />
+        </div>
+
+        <section className='flex gap-2 mb-10 flex-wrap'>
+          {bold_italic.map((item: string) => <Bold_italic text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
+          {link_anchor.map((item: string) => <Link_Anchor text={item} TextEnterRef={TextEnterRef} key={uuid()} />)}
+          {list_embedded.map(item => <List_embedded TextEnterRef={TextEnterRef} text={item.text} textElem={item.textElem} key={uuid()} />)}
+        </section>
+
         <p contentEditable={!isPending} className={`mt-10 focus-within:outline-none border p-3 rounded-md min-h-80 input-bordered ${paragPlaceholder}`} onInput={handleParagraphChange} tabIndex={0} ref={TextEnterRef}></p>
-        <input type="submit" disabled={isPending} value="Send" className='w-full lg:w-14 mt-10 cursor-pointer bg-slate-600 p-1 text-center rounded-sm hover:bg-slate-400 text-white' onClick={handleSubmitClick}/>
+        <input type="submit" disabled={isPending} value="Send" className='w-full lg:w-14 mt-10 cursor-pointer bg-slate-600 p-1 text-center rounded-sm hover:bg-slate-400 text-white' onClick={handleSubmitClick} />
       </form>
       {success &&
         <div className='text-green-600 bg-green-600/15 p-2 text-center rounded-lg mb-5 mt-10 font-bold'>{success}</div>
@@ -166,7 +170,7 @@ const Page = () => {
                   </a>
                 </li>
               </ul>
-              <div className='mb-4'>Want to stop getting emails from Wordtimes? <a href={`${process.env.URL}/newsletter/unsubscribe/token`} target='_blank' className='text-white link hover:text-white dark:hover:text-white'>Unsubscribe</a></div>
+              <div className='mb-4'>Want to stop getting emails from Wordtimes? <Link href={`/newsletter/unsubscribe/token`} className='text-white link hover:text-white dark:hover:text-white'>Unsubscribe</Link></div>
             </div>
           </div>
         </div>
