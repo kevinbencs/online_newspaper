@@ -32,12 +32,12 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
         if (data.error) return { error: 'Supabase error' }
 
-        const facebookImage = fs.readFileSync(path.join(process.cwd(), 'public/image/facebook.png')).toString('base64');
+        /*const facebookImage = fs.readFileSync(path.join(process.cwd(), 'public/image/facebook.png')).toString('base64');
         const instagramImage = fs.readFileSync(path.join(process.cwd(), 'public/image/instagram.png')).toString('base64');
         const youtubeImage = fs.readFileSync(path.join(process.cwd(), 'public/image/youtube.png')).toString('base64');
         const xImage = fs.readFileSync(path.join(process.cwd(), 'public/image/logos.png')).toString('base64');
         const tiktokImage = fs.readFileSync(path.join(process.cwd(), 'public/image/tik-tok(1).png')).toString('base64');
-        const logoImage = fs.readFileSync(path.join(process.cwd(), 'public/image/email.png')).toString('base64');
+        const logoImage = fs.readFileSync(path.join(process.cwd(), 'public/image/email.png')).toString('base64');*/
 
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
@@ -81,7 +81,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                          <div style="background: whitesmoke ; padding: 8px">
                              <div style="max-width:1000px; margin: 0 auto; background:white; font-size:17px">
                                 <div style="padding-left:8px;margin-bottom:8px">
-                                    <img src="cid:logoImage" alt="logo image" style="width:32px">
+                                    <img src="https://www.dropbox.com/scl/fi/mokqbaqpwz066gwe0fvcf/email.png?rlkey=fjvgjixslbuihosxp56la4j85&dl=1" alt="logo image" style="width:32px">
                                 </div>
                                 <div style="padding-left:8px;margin-bottom:40px"> ${currentDate} ${dayArray[day]}</div>
                                 <div style="margin-bottom:40px; font-size:30px; line-height: 36px; font-weight: 700; padding-left: 8px">${newsletter.title}</div>
@@ -91,31 +91,31 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                                      <ul style="display:flex; gap:10px; list-style:none; margin-bottom:40px;margin-top:8px; padding-left:0">
                                          <li>
                                              <a href="https://www.facebook.com" target='_blank' style="color:white">
-                                                 <img src="cid:facebookImage" alt='facebook icon' width={20} style="width:20px;"/>
+                                                 <img src="https://www.dropbox.com/scl/fi/43qq1qz7zu2lu3kgydwaz/facebook.png?rlkey=qwg2jafkp9qsdwxqz89r61l08&dl=1" alt='facebook icon' width={20} style="width:20px;"/>
                                                  
                                              </a>
                                          </li>
                                          <li>
                                              <a href="https://www.instagram.com" target='_blank' style="color:white">
-                                                 <img src="cid:instagramImage" alt='instagram icon' width={20} style="width:20px;"/>
+                                                 <img src="https://www.dropbox.com/scl/fi/rh2ibv702k659cy388m0f/instagram.png?rlkey=qagxvsek3mikgojax66eo6ozn&dl=1" alt='instagram icon' width={20} style="width:20px;"/>
                                                  
                                              </a>
                                          </li>
                                          <li>
                                              <a href="https://www.youtube.com" target='_blank' style="color:white">
-                                                 <img src="cid:youtubeImage" alt='youtube icon' width={20} style="width:20px;"/>
+                                                 <img src="https://www.dropbox.com/scl/fi/q2zwu2dnykduvmnunvcub/youtube.png?rlkey=xjk2khypw8pkzwhl4p2he0nag&dl=1" alt='youtube icon' width={20} style="width:20px;"/>
                                                  
                                              </a>
                                          </li>
                                          <li>
                                              <a href="https://www.x.com" target='_blank' style="color:white">
-                                                 <img src="cid:xImage"  alt='x icon' width={20} style="width:20px;"/>
+                                                 <img src="https://www.dropbox.com/scl/fi/k4axmt5mrtz7k1skwv4z3/logos.png?rlkey=69w9julsxzyrti9lh4wd930cv&dl=1"  alt='x icon' width={20} style="width:20px;"/>
                                                  
                                              </a>
                                          </li>
                                          <li>
                                              <a href="https://www.tiktok.com" target='_blank' style="color:white">
-                                                 <img src="cid:tiktokImage" alt='tiktok icon' width={20} style="width:20px;"/>
+                                                 <img src="https://www.dropbox.com/scl/fi/48ykqdhajyzxdjv6xjlgm/tik-tok-1.png?rlkey=tawpxrnsbjm0sscmdjozxtmat&dl=1" alt='tiktok icon' width={20} style="width:20px;"/>
                                                  
                                              </a>
                                          </li>
@@ -132,7 +132,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                      
                      
                  `,
-                attachments: [
+                /*attachments: [
                     {
                         content: facebookImage, // base64 encoding
                         filename: 'facebook.png',
@@ -175,7 +175,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                         disposition: 'inline',
                         content_id: 'logoImage'
                     }
-                ]
+                ]*/
             }
             await sgMail
                 .send(msg)
