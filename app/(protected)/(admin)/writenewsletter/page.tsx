@@ -17,6 +17,7 @@ import tiktok from '@/image/tik-tok(1).png';
 import email from '@/image/email.png';
 import CurrentDate from '@/app/_components/date/currentdate';
 import NewsLetterImgOptgroup from '@/app/_components/optgroup/newsletterimagegropu';
+import { env } from 'process';
 
 const Page = () => {
   const [paragPlaceholder, setParagPlaceholder] = useState<string>('placeholder');
@@ -165,7 +166,7 @@ const Page = () => {
                   </a>
                 </li>
               </ul>
-              <div className='mb-4'>Want to stop getting emails from Wordtimes? <a href='http://localhost:3000/newsletter/unsubscribe/token' target='_blank' className='text-white link hover:text-white dark:hover:text-white'>Unsubscribe</a></div>
+              <div className='mb-4'>Want to stop getting emails from Wordtimes? <a href={`${process.env.URL}/newsletter/unsubscribe/token`} target='_blank' className='text-white link hover:text-white dark:hover:text-white'>Unsubscribe</a></div>
             </div>
           </div>
         </div>

@@ -122,7 +122,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                                      </ul>
                                      <div style="margin-bottom:16px">
                                          Want to stop getting emails from Wordtimes?
-                                         <a href='http://localhost:3000/newsletter/unsubscribe/${token}' target='_blank' style="color:white"> Unsubscribe</a>
+                                         <a href='${process.env.URL}/newsletter/unsubscribe/${token}' target='_blank' style="color:white"> Unsubscribe</a>
                                      </div>
                                  </footer>
                              </div>
@@ -394,7 +394,7 @@ const createLink = (s: string) => {
     textArray.push(text.slice(index1, text.length))
 
     return (
-        `<a target='_blank' href='http://localhost:3000${s.slice(indexHref + 1, indexHrefEnd)}?source=newsletter' style="color:black;text-decoration:underline">${textArray.join('')}</a>`
+        `<a target='_blank' href='${process.env.URL}${s.slice(indexHref + 1, indexHrefEnd)}?source=newsletter' style="color:black;text-decoration:underline">${textArray.join('')}</a>`
     )
 }
 
