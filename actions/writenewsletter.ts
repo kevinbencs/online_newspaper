@@ -30,14 +30,14 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
         const data = await supabase.from('newsletter').select();
 
-        if (data.error) return { error: 'Server error' }
+        if (data.error) return { error: 'Supabase error' }
 
-        const facebookImage = fs.readFileSync(path.join(process.cwd(), 'image/facebook.png')).toString('base64');
-        const instagramImage = fs.readFileSync(path.join(process.cwd(), 'image/instagram.png')).toString('base64');
-        const youtubeImage = fs.readFileSync(path.join(process.cwd(), 'image/youtube.png')).toString('base64');
-        const xImage = fs.readFileSync(path.join(process.cwd(), 'image/logos.png')).toString('base64');
-        const tiktokImage = fs.readFileSync(path.join(process.cwd(), 'image/tik-tok(1).png')).toString('base64');
-        const logoImage = fs.readFileSync(path.join(process.cwd(), 'image/email.png')).toString('base64');
+        const facebookImage = fs.readFileSync(path.join(process.cwd(), 'public/image/facebook.png')).toString('base64');
+        const instagramImage = fs.readFileSync(path.join(process.cwd(), 'public/image/instagram.png')).toString('base64');
+        const youtubeImage = fs.readFileSync(path.join(process.cwd(), 'public/image/youtube.png')).toString('base64');
+        const xImage = fs.readFileSync(path.join(process.cwd(), 'public/image/logos.png')).toString('base64');
+        const tiktokImage = fs.readFileSync(path.join(process.cwd(), 'public/image/tik-tok(1).png')).toString('base64');
+        const logoImage = fs.readFileSync(path.join(process.cwd(), 'public/image/email.png')).toString('base64');
 
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
