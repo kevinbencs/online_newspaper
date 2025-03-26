@@ -66,7 +66,7 @@ const Client = () => {
                     <input type="submit" value="Sign in" disabled={isPending} className='block w-[100%] rounded-lg   p-2 cursor-pointer  dark:bg-base-300 bg-slate-400 hover:bg-slate-100  dark:hover:bg-base-100' />
                 </form>
             </div>
-            <h2 className='text-center text-2xl mb-4 mt-4'>Among the permissions, only sending emails, creating and deleting tasks are available</h2>
+            <h2 className='text-center text-2xl mb-4 mt-4'>Among the permissions, only sending emails is available</h2>
             <section className='max-w-[600px] mt-20 mb-32 flex flex-col items-start gap-5'>
                 <ul>
                     <li>
