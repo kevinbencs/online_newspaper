@@ -11,7 +11,7 @@ interface dataArt {
 }
 
 const FavouriteArtOfWeek = (props: { data: dataArt[] |null}) => {
-    console.log(props.data)
+    
     return (
         <section className='mb-20'>
             <h2 className='text-center text-xl mb-2'>The most popular article of the last seven days</h2>
