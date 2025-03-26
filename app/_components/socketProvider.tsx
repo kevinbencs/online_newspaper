@@ -35,7 +35,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [auth, setAuth] = useState<boolean>(false);
     const [task, setTask] = useState<TaskType[] | undefined>([])
 
-    useEffect(() => {
+    /*useEffect(() => {
         socket.on('lastMainPageNews', setMainMessage);
         socket.on("numberOfLockedArticle",(data) => {setSidebarNotification(data.data);});
         socket.on('task', (data) => {
@@ -53,7 +53,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
         socket.emit('authenticate',)
 
-    },[auth])
+    },[auth])*/
 
     return (
         <SocketContext.Provider value={{ mainMessage, sidebarNotification, auth, setAuth, task}}>

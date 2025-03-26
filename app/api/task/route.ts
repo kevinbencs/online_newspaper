@@ -35,8 +35,8 @@ export async function POST(req: NextRequest) {
 
         const tasks = await Task.find() as TaskType[];
 
-        const socketService = SocketService.getInstance();
-        socketService.emit('addTask', { tasks: JSON.parse(JSON.stringify(tasks)) })
+        //const socketService = SocketService.getInstance();
+        //socketService.emit('addTask', { tasks: JSON.parse(JSON.stringify(tasks)) })
 
 
         return NextResponse.json({ success: 'Success' }, { status: 200 });
@@ -69,8 +69,8 @@ export async function DELETE(req: NextRequest) {
 
         const tasks = await Task.find() as TaskType[];
 
-        const socketService = SocketService.getInstance();
-        socketService.emit('deleteTask', { tasks: JSON.parse(JSON.stringify(tasks)) })
+        /*const socketService = SocketService.getInstance();
+        socketService.emit('deleteTask', { tasks: JSON.parse(JSON.stringify(tasks)) })*/
 
 
         return NextResponse.json({ success: 'Success' }, { status: 200 });
