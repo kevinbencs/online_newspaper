@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, RefObject, useTransition } from 'react';
+import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, useTransition } from 'react';
 import { v4 as uuid } from 'uuid';
 import { chooseTypeOfTextItem } from '@/app/_components/career/showCareer';
 import Bold_italic from '@/app/_components/newArticle/bold_italic';
@@ -15,12 +15,11 @@ const Client = (props:{title: string, _id: string, text: string, lastUrl: string
     const [text, setText] = useState<(string | JSX.Element)[]>(['']);
     const [lastText, setLastText] = useState<string[]>([])
 
-    const [Reset1, setReset] = useState<boolean>(false);
     const [isPending, startTransition] = useTransition();
     const [titleInput, setTitleInput] = useState<string>(props.title);
 
     const [paragraphInput, setParagraphInput] = useState<string>(props.text.split('$').join('\n\n'));
-    const [paragPlaceholder, setParagPlaceholder] = useState<string>('placeholder');
+    const [paragPlaceholder, setParagPlaceholder] = useState<string>('');
     const [textError, setTextError] = useState<string>('');
 
     const [success, setSuccess] = useState<string | undefined>('');

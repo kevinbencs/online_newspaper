@@ -31,9 +31,9 @@ export const EditCareer = async (value: z.infer<typeof EditCareerSchema>) => {
             if (res !== 'ok') return { error: res }
         }
 
-        await Carrier.findByIdAndUpdate(value._id,{text: value.text, title: value.title})
+        /*await Carrier.findByIdAndUpdate(value._id,{text: value.text, title: value.title})
         revalidatePath('/career')
-        revalidatePath(`/career/${value.lastUrl}`)
+        revalidatePath(`/career/${value.lastUrl}`)*/
 
 
 
