@@ -5,7 +5,7 @@ import { useLogged } from "../islogged/isloggedprovider"
 import { MdEdit } from "react-icons/md";
 import { FaStar } from "react-icons/fa6";
 import { deleteArticle, saveArticle } from "@/actions/savearticle";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 const checkIsSaved = (item: {url: string, title: string}, url: string, title: string) => {

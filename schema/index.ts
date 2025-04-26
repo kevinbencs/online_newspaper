@@ -223,7 +223,7 @@ export const twoFaTokenIdeSchema = z.object({
 })
 
 export const deleteIdsSchema = z.object({
-    ids: z.number({message: 'Id is required'}).array().length(1,{message: 'Ids is required'})
+    ids: z.string({message: 'Id is required'}).array().length(1,{message: 'Ids is required'})
 })
 
 export const deleteIdsStringSchema = z.object({
@@ -231,9 +231,17 @@ export const deleteIdsStringSchema = z.object({
 })
 
 
-export const  WriteCarrierSchema = z.object({
+export const  WriteCareerSchema = z.object({
     text: z.string().min(1, { message: 'Text is required' }),
     title: z.string().min(1, { message: 'Title is required' }),
+    
+})
+
+export const  EditCareerSchema = z.object({
+    text: z.string().min(1, { message: 'Text is required' }),
+    title: z.string().min(1, { message: 'Title is required' }),
+    _id: z.string({message: 'Id is required'}),
+    lastUrl:  z.string().min(1, { message: 'Last url is required' }),
     
 })
 

@@ -4,7 +4,6 @@ import { supabase } from "@/utils/supabase/article";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import Token from "@/model/Token";
 import jwt,{JwtPayload} from 'jsonwebtoken'
-import * as z from 'zod'
 
 interface Decoded extends JwtPayload{
     id: string
@@ -26,17 +25,17 @@ export async function GET(request: NextRequest) {
         const Cookie = request.cookies.get('user-log-2fa');
 
         if (data.user?.app_metadata.twofa === 'true') {
-            if (!Cookie) return NextResponse.json({ error: 'Please log in' },{status: 400}) ;
+            if (!Cookie) return NextResponse.json({ saved: false }, { status: 200 }) ;
 
             const tokenRes = await Token.find({ token: Cookie.value });
 
-            if (!tokenRes) return NextResponse.json({ error: 'Please log in' },{status: 400}) ;
+            if (!tokenRes) return NextResponse.json({ saved: false }, { status: 200 }) ;
 
-            if (!process.env.TwoFA_URI) return NextResponse.json({ error: 'process.env.TwoFA_URI is missing' },{status: 500}) 
+            if (!process.env.TwoFA_URI) return NextResponse.json({ saved: false }, { status: 200 }) 
 
             const decoded = await jwt.verify(Cookie.value, process.env.TwoFA_URI!) as Decoded;
 
-            if (decoded.id !== data.user.id) return NextResponse.json({ error: 'Please log in' },{status: 400}) ;
+            if (decoded.id !== data.user.id) return NextResponse.json({ saved: false }, { status: 200 }) ;
         }
 
         if (error || !data || !data.user) NextResponse.json({ saved: false }, { status: 200 });

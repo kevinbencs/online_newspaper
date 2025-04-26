@@ -30,8 +30,8 @@ export const Confirm = async (value: z.infer<typeof tokenSchema>) => {
 
   }
   catch (err) {
+    console.log(err)
     return { error: 'Server error' }
   }
-
 
 }

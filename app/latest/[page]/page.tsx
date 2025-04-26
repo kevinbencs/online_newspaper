@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 export async function generateStaticParams() {
   const lastPage = (await LatestArtNum()).res
   const arr: number[] = []
-  for(let i = 1; i<= Math.ceil(lastPage/ 20) ; i++){
+  for(let i = 1; i<= Math.ceil((typeof(lastPage) === 'number' ? lastPage / 20 : 0)) ; i++){
     arr.push(i)
   }
 
@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-static'
 export const dynamicParams = true;
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 
 
@@ -64,11 +64,12 @@ const Page = async ({ params }: { params: { page: number } }) => {
     const lastPage = (await LatestArtNum()).res
 
 
-    if(Number(params.page) > Math.ceil(lastPage / 20)) notFound();
+    if(lastPage === undefined || Number(params.page) > Math.ceil(lastPage / 20)) notFound();
 
-    const res = (await LatestArt(params.page)).res
+    const ResApi = await LatestArt(params.page)
+    const res = ResApi.res
 
-    if (res.error) return (
+    if (ResApi.error ||res?.error) return (
         <div className="relative">
 
             <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">Latest</h1>
@@ -85,7 +86,7 @@ const Page = async ({ params }: { params: { page: number } }) => {
             </div>
         </div>
     )
-    if (res.data)
+    if (res?.data)
         return (
             <div className="relative">
 

@@ -13,11 +13,11 @@ type deleteSchema = z.infer<typeof deleteIdsStringSchema>
 export async function GET(request: NextRequest) {
     try {
         const cookie = request.cookies.get('admin-log');
-        if (!cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (!cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 })
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const { data, error } = await supabase_admin.auth.admin.listUsers()
 
@@ -43,7 +43,7 @@ export async function DELETE(request: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
         const body = await request.json()
 
@@ -61,7 +61,7 @@ export async function DELETE(request: NextRequest) {
            }
         }*/
 
-        return NextResponse.json({ success: 'Articles are deleted' }, { status: 200 })
+        return NextResponse.json({ success: 'Users are deleted' }, { status: 200 })
 
 
     } catch (error) {

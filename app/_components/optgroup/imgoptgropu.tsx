@@ -1,7 +1,6 @@
 'use client'
 
-import { useRef, useState, ChangeEvent, KeyboardEvent, useEffect, Dispatch, SetStateAction } from 'react';
-import Image from 'next/image';
+import { useRef, useState, ChangeEvent, useEffect, Dispatch, SetStateAction } from 'react';
 import ImgItem from './imgitem';
 
 interface imageUrl {

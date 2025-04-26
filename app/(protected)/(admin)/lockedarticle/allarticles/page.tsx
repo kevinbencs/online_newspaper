@@ -1,6 +1,8 @@
 import { getAllLockedArticle } from "@/actions/getalllockedarticle"
 import Link from "next/link";
 
+/*export const revalidate = 60*/
+
 const Page = async () => {
   const data = await getAllLockedArticle();
 

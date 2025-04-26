@@ -61,6 +61,7 @@ export const updateUser = async (value: z.infer<typeof updateUserSchema>) => {
 
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }
@@ -94,6 +95,7 @@ export const changePassword = async (value: z.infer<typeof NewPasswordSchema>) =
         return {success: 'Password changed'}
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }

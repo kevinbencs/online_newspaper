@@ -8,6 +8,7 @@ const CopyLink = (props:{url:string}) => {
         navigator.clipboard.writeText(props.url)
         .catch(err => {
             console.log('Link is not copied')
+            console.error(err)
         })
     }
 

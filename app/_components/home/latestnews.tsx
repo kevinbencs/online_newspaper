@@ -2,7 +2,7 @@
 
 import { useState, MouseEvent, useRef, useEffect, TouchEvent } from "react";
 import LatestNewsLink from "./latestnewslink";
-import { useSocket } from '../socketProvider'
+import { latestNewsMainPage } from "@/actions/getlatestnews";
 
 
 interface DataMainPage {
@@ -30,20 +30,30 @@ const LatestNews = (props: {
   const [startX, setStartX] = useState<number>(0);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [isDragging, setDragging] = useState<boolean>(false);
-  const [data, setData] = useState<DataMainPage[] | undefined>()
-  const [error, setError] = useState<string | undefined>('');
-  const { mainMessage } = useSocket();
+  const [data, setData] = useState<DataMainPage[] | undefined>(props.res.data)
+  const [error, setError] = useState<string | undefined>(props.res.error);
+
 
   useEffect(() => {
-    setData(props.res.data);
-    setError(props.res.error)
-  }, [])
+    const id = setInterval(() => {
+      latestNewsMainPage()
+      .then((res) => {
+        if(res.error){
+          console.log(error)
+        }
+        if(res.data){
+          setError('')
+          setData(res.data)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }, 5000)
 
-  useEffect(() => {
-    if(mainMessage.data){
-      setData(mainMessage.data)
-    }
-  },[mainMessage])
+    return () => clearInterval(id)
+  })
+
 
 
   const handleMouseDown = (e: MouseEvent<HTMLElement>) => {
@@ -116,7 +126,7 @@ const LatestNews = (props: {
         onTouchEnd={handleTouchEnd}
         ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {data && data?.map(item => <LatestNewsLink Article={{ header: item.title, paywall: item.paywall, date: item.date, link: `/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(5, 7)}/${item.date.slice(8, 10)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}` }} key={item.id} isDragging={isDragging} />)}
+          {data && data?.map(item => <LatestNewsLink Article={{ header: item.title, paywall: item.paywall, date: item.date, link: '/'+item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')+'/'+item.date.slice(0, 4)+'/'+item.date.slice(5, 7)+'/'+item.date.slice(8, 10)+'/'+item.title.replaceAll(' ', '_').replace('?','nb20') }} key={item.id} isDragging={isDragging} />)}
         </section>
       </div>
     </div>

@@ -1,8 +1,6 @@
 import Audio from "@/model/Audio"
-import Admin from "@/model/Admin"
 import Token from "@/model/Token"
 import { cookies } from 'next/headers';
-import jwt, { JwtPayload } from "jsonwebtoken"
 import { NextRequest, NextResponse } from "next/server";
 import { AudioVideoUrlSchema } from "@/schema"
 import * as z from 'zod'
@@ -11,9 +9,6 @@ import { AudioVideoUrlUpdateSchema } from "@/schema"
 import { Eligibility } from "@/utils/mongo/eligibility";
 
 
-interface Decoded extends JwtPayload {
-    id: string
-}
 
 interface audioUrl {
     _id: string,
@@ -30,11 +25,11 @@ type audioUpdate = z.infer<typeof AudioVideoUrlUpdateSchema>
 export async function GET(request: NextRequest) {
     try {
         const Cookie = cookies().get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 })
 
         const aud: audioUrl[] = await Audio.find();
 
@@ -50,15 +45,15 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 })
 
         const token = await Token.findOne({ token: Cookie.value });
-        if (!token) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (!token) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 })
 
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const body = await request.json()
         const audioData: audioData = AudioVideoUrlSchema.parse(body);
@@ -93,18 +88,18 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !=='Admin' && coll.role!== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const body = await request.json();
         const audio: audio = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(audio);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
-        //await Audio.findByIdAndDelete(audio.Id)
+        /*await Audio.findByIdAndDelete(audio.Id)*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -118,11 +113,11 @@ export async function DELETE(request: NextRequest) {
 export async function PUT(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (coll.role !=='Admin' && coll.role!== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 })
         
         const body = await request.json()
         const audio: audioUpdate = AudioVideoUrlUpdateSchema.parse(body)

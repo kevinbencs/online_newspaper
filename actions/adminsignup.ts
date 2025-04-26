@@ -6,6 +6,7 @@ import Admin from '@/model/Admin'
 import { hash } from 'bcrypt'
 import { cookies } from 'next/headers';
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { revalidateTag, revalidatePath } from 'next/cache'
 
 
 export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) => {
@@ -34,25 +35,42 @@ export const adminSignUp = async (values: z.infer<typeof AdminRegisterShcema>) =
     const role = values.role;
     const image = values.imageUrl
 
-    /*let importance: number = 0;
+    /*const user = await Admin.find({ email });
 
-    if(role === 'Admin') {
+    let importance: number = 0;
+
+    if (role === 'Admin') {
       importance = 1;
     }
-    if(role === 'Editor'){
+    if (role === 'Editor') {
       importance = 2;
     }
 
-    if(role === 'Author'){
+    if (role === 'Author') {
       importance = 3;
     }
 
     const hashPassword = await hash(password, 12);
-    const newAdmin = new Admin({ email, password: hashPassword, name, role, image, importance });
 
-    await newAdmin.save();*/
+    if (user.length === 0) {
 
-    return { success: `${name} created successfully.` }
+      const newAdmin = new Admin({ email, password: hashPassword, name, role, image, importance, hired: true });
+
+      await newAdmin.save();
+      revalidateTag('authorsTag')
+      revalidatePath('/authors')
+    }
+    else {
+      await Admin.findByIdAndUpdate(user[0]._id, {password: hashPassword, role, importance, hired: true})
+    }*/
+
+
+
+
+
+
+
+    return { success: name + ' created successfully.' }
 
   }
   catch (error) {

@@ -15,17 +15,23 @@ interface imageUrl {
 }
 
 const fetcher = async (url: string): Promise<{ success: imageUrl[] }> => {
-    const res = await fetch(url);
+    try {
+        const res = await fetch(url);
 
-    if (!res.ok) {
-        const error = new Error('An error occurred while fetching the data.')
-        error.cause = res.json().then((data: { error: string }) => data.error)
-        console.log(error.cause)
+        if (!res.ok) {
+            const error = new Error('An error occurred while fetching the data.')
+            error.cause = res.json().then((data: { error: string }) => data.error)
+            console.log(error.cause)
 
-        throw error;
+            throw error;
+        }
+
+        return res.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error('Api error')
     }
 
-    return res.json();
 }
 
 const ImageUrl = (props: { place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[], setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string>, imageCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {

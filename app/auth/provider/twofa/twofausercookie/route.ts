@@ -18,18 +18,18 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const Body: twoFAToken = twoFaTokenIdeSchema.parse(body);
         const validatedFields = twoFaTokenIdeSchema.safeParse(Body)
-        if (validatedFields.error) return NextResponse.json({ res: false }, { status: 200 })
+        if (validatedFields.error) return NextResponse.json({ res: false }, { status: 400 })
         const Tok = Body.token
 
         const Toke = await Token.find({ token: Tok })
-        if (!Toke) return NextResponse.json({ res: false }, { status: 200 })
+        if (!Toke) return NextResponse.json({ res: false }, { status: 404 })
             
         const decoded = await jwt.verify(Tok, process.env.TwoFA_URI!) as Decoded;
 
         if (decoded.id === Body.id) return NextResponse.json({ res: true }, { status: 200 })
-        else return NextResponse.json({ res: false }, { status: 200 })
+        else return NextResponse.json({ res: false }, { status: 401 })
     } catch (error) {
         console.log(error);
-        return NextResponse.json({ res: false }, { status: 200 })
+        return NextResponse.json({ res: false }, { status: 500 })
     }
 }

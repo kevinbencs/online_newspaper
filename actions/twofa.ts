@@ -50,8 +50,6 @@ export const registry = async () => {
                 }
             })
 
-            //const user = await supabase_admin.auth.admin.getUserById(id)
-
             const url = speakeasy.otpauthURL({
                 secret: secret.base32,
                 label: `Word-Times (${data.user.email})`,

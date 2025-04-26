@@ -20,6 +20,7 @@ export const subscribe = async (value: z.infer<typeof SubscribeSchema> ) => {
         return {success: 'Success'}
     }
     catch(err){
+        console.log(err)
         return {failed: 'Server error.'}
     }
 }

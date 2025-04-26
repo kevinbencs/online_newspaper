@@ -4,6 +4,7 @@ import { deleteIdsSchema } from "@/schema";
 import * as z from 'zod'
 import { ObjectId } from "mongodb";
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { revalidatePath,revalidateTag } from 'next/cache';
 
 
 
@@ -50,8 +51,13 @@ export async function DELETE(request: NextRequest) {
         const validateFields = deleteIdsSchema.safeParse(ids);
         if (validateFields.error) return NextResponse.json({ failed: validateFields.error.errors }, { status: 400 })
 
+        /*for(let j of ids.ids){
+            const item = await Career.findByIdAndDelete(j)
+            revalidatePath(`/career/${item.title.replaceAll(' ','_')}`)
+        }
 
-        //await Career.deleteMany({id:{$id: ids}})
+        revalidatePath('/career')
+        revalidateTag('careerTag')*/
 
 
         return NextResponse.json({ success: 'Careers are deleted' }, { status: 200 })

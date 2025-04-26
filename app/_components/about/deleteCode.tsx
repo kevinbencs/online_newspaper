@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from "react";
 
 const DownloadDeleteCode = (props: { code: string | undefined }) => {
 

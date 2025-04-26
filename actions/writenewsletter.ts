@@ -6,11 +6,10 @@ import * as z from 'zod';
 import { NewsletterSchema } from "@/schema";
 import sgMail from '@sendgrid/mail';
 import { supabase } from "@/utils/supabase/article";
-import fs from 'fs';
-import path from 'path';
 import { getImageById } from "./getimageurl";
 import { cookies } from "next/headers";
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { revalidatePath } from 'next/cache';
 
 
 
@@ -34,14 +33,6 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
         if(!process.env.SENDGRID_API_KEY) return {error: "SENDGRID_API_KEY missing for Sendgrid"}
         if(!process.env.EMAIL) return {error: "EMAIL missing for Sendgrid"}
-
-        /*const facebookImage = fs.readFileSync(path.join(process.cwd(), 'public/image/facebook.png')).toString('base64');
-        const instagramImage = fs.readFileSync(path.join(process.cwd(), 'public/image/instagram.png')).toString('base64');
-        const youtubeImage = fs.readFileSync(path.join(process.cwd(), 'public/image/youtube.png')).toString('base64');
-        const xImage = fs.readFileSync(path.join(process.cwd(), 'public/image/logos.png')).toString('base64');
-        const tiktokImage = fs.readFileSync(path.join(process.cwd(), 'public/image/tik-tok(1).png')).toString('base64');
-        const logoImage = fs.readFileSync(path.join(process.cwd(), 'public/image/email.png')).toString('base64');*/
-
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
 
@@ -132,53 +123,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                          </div>
                      </body>
                      </html>
-                     
-                     
-                 `,
-                /*attachments: [
-                    {
-                        content: facebookImage, // base64 encoding
-                        filename: 'facebook.png',
-                        type: 'image/png',
-                        disposition: 'inline',
-                        content_id: 'facebookImage'
-                    },
-                    {
-                        content: instagramImage,
-                        filename: 'instagram.png',
-                        type: 'image/png',
-                        disposition: 'inline',
-                        content_id: 'instagramImage'
-                    },
-                    {
-                        content: youtubeImage,
-                        filename: 'youtube.png',
-                        type: 'image/png',
-                        disposition: 'inline',
-                        content_id: 'youtubeImage'
-                    },
-                    {
-                        content: xImage,
-                        filename: 'x.png',
-                        type: 'image/png',
-                        disposition: 'inline',
-                        content_id: 'xImage'
-                    },
-                    {
-                        content: tiktokImage,
-                        filename: 'tiktok.png',
-                        type: 'image/png',
-                        disposition: 'inline',
-                        content_id: 'tiktokImage'
-                    },
-                    {
-                        content: logoImage,
-                        filename: 'email.png',
-                        type: 'image/png',
-                        disposition: 'inline',
-                        content_id: 'logoImage'
-                    }
-                ]*/
+                 `
             }
             await sgMail
                 .send(msg)

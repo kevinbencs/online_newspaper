@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, ChangeEvent, KeyboardEvent, useEffect, Dispatch, SetStateAction } from 'react';
+import { useRef, useState, ChangeEvent, useEffect, Dispatch, SetStateAction } from 'react';
 import ImgItem from './imgitem';
 import useSWR from 'swr';
 

@@ -24,10 +24,10 @@ type imageUpdate = z.infer<typeof ImageUrlUpdateSchema>
 export async function GET(request: NextRequest) {
     try {
         const Cookie = cookies().get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });;
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });;
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author'  ) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const image: img[] = await Image.find();
 
@@ -42,11 +42,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 })
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const body = await request.json()
         const imageoData: imageoData = ImageUrlSchema.parse(body);
@@ -76,18 +76,18 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const body = await request.json();
         const img: image = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(img);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
-        //await Image.findByIdAndDelete(img.Id)
+        /*await Image.findByIdAndDelete(img.Id)*/
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -101,11 +101,11 @@ export async function DELETE(request: NextRequest) {
 export async function PUT(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
 
         const body = await request.json()

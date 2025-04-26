@@ -1,9 +1,10 @@
 'use client'
 
 import TaskItem from '@/app/_components/taskitem';
-import { SyntheticEvent, useEffect, useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 import { v4 as uuid } from 'uuid';
-import { useSocket } from '@/app/_components/socketProvider';
+import useSWR from 'swr'
+import { preload } from 'swr';
 
 
 interface TaskType {
@@ -12,12 +13,32 @@ interface TaskType {
     task: string
 }
 
-const Client = (props:{tasks: TaskType[] | undefined, error: string | undefined}) => {
-    const [tasks, setTasks] = useState<TaskType[] | undefined>(props.tasks);
-    const [firstLoad,setFirstLoad] = useState<boolean>(true);
+const fetcherSWR = async (url: string): Promise<{res: TaskType[] }> => {
+    try {
+        const res = await fetch(url)
+
+        if (!res.ok) {
+            const error = new Error('An error occurred while fetching the data.')
+            error.cause = res.json().then((data: { error: string }) => data.error)
+            console.log(error.cause)
+
+            throw error;
+        }
+        return res.json()
+    } catch (error) {
+        console.error(error)
+        throw new Error('Api error')
+    }
+
+}
+
+preload('/api/task', fetcherSWR)
+
+const Client = () => {
     const [inputValue, setINputValue] = useState<string>('');
-    const [error, setError] = useState<string | undefined>(props.error);
-    const {task} = useSocket();
+    const [Error, setError] = useState<string | undefined>('');
+
+    const {data,error} = useSWR('/api/task', fetcherSWR, {refreshInterval: 1000})
 
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -46,22 +67,18 @@ const Client = (props:{tasks: TaskType[] | undefined, error: string | undefined}
 
 
 
-    useEffect(() => {
-        if(firstLoad){
-            setFirstLoad(false);
-        }
-        else{
-            setTasks(task)
-        }
-    },[task])
-
     return (
         <div className='flex justify-center w-full'>
             <div className='lg:w-[680px] w-full'>
                 <h1 className='text-center mb-10 text-3xl'>Tasks</h1>
+                {Error &&
+                    <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5 text-center  p-2'>
+                        {Error}
+                    </div>
+                }
                 {error &&
                     <div className='text-red-700 font-bold dark:bg-red-400/15 dark:text-red-500 bg-red-700/25 rounded-lg mb-5 text-center  p-2'>
-                        {error}
+                        {error.message}
                     </div>
                 }
                 <form onSubmit={handleSubmit}>
@@ -76,7 +93,8 @@ const Client = (props:{tasks: TaskType[] | undefined, error: string | undefined}
                     </div>
                 </form>
                 <div className='mt-10'>
-                    {tasks && tasks.map((item: TaskType) => <TaskItem name={item.name} task={item.task} id={item._id}  key={uuid()} setError={setError} />)}
+                    {/*tasks && tasks.map((item: TaskType) => <TaskItem name={item.name} task={item.task} id={item._id}  key={uuid()} setError={setError} />)*/}
+                    {(data && data.res) && data.res.map((item: TaskType) => <TaskItem name={item.name} task={item.task} id={item._id}  key={uuid()} setError={setError} />)}
                 </div>
             </div>
         </div>

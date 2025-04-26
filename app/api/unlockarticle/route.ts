@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/utils/supabase/article";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { EditArticleSchema } from "@/schema";
 import { getImageById } from "@/actions/getimageurl";
 import { getVideoById } from "@/actions/getvideourl";
-import SocketService from "@/service/socketService";
 import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio, searchVideo } from "@/lib/checkArt";
 import { Eligibility } from "@/utils/mongo/eligibility";
 import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
@@ -26,11 +24,11 @@ export async function POST(req: NextRequest) {
 
     try {
         const cookie = req.cookies.get('admin-log');
-        if (!cookie) return NextResponse.json({ error: 'Please log in' }, { status: 401 });
+        if (!cookie) return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
 
         const body = await req.json();
         const value = EditArticleSchema.parse(body);
@@ -48,7 +46,7 @@ export async function POST(req: NextRequest) {
                 const res = await searchVideo(textArra[i]);
 
                 if (res.success) {
-                    textArra[i] = `<video id=(${res.success.url};${res.success._id};${res.success.title})></video>`
+                    textArra[i] = '<video id=('+res.success.url+';'+res.success._id+';'+res.success.title+')></video>'
                 }
                 else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
             }
@@ -57,9 +55,9 @@ export async function POST(req: NextRequest) {
                 const res = await searchAudio(textArra[i]);
 
                 if (res.success) {
-                    textArra[i] = `<audio id=(${res.success.url};${res.success._id};${res.success.title};${res.success.date})></<audio>`
+                    textArra[i] = '<audio id=('+res.success.url+';'+res.success._id+';'+res.success.title+';'+res.success.date+')></<audio>'
                 }
-                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
+                else return NextResponse.json({ error: 'Audio id is not in database' }, { status: 404 })
             }
 
             if (textArra[i].indexOf('<Image') === 0) {
@@ -67,7 +65,7 @@ export async function POST(req: NextRequest) {
                 const res = await editImageIdToData(textArra[i]);
 
                 if (res.success) {
-                    textArra[i] = `<Image id=(${res.success.url};${res.success._id};${res.success.detail})></<Image>`
+                    textArra[i] = '<Image id=('+res.success.url+';'+res.success._id+';'+res.success.detail+')></<Image>'
                 }
                 else return NextResponse.json({ error: 'Image id is not in database' }, { status: 404 })
             }
@@ -81,34 +79,34 @@ export async function POST(req: NextRequest) {
                 const res = await searchVideo(paywallTextArr[i]);
 
                 if (res.success) {
-                    paywallTextArr[i] = `<video id=(${res.success.url};${res.success._id};${res.success.title})></video>`
+                    paywallTextArr[i] = '<video id=('+res.success.url+';'+res.success._id+';'+res.success.title+')></video>'
                 }
-                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 400 })
+                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 404 })
             }
 
             if (paywallTextArr[i].indexOf('<audio') === 0) {
                 const res = await searchAudio(paywallTextArr[i]);
 
                 if (res.success) {
-                    paywallTextArr[i] = `<audio id=(${res.success.url};${res.success._id};${res.success.title};${res.success.date})></<audio>`
+                    paywallTextArr[i] = '<audio id=('+res.success.url+';'+res.success._id+';'+res.success.title+';'+res.success.date+')></<audio>'
                 }
-                else return NextResponse.json({ error: 'Video id is not in database' }, { status: 400 })
+                else return NextResponse.json({ error: 'Audio id is not in database' }, { status: 404 })
             }
 
             if (paywallTextArr[i].indexOf('<Image') === 0) {
                 const res = await editImageIdToData(paywallTextArr[i]);
 
                 if (res.success) {
-                    paywallTextArr[i] = `<Image id=(${res.success.url};${res.success._id};${res.success.detail})></<Image>`
+                    paywallTextArr[i] = '<Image id=('+res.success.url+';'+res.success._id+';'+res.success.detail+')></<Image>'
                 }
-                else return NextResponse.json({ error: 'Image id is not in database' }, { status: 400 })
+                else return NextResponse.json({ error: 'Image id is not in database' }, { status: 404 })
             }
         }
 
 
         const resImg = await getImageById({ id: value.cover_img_id })
 
-        if (resImg.error) return NextResponse.json({ error: 'Cover image id is not in database' }, { status: 400 });
+        if (resImg.error) return NextResponse.json({ error: 'Cover image id is not in database' }, { status: 404 });
         const cover_img_id = resImg.success.url + ';' + resImg.success._id + ';' + resImg.success.detail;
 
         let resFirstElement;
@@ -117,13 +115,13 @@ export async function POST(req: NextRequest) {
         if (value.first_element === 'Image') {
             resFirstElement = await getImageById({ id: value.first_element_url });
 
-            if (resFirstElement?.error || resFirstElement.success === null) return NextResponse.json({ error: 'First element image id is not in database' }, { status: 400 })
+            if (resFirstElement?.error || resFirstElement.success === null) return NextResponse.json({ error: 'First element image id is not in database' }, { status: 404 })
             else { firstElementUrl = resFirstElement?.success.url + ';' + resFirstElement?.success.id + ';' + resFirstElement?.success.detail }
         }
         else if (value.first_element === 'Video') {
             resFirstElement = await getVideoById({ id: value.first_element_url });
 
-            if (resFirstElement?.error || resFirstElement.success === null) return NextResponse.json({ error: 'First element video id is not in database' }, { status: 400 });
+            if (resFirstElement?.error || resFirstElement.success === null) return NextResponse.json({ error: 'First element video id is not in database' }, { status: 404 });
             else { firstElementUrl = resFirstElement?.success.url + ';' + resFirstElement?.success._id + ';' + resFirstElement?.success.title }
         }
         else if (value.first_element === 'Youtube') {
@@ -205,27 +203,7 @@ export async function POST(req: NextRequest) {
             if (res.error) console.log(res.error)
         }
 
-        const socketService = SocketService.getInstance();
-        const article: PostgrestSingleResponse<DataMainPage[]> = await supabase.from('article').select('title, category, date, time, id, paywall').limit(6).eq('locked', false).order('id', { ascending: false })
-        if (!article.error) {
-            article.data.map(val => {
-                val.date = val.date.replaceAll(' ', '').replaceAll('.', '-');
-                if (val.time.length === 8) val.date = val.date.slice(0, -1) + 'T' + val.time + 'Z'
-                else val.date = val.date.slice(0, -1) + 'T0' + val.time + 'Z'
-            })
-
-            socketService.emit('lastMainPage', { data: article.data })
-        }
-
-
-        const lockeddArticle: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
-        if (!lockeddArticle.data || lockeddArticle.data.length === 0) {
-
-            socketService.emit('unLockArticle', { data: 0 })
-        }
-        else {
-            socketService.emit('unLockArticle', { data: lockeddArticle.count })
-        }*/
+        */
 
 
 

@@ -1,6 +1,4 @@
 import { sectionVideo } from '@/actions/getmainnews';
-import Stop from '../../image/stop.png'
-import Image from "next/image";
 import Link from 'next/link';
 import Img from '../article/img2';
 import { IoLockClosed } from "react-icons/io5";

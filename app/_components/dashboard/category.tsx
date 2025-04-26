@@ -13,18 +13,24 @@ interface Category {
     _id: string
 }
 
-const fetcher = async (url: string): Promise<{success: Category[]}> => {
-    const res = await fetch(url);
+const fetcher = async (url: string): Promise<{ success: Category[] }> => {
+    try {
+        const res = await fetch(url);
 
-    if (!res.ok) {
-        const error = new Error('An error occurred while fetching the data.')
-        error.cause = res.json().then((data: { error: string }) => data.error)
-        console.log(error.cause)
+        if (!res.ok) {
+            const error = new Error('An error occurred while fetching the data.')
+            error.cause = res.json().then((data: { error: string }) => data.error)
+            console.log(error.cause)
 
-        throw error;
+            throw error;
+        }
+
+        return res.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error('Api error')
     }
 
-    return res.json();
 }
 
 const CategoryUrl = (props: { place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[], setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, setCategoryCopyMessage: Dispatcher<string>, categoryCopyMessage: string, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {
@@ -35,7 +41,7 @@ const CategoryUrl = (props: { place: string, setPlace: Dispatcher<string>, succe
     const [updateCategory, setUpdateCategory] = useState<string>('');
     const [changed, setChanged] = useState<boolean>(false);
 
-    const { data, error, isLoading, mutate } = useSWR<{success: Category[]}, Error>('/api/category', fetcher)
+    const { data, error, isLoading, mutate } = useSWR<{ success: Category[] }, Error>('/api/category', fetcher)
 
     if (error) props.setError(error.message)
 

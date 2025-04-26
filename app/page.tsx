@@ -6,7 +6,7 @@ import SectionTwo from "./_components/home/sectionTwo";
 import { latestNewsMainPage } from "@/actions/getlatestnews";
 
 
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 export default async function Page() {
 

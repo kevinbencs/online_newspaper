@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, SyntheticEvent, Dispatch, SetStateAction, RefObject, useTransition } from 'react';
 import { v4 as uuid } from 'uuid';
-import { chooseTypeOfTextItem } from '@/app/_components/carrier/showCarrier';
+import { chooseTypeOfTextItem } from '@/app/_components/career/showCareer';
 import Bold_italic from '../../../_components/newArticle/bold_italic';
 import List_embedded from '../../../_components/newArticle/list_embedded';
 import { WriteCareer } from '@/actions/writeCareer';

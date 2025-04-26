@@ -25,11 +25,11 @@ type videoUpdate = z.infer<typeof AudioVideoUrlUpdateSchema>
 export async function GET() {
     try {
         const Cookie = cookies().get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const video: videoUrl[] = await Video.find();
 
@@ -43,11 +43,11 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const body = await request.json()
         const videoData: videoData = AudioVideoUrlSchema.parse(body);
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
         const res = await Video.findOne({ url: videoData.url });
 
-        if (res) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
+        if (res) return NextResponse.json({ error: 'This video is in the database.' }, { status: 400 })
 
         /*const NewVideoUrl = new Video({
             url: videoData.url,
@@ -77,11 +77,11 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 401 });
 
         const body = await request.json();
         const vid: video = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
@@ -102,11 +102,11 @@ export async function DELETE(request: NextRequest) {
 export async function PUT(request: NextRequest) {
     try {
         const Cookie = request.cookies.get('admin-log');
-        if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (!Cookie) return NextResponse.json({error: 'Please log in as admin, or editor' }, { status: 401 });
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 401 });
         const body = await request.json()
         const video: videoUpdate = AudioVideoUrlUpdateSchema.parse(body)
         const validatedFields = AudioVideoUrlUpdateSchema.safeParse(video);
@@ -116,7 +116,7 @@ export async function PUT(request: NextRequest) {
 
         if (res.error) {
             console.log(res.error);
-            if (res.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' }, { status: 400 })
+            if (res.error.name === 'CastError') return NextResponse.json({ error: 'Video does not exist' }, { status: 404 })
             else return NextResponse.json({ error: 'Server error' }, { status: 500 })
         }
 

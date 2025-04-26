@@ -6,24 +6,30 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import * as z from 'zod'
 
 export const clickOnArt = async (value: z.infer<typeof getArtSchema>) => {
-    const currentDate = new Date().toISOString().slice(0, 10).replaceAll('-', '. ') + '.';
+    try {
+        const currentDate = new Date().toISOString().slice(0, 10).replaceAll('-', '. ') + '.';
 
-    const validatedFields = getArtSchema.safeParse(value);
-    if (validatedFields.error) return { failed: validatedFields.error.errors }
+        const validatedFields = getArtSchema.safeParse(value);
+        if (validatedFields.error) return { failed: validatedFields.error.errors }
 
-    const Article = value.Article;
-    const date = value.date;
-    const source = value.source;
+        const Article = value.Article;
+        const date = value.date;
+        const source = value.source;
 
-    const article: PostgrestSingleResponse<{title: string, locked: boolean, date: string}[]> = await supabase.from('article').select('title, date, locked').eq('title', Article).eq('date', date).eq('locked', false)
+        const article: PostgrestSingleResponse<{ title: string, locked: boolean, date: string }[]> = await supabase.from('article').select('title, date, locked').eq('title', Article).eq('date', date).eq('locked', false)
 
-    if (!article.data || article.data.length === 0) { return { error: 'No article' } }
+        if (!article.data || article.data.length === 0) { return { error: 'No article' } }
 
-    const res = await supabase.from('numberclickarticle').insert({
-        title: article.data[0].title,
-        source: source,
-        date: currentDate
-    })
+        const res = await supabase.from('numberclickarticle').insert({
+            title: article.data[0].title,
+            source: source,
+            date: currentDate
+        })
 
-    return { success: 'success' }
+        return { success: 'success' }
+    } catch (error) {
+        console.log(error)
+        return {error: 'Server error'}
+    }
+
 }

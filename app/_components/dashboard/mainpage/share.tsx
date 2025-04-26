@@ -22,21 +22,7 @@ const options = {
   responsive: true,
 };
 
-const data: dataObject = {
-  labels: [
-    'Facebook',
-    'X',
-  ],
-  datasets: [{
-    label: 'Share',
-    data: [],
-    backgroundColor: [
-      'rgb(54, 162, 235)',
-      'rgb(0,0,0)',
-    ],
-    hoverOffset: 10
-  }]
-};
+
 
 const Share = (props: { share: { sh: string, article_count: number }[] | null}) => {
   const [data, setData] = useState<dataObject>({

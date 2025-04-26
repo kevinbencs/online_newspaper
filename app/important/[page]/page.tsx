@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 export async function generateStaticParams() {
   const lastPage = await impArtNum() 
   const arr: number[] = []
-  for(let i = 1; i<= Math.ceil(lastPage.numb / 20) ; i++){
+  for(let i = 1; i<= Math.ceil(typeof(lastPage) === 'number' ? lastPage / 20 : 0) ; i++){
     arr.push(i)
   }
 
@@ -50,7 +50,7 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-static'
 export const dynamicParams = true;
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 
 const Page = async ({ params }: { params: {page: number  }}) => {
@@ -58,13 +58,13 @@ const Page = async ({ params }: { params: {page: number  }}) => {
   if(!Number.isInteger(Number(params.page))) notFound();
   if(Number(params.page) < 1) notFound();
 
-  const lastPage = await impArtNum() 
+  const lastPage = (await impArtNum() ).numb
+  if (lastPage === undefined || Number(params.page) > Math.ceil(lastPage / 20)) notFound();
 
-  if(Number(params.page) > Math.ceil(lastPage.numb / 20)) notFound();
+  const ResApi = await impArt(Number(params.page))
+  const res = ResApi.res 
 
-  const res = (await impArt(Number(params.page))).res 
-
-  if (res.error) return (
+  if (ResApi.error || res?.error) return (
 
     <div className="relative">
 
@@ -84,7 +84,7 @@ const Page = async ({ params }: { params: {page: number  }}) => {
   )
 
 
-  if (res.data)
+  if (res?.data)
     return (
       <div className="relative">
 
@@ -96,7 +96,7 @@ const Page = async ({ params }: { params: {page: number  }}) => {
               {res.data.map(item => <Latest_important paywall={item.paywall} date={item.date} detail={item.detail} author={item.author} category={item.category} imageId={item.cover_img_id} title={item.title} key={item.id}
                 link={`/${item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?', 'nb20')}`} />)}
             </div>
-            {lastPage && <Pagination url='important' page={params.page} lastPage={Math.ceil(lastPage.numb / 20)} />}
+            {lastPage && <Pagination url='important' page={params.page} lastPage={Math.ceil(lastPage / 20)} />}
           </div>
           <div className="lg:w-80">
             <Rightsidebar />

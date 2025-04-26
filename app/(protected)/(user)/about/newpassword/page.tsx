@@ -1,6 +1,6 @@
 'use client'
 import { changePassword } from '@/actions/updateuser';
-import { SyntheticEvent, use, useState, useTransition } from 'react'
+import { SyntheticEvent, useState, useTransition } from 'react'
 import { ZodIssue } from 'zod';
 import { v4 as uuid } from 'uuid';
 

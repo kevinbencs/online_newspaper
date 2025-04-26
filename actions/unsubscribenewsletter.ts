@@ -11,32 +11,35 @@ interface Decoded extends JwtPayload {
 
 
 export const unsubscribeEmail = async (value: z.infer<typeof EmailSchema>) => {
-    const validatedFields = EmailSchema.safeParse(value);
-    if(validatedFields.error) return {error: validatedFields.error.errors};
 
-    try{
+
+    try {
+        const validatedFields = EmailSchema.safeParse(value);
+        if (validatedFields.error) return { error: validatedFields.error.errors };
         await supabase.from('newsletter').delete().eq('email', value.email)
 
-        return {success: 'You unsubscribed from newsletters.'}
+        return { success: 'You unsubscribed from newsletters.' }
     }
-    catch(err){
-        return {failed: 'Server error'};
+    catch (err) {
+        console.log(err)
+        return { failed: 'Server error' };
     }
 }
 
 export const unsubscribeToken = async (value: string) => {
-    
-    try{
+
+    try {
         const decoded = jwt.verify(value, process.env.SECRET_CODE!) as Decoded
 
-        if(!decoded) return {failed: 'Url error'}
+        if (!decoded) return { failed: 'Url error' }
 
-        await supabase.from('newsletter').delete().eq('email',decoded.email)
+        await supabase.from('newsletter').delete().eq('email', decoded.email)
 
-        return {success: 'You unsubscribed from newsletters.'}
+        return { success: 'You unsubscribed from newsletters.' }
     }
-    catch(err){
-        return {failed: 'Server error'}
+    catch (err) {
+        console.log(err)
+        return { failed: 'Server error' }
     }
 }
 

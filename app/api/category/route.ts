@@ -6,7 +6,6 @@ import * as z from 'zod'
 import { AudioVideoImageCategoryDeleteUrlSchema } from "@/schema"
 import { Eligibility } from "@/utils/mongo/eligibility";
 import { revalidateTag } from "next/cache";
-import { CatCache } from "@/cache/cache";
 
 
 interface Cat {
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     try {
         await connectToMongo();
-        const category: Cat[] = await CatCache()
+        const category: Cat[] = await Category.find({},{_id: 1, name: 1}).sort({name: 1});
 
         return NextResponse.json({ success: category }, { status: 200 })
     }
@@ -42,7 +41,7 @@ export async function POST(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
         const body = await request.json()
         const categoryData: categoryData = CategorySchema.parse(body);
@@ -53,14 +52,15 @@ export async function POST(request: NextRequest) {
 
         if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
 
+        
+
         /*const NewCategory = new Category({
             name: categoryData.name,
         })
 
         await NewCategory.save();
-
-        revalidateTag('catNewNumtag')*/
-
+        revalidateTag('categoryTags')
+        */
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
     catch (err) {
@@ -76,16 +76,16 @@ export async function DELETE(request: NextRequest) {
         if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
         const body = await request.json();
         const category: category = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
         const validatedFields = AudioVideoImageCategoryDeleteUrlSchema.safeParse(category);
         if (validatedFields.error) return NextResponse.json({ failed: validatedFields.error.errors }, { status: 400 });
 
-        //await Category.findByIdAndDelete(category.Id)
-
-        //revalidateTag('catNewNumtag')
+        /*await Category.findByIdAndDelete(category.Id)
+        revalidateTag('categoryTags')
+        */
 
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
 
         const body = await request.json()
         const category: categoryUpdate = CategoryUpdateSchema.parse(body)
@@ -117,10 +117,10 @@ export async function PUT(request: NextRequest) {
             console.log(cate.error);
             if(cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' },{status: 400})
             else return NextResponse.json({ error: 'Server error' },{status: 400})
-        }*/
-
-        //revalidateTag('catNewNumtag')
-
+        }
+        revalidateTag('categoryTags')    
+        */
+       
         return NextResponse.json({ success: 'Success' }, { status: 200 })
     }
     catch (err) {

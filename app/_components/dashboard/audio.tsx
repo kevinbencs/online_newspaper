@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Dispatch, SetStateAction, SyntheticEvent,  useState } from 'react'
+import React, { Dispatch, SetStateAction, SyntheticEvent, useState } from 'react'
 import { ZodIssue } from 'zod';
 import AudioOptgroup from '../optgroup/audiogroup';
 import { v4 as uuid } from 'uuid';
@@ -15,17 +15,23 @@ interface audUrl {
 }
 
 const fetcher = async (url: string): Promise<{ success: audUrl[] }> => {
-    const res = await fetch(url);
+    try {
+        const res = await fetch(url);
 
-    if (!res.ok) {
-        const error = new Error('An error occurred while fetching the data.')
-        error.cause = res.json().then((data: { error: string }) => data.error)
-        console.log(error.cause)
+        if (!res.ok) {
+            const error = new Error('An error occurred while fetching the data.')
+            error.cause = res.json().then((data: { error: string }) => data.error)
+            console.log(error.cause)
 
-        throw error;
+            throw error;
+        }
+
+        return res.json();
+    } catch (error) {
+        console.error(error)
+        throw new Error('Api error')
     }
 
-    return res.json();
 }
 
 const AudioUrl = (props: { place: string, setPlace: Dispatcher<string>, success: string | undefined, error: string | undefined, failed: undefined | ZodIssue[], setVideoCopyMessage: Dispatcher<string>, setAudioCopyMessage: Dispatcher<string>, audioCopyMessage: string, setCategoryCopyMessage: Dispatcher<string>, setImageCopyMessage: Dispatcher<string>, setSuccess: Dispatcher<string | undefined>, setError: Dispatcher<string | undefined>, setFailed: Dispatcher<ZodIssue[] | undefined>, isPending: boolean, startTransition: (callback: () => void) => void }) => {
@@ -186,7 +192,7 @@ const AudioUrl = (props: { place: string, setPlace: Dispatcher<string>, success:
             </form>
 
             <h3 className='mb-5 text-xl pl-2'>Search audio id</h3>
-            <AudioOptgroup  changed={changed }error={error} isLoading={isLoading} data={data?.success} audioCopyMessage={props.audioCopyMessage} setVideoCopyMessage={props.setVideoCopyMessage} setAudioCopyMessage={props.setAudioCopyMessage} setCategoryCopyMessage={props.setCategoryCopyMessage} setImageCopyMessage={props.setImageCopyMessage} isPending={props.isPending} setSuccess={props.setSuccess} />
+            <AudioOptgroup changed={changed} error={error} isLoading={isLoading} data={data?.success} audioCopyMessage={props.audioCopyMessage} setVideoCopyMessage={props.setVideoCopyMessage} setAudioCopyMessage={props.setAudioCopyMessage} setCategoryCopyMessage={props.setCategoryCopyMessage} setImageCopyMessage={props.setImageCopyMessage} isPending={props.isPending} setSuccess={props.setSuccess} />
 
             <h3 className='mb-5 text-xl pl-2'>Delete audio by id</h3>
             {props.place === 'audioDelete' &&

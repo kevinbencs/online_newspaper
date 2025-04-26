@@ -36,15 +36,27 @@ export async function getCategory() {
 }
 
 export const catArt = async (page: number, name: string) => {
-    const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, title, category, detail, cover_img_id, date, author, paywall').eq('category', name).range((page - 1) * 20, page * 20).order('id', { ascending: false }).eq('locked', false)
+    try {
+        const res: PostgrestSingleResponse<Data[]> = await supabase.from('article').select('id, title, category, detail, cover_img_id, date, author, paywall').eq('category', name).range((page - 1) * 20, page * 20).order('id', { ascending: false }).eq('locked', false)
 
-    return { res }
+        return { res }
+    } catch (error) {
+        console.log(error);
+        return { error: 'Supabase error' }
+    }
+
 }
 
 export const catArtNum = async (name: string) => {
-    const res = (await supabase.from('article').select('id', { count: 'exact' }).eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).eq('locked', false)).count;
+    try {
+        const res = (await supabase.from('article').select('id', { count: 'exact' }).eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).eq('locked', false)).count;
 
-    if (res === null) return { res: 0 }
+        if (res === null) return { res: 0 }
 
-    return { res }
+        return { res }
+    } catch (error) {
+        console.log(error);
+        return { error: 'Supabase error' }
+    }
+
 }

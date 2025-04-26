@@ -20,6 +20,7 @@ export const getImageById = async (value: z.infer<typeof idSchema>) => {
         return { success: JSON.parse(JSON.stringify(image)) }
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }

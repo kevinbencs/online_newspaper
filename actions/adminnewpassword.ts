@@ -3,15 +3,9 @@
 import { NewPasswordSchema } from '@/schema'
 import * as z from 'zod'
 import { cookies } from 'next/headers';
-import jwt, { JwtPayload } from "jsonwebtoken"
 import Admin from '@/model/Admin';
 import { hash } from 'bcrypt'
-import Token from '@/model/Token';
 import { Eligibility } from "@/utils/mongo/eligibility";
-
-interface Decoded extends JwtPayload {
-    id: string
-}
 
 
 export const changeAdminPassword = async (values: z.infer<typeof NewPasswordSchema>) => {
@@ -31,11 +25,11 @@ export const changeAdminPassword = async (values: z.infer<typeof NewPasswordSche
             return { failed: validatedFields.error.errors };
         }
 
-        //const newPassword = await hash(values.password, 12);
+        /*const newPassword = await hash(values.password, 12);
 
-        //const res = await Admin.findByIdAndUpdate(decoded.id, { password: newPassword })
+        const res = await Admin.findByIdAndUpdate(coll.id, { password: newPassword })
         
-        //if (!res) return { error: 'Please log in' };
+        if (!res) return { error: 'Please log in' };*/
 
         return { success: 'Password changed.' }
 

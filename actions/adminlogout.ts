@@ -1,6 +1,5 @@
 "use server"
 
-import mongoose from 'mongoose';
 import { cookies } from 'next/headers';
 import Token from "@/model/Token"
 

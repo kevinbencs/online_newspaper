@@ -55,7 +55,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 const res = await searchVideo(textArra[i]);
 
                 if (res.success) {
-                    textArra[i] = `<video id=(${res.success.url};${res.success._id};${res.success.title})></video>`
+                    textArra[i] = '<video id=('+res.success.url+';'+res.success._id+';'+res.success.title+')></video>'
                 }
                 else return { error: 'Video id is not in database' }
             }
@@ -64,7 +64,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 const res = await searchAudio(textArra[i]);
 
                 if (res.success) {
-                    textArra[i] = `<audio id=(${res.success.url};${res.success._id};${res.success.title};${res.success.date})></<audio>`
+                    textArra[i] = '<audio id=('+res.success.url+';'+res.success._id+';'+res.success.title+';'+res.success.date+')></<audio>'
                 }
                 else return { error: 'Video id is not in database' }
             }
@@ -74,7 +74,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 const res = await editImageIdToData(textArra[i]);
 
                 if (res.success) {
-                    textArra[i] = `<Image id=(${res.success.url};${res.success._id};${res.success.detail})></<Image>`
+                    textArra[i] = '<Image id=('+res.success.url+';'+res.success._id+';'+res.success.detail+')></<Image>'
                 }
                 else return { error: 'Image id is not in database' }
             }
@@ -88,7 +88,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 const res = await searchVideo(paywallTextArr[i]);
 
                 if (res.success) {
-                    paywallTextArr[i] = `<video id=(${res.success.url};${res.success._id};${res.success.title})></video>`
+                    paywallTextArr[i] = '<video id=('+res.success.url+';'+res.success._id+';'+res.success.title+')></video>'
                 }
                 else return { error: 'Video id is not in database' }
             }
@@ -97,7 +97,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 const res = await searchAudio(paywallTextArr[i]);
 
                 if (res.success) {
-                    paywallTextArr[i] = `<audio id=(${res.success.url};${res.success._id};${res.success.title};${res.success.date})></<audio>`
+                    paywallTextArr[i] = '<audio id=('+res.success.url+';'+res.success._id+';'+res.success.title+';'+res.success.date+')></<audio>'
                 }
                 else return { error: 'Video id is not in database' }
             }
@@ -106,7 +106,7 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
                 const res = await editImageIdToData(paywallTextArr[i]);
 
                 if (res.success) {
-                    paywallTextArr[i] = `<Image id=(${res.success.url};${res.success._id};${res.success.detail})></<Image>`
+                    paywallTextArr[i] = '<Image id=('+res.success.url+';'+res.success._id+';'+res.success.detail+')></<Image>'
                 }
                 else return { error: 'Image id is not in database' }
             }

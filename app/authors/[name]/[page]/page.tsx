@@ -49,7 +49,7 @@ export async function generateStaticParams() {
     const arr = [];
     for(let j = 0; j< auths.length; j++){
         const lastPage = (await AuthArtNum(auths[j].name)).res
-        for (let i = 1; i <= Math.ceil(lastPage / 20); i++) {
+        for (let i = 1; i <= Math.ceil( typeof(lastPage) === 'number' ? lastPage / 20 : 0 ); i++) {
             arr.push({name:auths[j].name.replaceAll(' ', '_'), number: i })
         }
     }
@@ -59,26 +59,26 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-static'
 export const dynamicParams = true;
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 
 
 const Page = async ({ params }: { params: { name: string, page: number } }) => {
-    /*const authors = await getAuthor()
-    console.log(authors)*/
+
 
     if (!Number.isInteger(Number(params.page))) notFound();
     if (Number(params.page) < 1) notFound();
 
     const lastPage = (await AuthArtNum(params.name.replaceAll('_', ' '))).res
 
-    if (Number(params.page) > Math.ceil(lastPage / 20)) notFound();
+    if (lastPage === undefined || Number(params.page) > Math.ceil(lastPage / 20)) notFound();
 
     
+    const ResApi = await AuthArt(params.page, params.name.replaceAll('_', ' '))
+    const res = ResApi.res
 
-    const res = (await AuthArt(params.page, params.name.replaceAll('_', ' '))).res
 
-    if (res.error) return (
+    if (ResApi.error || res?.error ) return (
         <div className="relative">
 
 
@@ -96,7 +96,7 @@ const Page = async ({ params }: { params: { name: string, page: number } }) => {
             </div>
         </div>
     )
-    if (res.data)
+    if (res?.data)
         return (
             <div className="relative">
 

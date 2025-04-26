@@ -4,16 +4,13 @@ import { adminLogOut } from "@/actions/adminlogout"
 import { useLogged } from "../_components/islogged/isloggedprovider"
 import { useRouter } from "next/navigation"
 import { SyntheticEvent } from "react"
-import { useSocket } from "./socketProvider"
 
 export default function AdminLogout() {
     const { setLogged, setRole } = useLogged();
     const { push } = useRouter();
-    const {setAuth} = useSocket()
 
     const handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
-        setAuth(false);
         adminLogOut()
             .then(val => {
                 if (val) {

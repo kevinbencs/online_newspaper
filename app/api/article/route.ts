@@ -36,11 +36,11 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         const cookie = request.cookies.get('admin-log');
-        if (!cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 })
+        if (!cookie) return NextResponse.json({ error: 'Please log in as admin/editor' }, { status: 401 })
 
         const coll = await Eligibility(cookie.value)
 
-        if(coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if(coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin/editor' }, { status: 401 });
 
         const body = await request.json()
 
@@ -50,7 +50,7 @@ export async function DELETE(request: NextRequest) {
         if (validateFields.error) return NextResponse.json({ failed: validateFields.error.errors }, { status: 400 })
 
         /*for (let i of ids.ids) {
-            const { error } = await supabase.from('article').delete().eq('id', i);
+            const { error } = await supabase.from('article').delete().eq('id', Number(i));
 
             if (error) {
                 console.log(error);

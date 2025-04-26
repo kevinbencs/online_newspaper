@@ -110,7 +110,7 @@ const Page = () => {
                         {Role.map((item) => <li tabIndex={0} onFocus={() => setOptClass(`h-36`)} onBlur={() => setOptClass(`h-0`)} key={item} onClick={() => handleClick(item)} onKeyDown={(e) => handleKeyDown(e, item)}>{item} </li>)}
                     </ul>
                 </label>
-                <input type="submit" disabled={isPending} value="Create new account" className='p-1 border-2 border-base-content w-28 cursor-pointer bg-base-300 dark:bg-gray-400 hover:bg-base-100 dark:hover:bg-gray-500 dark:text-white' />
+                <input type="submit" disabled={isPending} value="Create new account" className='p-1 border-2 border-base-content cursor-pointer bg-base-300 dark:bg-gray-400 hover:bg-base-100 dark:hover:bg-gray-500 dark:text-white' />
             </form>
         </div>
     )

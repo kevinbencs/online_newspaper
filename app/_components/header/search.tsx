@@ -2,7 +2,9 @@
 import { SyntheticEvent, useState, Dispatch, SetStateAction, } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useSearch } from '../searchContext';
+import { useCategory } from '../categoryContext';
+import useSWR from 'swr'
+
 
 interface Cat {
   name: string,
@@ -28,12 +30,48 @@ interface Theme {
 
 
 
+
+
+
+interface Res {
+  res: {
+    author: Author[],
+    title: Title[],
+    theme: Theme[]
+  }
+}
+
+
+const fetcher = async (url: string): Promise<Res> => {
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } })
+
+    if (!res.ok) {
+      const error = new Error()
+      error.cause = res.json().then((data: { error: string }) => data.error)
+      console.log(error.cause)
+
+      throw error;
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error(error)
+    throw error;
+  }
+
+}
+
+
+
 const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => {
   const [Input, setInput] = useState<string>('');
   const [focus, setFocus] = useState<boolean>(false);
   const router = useRouter();
 
-  const { data, error, isLoading } = useSearch()
+  const { categoryData, categoryError, categoryIsLoading } = useCategory()
+
+  const { data, error, isLoading } = useSWR('/api/search', fetcher, { revalidateOnFocus: false })
 
   const categoryFilter = (arrayItem: Cat) => {
     const arr = arrayItem.name.toLowerCase().split(' ')
@@ -80,8 +118,8 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
   return (
     <>
       <form action="#" onSubmit={handleSubmit} className="input input-bordered dark:border-2 border-none dark:border-solid focus-within:outline-none flex items-center h-16 gap-2">
-        <input name='headerSearch' type="text" onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}}  className="grow text-lg text-base-content" placeholder="Search" value={Input} onChange={(e) => setInput(e.target.value)} />
-        <button onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}} >
+        <input name='headerSearch' type="text" onFocus={() => setFocus(true)} onBlur={() => { setFocus(false) }} className="grow text-lg text-base-content" placeholder="Search" value={Input} onChange={(e) => setInput(e.target.value)} />
+        <button onFocus={() => setFocus(true)} onBlur={() => { setFocus(false) }} >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -95,31 +133,38 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
         </button>
 
       </form >
-      {Input !== ''  &&
+      {Input !== '' &&
         <div className={` ${focus ? 'h-64' : 'h-0'} bg-white border-l-2 border-r-2 border-b-2 border-gray-600 dark:bg-neutral absolute lg:w-[59.3%] w-[calc(100%-92px)] m-10 lg:ml-[20.3%] lg:mr-[20%] left-[6px] lg:left-0  top-16 overflow-y-scroll overflow-x-hidden text-base-content dark:text-neutral-content sidebar`}>
+          {categoryError && <div>{categoryError.message}</div>}
+          {categoryIsLoading && <div>...Loading</div>}
+
+          {data && <>
+            {(categoryData && categoryData.filter(categoryFilter).length > 0) &&
+              <section>
+                <h3 className='bg-base-300 p-2 text-2xl border-b-2 border-gray-600'>Category</h3>
+                <ul className='text-lg'>
+
+                  {categoryData.filter(categoryFilter).slice(0, 7).map((item) => <li className='border-b-2 border-gray-600 ' key={item._id}>
+                    <Link onFocus={() => setFocus(true)} onBlur={() => { setFocus(false) }} href={`/category/${item.name.toLowerCase().replaceAll(' ', '').replaceAll('&', '_')}`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.name}</Link>
+                  </li>)}
+                </ul>
+              </section>
+            }
+          </>}
+
           {error && <div>{error.message}</div>}
           {isLoading && <div>...Loading</div>}
           {data &&
             <>
 
-              {(data.res.category && data.res.category.filter(categoryFilter).length > 0) &&
-                <section>
-                  <h3 className='bg-base-300 p-2 text-2xl border-b-2 border-gray-600'>Category</h3>
-                  <ul className='text-lg'>
 
-                    {data.res.category.filter(categoryFilter).slice(0, 7).map((item) => <li className='border-b-2 border-gray-600 ' key={item._id}>
-                      <Link onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}} href={`/category/${item.name.toLowerCase().replaceAll(' ', '').replaceAll('&', '_')}`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.name}</Link>
-                    </li>)}
-                  </ul>
-                </section>
-              }
 
               {(data.res.author && data.res.author.filter(authorFilter).length > 0) &&
                 <section>
                   <h3 className='bg-base-300 p-2 text-2xl border-b-2 border-gray-600'>Author</h3>
                   <ul className='text-lg'>
                     {data.res.author.filter(authorFilter).slice(0, 7).map((item) => <li className='border-b-2 border-gray-600 ' key={item._id}>
-                      <Link onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}} href={`/authors/${item.name.replaceAll(' ', '_')}`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.name}</Link>
+                      <Link onFocus={() => setFocus(true)} onBlur={() => { setFocus(false) }} href={`/authors/${item.name.replaceAll(' ', '_')}`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.name}</Link>
                     </li>)}
                   </ul>
                 </section>
@@ -131,7 +176,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
                   <ul className='text-lg'>
 
                     {data.res.theme.filter(themeFilter).slice(0, 7).map((item) => <li className='border-b-2 border-gray-600 ' key={item.id}>
-                      <Link onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}} href={`/search?text=${item.theme.replaceAll(' ', '_')}&filter=theme`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.theme} ({item.number})</Link>
+                      <Link onFocus={() => setFocus(true)} onBlur={() => { setFocus(false) }} href={`/search?text=${item.theme.replaceAll(' ', '_')}&filter=theme`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.theme} ({item.number})</Link>
                     </li>)}
                   </ul>
                 </section>
@@ -142,7 +187,7 @@ const Search = (props: { setShowSearch: Dispatch<SetStateAction<boolean>> }) => 
                   <h3 className='bg-base-300 p-2 text-2xl border-b-2 border-gray-600'>Title</h3>
                   <ul className='text-lg'>
                     {data.res.title.filter(titleFilter).slice(0, 7).map((item) => <li className='border-b-2 border-gray-600 ' key={item.id}>
-                      <Link onFocus={() => setFocus(true)} onBlur={() => {setFocus(false)}} href={`/search?text=${item.title}&filter=title`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.title} ({item.number})</Link>
+                      <Link onFocus={() => setFocus(true)} onBlur={() => { setFocus(false) }} href={`/search?text=${item.title}&filter=title`} onClick={handleLinkClick} className='block p-1 pl-2 hover:bg-slate-400 hover:text-white'>{item.title} ({item.number})</Link>
                     </li>)}
                   </ul>
                 </section>

@@ -48,6 +48,7 @@ export const GetTask = async () => {
         return {tasks: JSON.parse(JSON.stringify(tasks))};
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }

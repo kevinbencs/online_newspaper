@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
             path.shift();
         }
 
-        const {data} = await supabase.from('article').select('paywall').eq('title',path[4].replaceAll('_',' ').replaceAll('nb20','?')).eq('date',`${path[1]}. ${path[2]}. ${path[3]}.`)
+        const {data}: PostgrestSingleResponse<{paywall : boolean}[]> = await supabase.from('article').select('paywall').eq('title',path[4].replaceAll('_',' ').replaceAll('nb20','?')).eq('date',`${path[1]}. ${path[2]}. ${path[3]}.`)
         if(data) return NextResponse.json({res: data[0].paywall}, {status:200})
         else return NextResponse.json({res: false}, {status:200})
     } catch (error) {

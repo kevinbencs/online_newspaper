@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next start",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js",
+    "start": "next start",
+    "websocket": "node websocket.js",
+    "api": "node api.js",
+    "comment": "node comment.js",
     "lint": "next lint"
   },
+  "type": "module",
   "dependencies": {
     "@sendgrid/mail": "^8.1.4",
     "@supabase/ssr": "^0.5.1",
@@ -29,8 +33,6 @@
     "react-tweet": "^3.2.1",
     "rss": "^1.2.2",
     "sharp": "^0.33.5",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1",
     "speakeasy": "^2.0.0",
     "srw": "^0.0.4",
     "uuid": "^10.0.0",

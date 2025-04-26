@@ -22,23 +22,7 @@ interface dataObject {
 const options = {
   responsive: true,
 };
-const data: dataObject = {
-  labels: [
-    'Newsletter',
-    'X',
-    'Facebook'
-  ],
-  datasets: [{
-    label: 'Visited',
-    data: [],
-    backgroundColor: [
-      'rgb(100, 100, 100)',
-      'rgb(0,0,0)',
-      'rgb(54, 162, 235)'
-    ],
-    hoverOffset: 10
-  }]
-};
+
 
 const Source = (props: { source: { so: string, article_count: number }[] | null }) => {
    const [data, setData] = useState<dataObject>({

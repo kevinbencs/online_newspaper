@@ -30,6 +30,11 @@ const AdminSchema = new Schema({
     importance: {
         type: Number,
         require: 'Importance is required'
+    },
+    hired: {
+        type: Boolean,
+        require: 'Hired is require',
+        default: false
     }
 
 }, {timestamps: true})

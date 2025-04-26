@@ -4,22 +4,28 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
 export const loginDiscord = async () => {
-  const supabase = createClient();
+  try {
+    const supabase = createClient();
 
-  const redirectUrl = `${process.env.URL}/auth/callback`;
+    const redirectUrl = `${process.env.URL}/auth/callback`;
 
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'discord',
-    options: {
-      queryParams: {
-        access_type: 'offline',
-        prompt: 'consent',
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'discord',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+        redirectTo: redirectUrl,
       },
-      redirectTo: redirectUrl,
-    },
-  })
+    })
 
-  if (data.url) {
-    redirect(data.url) 
+    if (data.url) {
+      redirect(data.url)
+    }
+  } catch (error) {
+    console.log(error)
+    redirect(`/auth/auth-code-error`)
   }
+
 }

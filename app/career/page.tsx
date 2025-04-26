@@ -36,7 +36,7 @@ interface Car {
     title: string
 }
 
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 const Page = async () => {
     const data: { success: Car[], error: undefined } | { success: undefined, error: string } = await getCareers()

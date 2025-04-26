@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
             const coll = await Eligibility(Cookie.value)
 
-            if (coll.role === '') return NextResponse.json({ number: 0 }, { status: 200 });
+            if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ number: 0 }, { status: 200 });
 
             const article: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
 
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         }
         catch (err) {
             console.log(err)
-            return NextResponse.json({ number: 0 }, { status: 200 });
+            return NextResponse.json({ number: 0 }, { status: 500 });
         }
     }
     else {

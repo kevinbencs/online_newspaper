@@ -122,6 +122,7 @@ export const getEditArticle = async (value: z.infer<typeof getEditArtSchema>) =>
         };
     }
     catch (err) {
+        console.log(err)
         return {
             error: 'Server error'
         }

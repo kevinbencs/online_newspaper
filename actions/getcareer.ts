@@ -33,7 +33,7 @@ export const getCareerByTitle =  async (value: z.infer<typeof titleSchema>) => {
         
         await connectToMongo()
         
-        const res = await Career.findOne({title: value.title},{text: 1, title: 1});
+        const res:{title: string, text: string, _id: string} | null = await Career.findOne({title: value.title},{text: 1, title: 1, _id: 1});
         
         return {success: res}
 

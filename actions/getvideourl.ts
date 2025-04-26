@@ -18,6 +18,7 @@ export const getVideoById =async (value: z.infer<typeof idSchema>) => {
         return { success: JSON.parse(JSON.stringify(vid)) }
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }

@@ -1,6 +1,5 @@
 import Task from "@/model/Task"
 import { idSchema, taskSchema } from "@/schema";
-import SocketService from "@/service/socketService";
 import { NextRequest, NextResponse } from "next/server";
 import { Eligibility } from "@/utils/mongo/eligibility";
 
@@ -12,15 +11,34 @@ interface TaskType {
     task: string
 }
 
+export async function GET(req: NextRequest) {
+    try {
+        const cookie = req.cookies.get('admin-log');
+        if (!cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+
+        const coll = await Eligibility(cookie.value)
+
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+
+        const tasks = await Task.find() as TaskType[];
+
+        return NextResponse.json({res: tasks})
+
+    } catch (err) {
+        console.log(err)
+        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    }
+}
+
 
 export async function POST(req: NextRequest) {
     try {
         const cookie = req.cookies.get('admin-log');
-        if (!cookie) return NextResponse.json({ error: 'Please log in' }, { status: 401 });
+        if (!cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const body = await req.json()
         const value = taskSchema.parse(body)
@@ -33,15 +51,10 @@ export async function POST(req: NextRequest) {
 
         await task.save();
 
-        const tasks = await Task.find() as TaskType[];
-
-        //const socketService = SocketService.getInstance();
-        //socketService.emit('addTask', { tasks: JSON.parse(JSON.stringify(tasks)) })
-
-
         return NextResponse.json({ success: 'Success' }, { status: 200 });
     }
     catch (err) {
+        console.log(err)
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }
@@ -52,11 +65,11 @@ export async function DELETE(req: NextRequest) {
 
     try {
         const cookie = req.cookies.get('admin-log');
-        if (!cookie) return NextResponse.json({ error: 'Please log in' }, { status: 401 });
+        if (!cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
 
         const body = await req.json()
         const value = idSchema.parse(body);
@@ -67,15 +80,10 @@ export async function DELETE(req: NextRequest) {
 
         await Task.findByIdAndDelete(id)
 
-        const tasks = await Task.find() as TaskType[];
-
-        /*const socketService = SocketService.getInstance();
-        socketService.emit('deleteTask', { tasks: JSON.parse(JSON.stringify(tasks)) })*/
-
-
         return NextResponse.json({ success: 'Success' }, { status: 200 });
     }
     catch (err) {
+        console.log(err)
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }

@@ -1,20 +1,22 @@
 import { MetadataRoute } from 'next'
 
+/*export const revalidate = 60*/
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const resArt = await fetch(`${process.env.URL}/api/article`, { next: {revalidate: 3600} });
+    const resArt = await fetch(`${process.env.URL}/api/article`/*, { next: {revalidate: 60} }*/);
     const dataArt: { art: { title: string, date: string, category: string }[] } = await resArt.json();
 
-    const resCar = await fetch(`${process.env.URL}/api/career`, { next: {revalidate: 3600} });
+    const resCar = await fetch(`${process.env.URL}/api/career`, {next:{tags:['careerTag']}});
     const dataCar: { Car: { title: string, date: string }[] } = await resCar.json();
 
-    const resAuth = await fetch(`${process.env.URL}/api/authors`, { next: {revalidate: 3600} });
+    const resAuth = await fetch(`${process.env.URL}/api/authors`, {next:{tags:['authorsTag']}});
     const dataAuth: { res: { name: string}[] } = await resAuth.json();
 
-    const resCategory = await fetch(`${process.env.URL}/api/category`, { next: {revalidate: 3600} });
+    const resCategory = await fetch(`${process.env.URL}/api/category` , { next: { tags: ['categoryTags']}});
     const dataCategory: { success: { name: string, _id:string}[] } = await resCategory.json();
 
-    const resSearch = await fetch(`${process.env.URL}/api/search/sitemap`, { next: {revalidate: 3600} });
+    const resSearch = await fetch(`${process.env.URL}/api/search/sitemap`/*, { next: {revalidate: 3600} }*/);
     const dataSearch: { res: { theme: string}[] } = await resSearch.json();
 
     const ResArray: {
@@ -28,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ResArray.push({
         url: `${process.env.URL}/carrier/${item.title.replaceAll(' ', '_')}`,
         lastModified: item.date,
-        changeFrequency: 'never',
+        changeFrequency: 'daily',
         priority: 0.8,
       })
     }
@@ -37,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ResArray.push({
         url: `${process.env.URL}/${item.category}/${item.date.slice(0, 4)}/${item.date.slice(6, 8)}/${item.date.slice(10, 12)}/${item.title.replaceAll(' ', '_').replace('?','nb20')}`,
         lastModified: item.date,
-        changeFrequency: 'daily',
+        changeFrequency: 'always',
         priority: 1,
       })
     }

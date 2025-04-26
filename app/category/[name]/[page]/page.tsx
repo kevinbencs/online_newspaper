@@ -58,7 +58,7 @@ export async function generateStaticParams() {
     const arr = [];
     for(let j = 0; j< auths!.length; j++){
         const lastPage = (await catArtNum(auths![j].name)).res
-        for (let i = 1; i <= Math.ceil(lastPage / 20); i++) {
+        for (let i = 1; i <= Math.ceil(typeof(lastPage) === 'number' ? lastPage / 20 : 0); i++) {
             arr.push({name:auths![j].name.replaceAll(' ', '_'), number: i })
         }
     }
@@ -68,7 +68,7 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-static'
 export const dynamicParams = true;
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 
 
@@ -79,13 +79,14 @@ const Page = async ({ params }: { params: { name: string, page: number } }) => {
     if (!Number.isInteger(Number(params.page))) notFound();
     if (Number(params.page) < 1) notFound();
 
-    const lastPage = (await catArtNum(params.name.slice(0, 1).toUpperCase() + params.name.slice(1, params.name.length).replace('_', ' & '))).res
-
     
-    const res = (await catArt(params.page, params.name.slice(0, 1).toUpperCase() + params.name.slice(1, params.name.length).replace('_', ' & '))).res 
+    const lastPage = (await catArtNum(params.name.slice(0, 1).toUpperCase() + params.name.slice(1, params.name.length).replace('_', ' & '))).res
+    if (lastPage === undefined || Number(params.page) > Math.ceil(lastPage / 20)) notFound();
+    const ResApi = await catArt(params.page, params.name.slice(0, 1).toUpperCase() + params.name.slice(1, params.name.length).replace('_', ' & '))
+    const res = ResApi.res 
 
 
-    if (res.error) return (
+    if (ResApi.error || res?.error) return (
         <div className="relative">
 
             <h1 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name.replace('_', ' & ')}</h1>
@@ -103,7 +104,7 @@ const Page = async ({ params }: { params: { name: string, page: number } }) => {
         </div>
     )
 
-    if (res.data) return (
+    if (res?.data) return (
         <div className="relative">
 
             <h2 className="text-center mt-32 mb-40 text-5xl text-slate-400">{params.name.replace('_', ' & ')}</h2>

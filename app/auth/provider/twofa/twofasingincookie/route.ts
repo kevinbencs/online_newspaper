@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         if (validatedFields.error) return NextResponse.json({ res: false }, { status: 400 })
 
         const Tok = await Token.find({ token: Body.token })
-        if (!Tok) return NextResponse.json({ res: false }, { status: 400 })
+        if (!Tok) return NextResponse.json({ res: false }, { status: 404 })
 
         const decoded = await jwt.verify(Body.token, process.env.TwoFaSingIn_Uri!) as Decoded;
         if (decoded.id === Body.id) {

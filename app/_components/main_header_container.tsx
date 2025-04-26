@@ -5,8 +5,7 @@ import Header from "./header/header";
 
 import { AudioProvider } from "./audio/audioprovider";
 import { IsLoggedProvider } from "./islogged/isloggedprovider";
-import { SocketProvider } from "./socketProvider";
-import { SearchProvider } from "./searchContext";
+import { CategoryProvider } from "./categoryContext";
 
 const Main_header_container = (props: { Children: ReactNode }) => {
     const [mainPos, setMainPos] = useState<number>(10);
@@ -35,16 +34,14 @@ const Main_header_container = (props: { Children: ReactNode }) => {
     return (
         <>
             <IsLoggedProvider>
-                <SearchProvider>
-                    <SocketProvider>
-                        <Header mainPos={mainPos} />
-                        <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1">
-                            <AudioProvider>
-                                {props.Children}
-                            </AudioProvider>
-                        </main>
-                    </SocketProvider>
-                </SearchProvider>
+                <CategoryProvider>
+                    <Header mainPos={mainPos} />
+                    <main ref={mainRef} className="mt-10 desktop:pl-[calc(50%-600px)] desktop:pr-[calc(50%-600px)] pl-1 pr-1">
+                        <AudioProvider>
+                            {props.Children}
+                        </AudioProvider>
+                    </main>
+                </CategoryProvider>
             </IsLoggedProvider>
         </>
     )

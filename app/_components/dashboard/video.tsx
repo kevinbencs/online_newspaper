@@ -16,17 +16,23 @@ interface videoUrl {
 
 
 const fetcher = async (url: string): Promise<{ success: videoUrl[] }> => {
-    const res = await fetch(url);
+    try {
+        const res = await fetch(url);
 
-    if (!res.ok) {
-        const error = new Error('An error occurred while fetching the data.')
-        error.cause = res.json().then((data: { error: string }) => data.error)
-        console.log(error.cause)
+        if (!res.ok) {
+            const error = new Error('An error occurred while fetching the data.')
+            error.cause = res.json().then((data: { error: string }) => data.error)
+            console.log(error.cause)
 
-        throw error;
+            throw error;
+        }
+
+        return res.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error('Api error')
     }
 
-    return res.json();
 }
 
 

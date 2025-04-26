@@ -3,13 +3,13 @@ import Link from "next/link";
 import CurrentDate from "../date/currentdate";
 import { Dispatch, SetStateAction } from "react";
 import UserElement from "./userelement";
-import { useSearch } from "../searchContext";
+import { useCategory } from "../categoryContext";
 
 
 type Dispatcher<T> = Dispatch<SetStateAction<T>>
 const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
 
-  const { data, error, isLoading } = useSearch() 
+  const { categoryData, categoryError, categoryIsLoading } = useCategory()
 
   const checked = () => {
     props.setCheckboxValue(false);
@@ -41,11 +41,11 @@ const Sidebar = (props: { setCheckboxValue: Dispatcher<boolean> }) => {
         <nav className="pl-5 border-b pt-2 border-gray-500">
           <ul className="menu text-lg marker:text-green-600 text-base-content pr-0 list-inside list-disc">
             <li className="menu-title  pl-0 pb-2"><h3 className=" text-base-content md:text-2xl text-lg">Category</h3></li>
-            {error  && <li className="text-red-700"> {error.message}</li>}
-            {isLoading && <li>...Loading</li>}
-            {(data && data.res && data.res.category.length > 0) &&
+            {categoryError && <li className="text-red-700"> {categoryError.message}</li>}
+            {categoryIsLoading && <li>...Loading</li>}
+            {(categoryData && categoryData.length > 0) &&
               <>
-                {data.res.category.map(item => <li key={item._id}>
+                {categoryData.map(item => <li key={item._id}>
                   <Link onClick={checked}
                     className="border-t rounded-none  dark:text-sky-200 text-base-content border-gray-500 pt-3 pb-3 pl-3 text-sm md:text-base before:w-[5px] before:h-[5px] before:bg-green-700 before:dark:bg-green-500 before:rounded-[50%] before:relative before:-left-3"
                     href={`/category/${item.name.toLowerCase().replaceAll(' ', '').replaceAll('&', '_')}/1`}>

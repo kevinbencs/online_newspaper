@@ -12,7 +12,7 @@ const SidebarContainer = () => {
             <input id="my-drawer" type="checkbox" className="drawer-toggle" checked={checkboxValue} onChange={() => setCheckboxValue(!checkboxValue)} />
             <div className="drawer-content">
                 <label htmlFor="my-drawer" className="btn btn-square btn-ghost ">
-                    {/* Page content here */}
+                    
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

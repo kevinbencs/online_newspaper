@@ -22,34 +22,35 @@ interface Art {
 
 
 export const getArticleMetadata = async (value: z.infer<typeof getArtSchema>) => {
+    try {
+        const validatedFields = getArtSchema.safeParse(value);
+        if (validatedFields.error) return { failed: validatedFields.error.errors }
 
-    const validatedFields = getArtSchema.safeParse(value);
-    if(validatedFields.error) return {failed: validatedFields.error.errors}
-
-    const Article = value.Article;
-    const date = value.date;
- 
-
-    const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', Article).eq('date', date)
-
-    if (!article.data || article.data.length === 0) { return { error: 'No article' } }
+        const Article = value.Article;
+        const date = value.date;
 
 
-    return {
-        data: {
-            title: article.data[0].title,
-            date: article.data[0].date,
-            first_element: article.data[0].first_element,
-            first_element_url: article.data[0].first_element_url,
-            author: article.data[0].author,
-            category: article.data[0].category,
-            cover_img_id: article.data[0].cover_img_id,
-            keyword: article.data[0].keyword,
-            description: article.data[0].detail
+        const article: PostgrestSingleResponse<Art[]> = await supabase.from('article').select().eq('title', Article).eq('date', date)
+
+        if (!article.data || article.data.length === 0) { return { error: 'No article' } }
+
+
+        return {
+            data: {
+                title: article.data[0].title,
+                date: article.data[0].date,
+                first_element: article.data[0].first_element,
+                first_element_url: article.data[0].first_element_url,
+                author: article.data[0].author,
+                category: article.data[0].category,
+                cover_img_id: article.data[0].cover_img_id,
+                keyword: article.data[0].keyword,
+                description: article.data[0].detail
+            }
         }
+    } catch (error) {
+        console.log(error);
+        return { error: 'Server error' }
     }
-    
 
- 
-    
 }

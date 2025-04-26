@@ -86,7 +86,7 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-static'
 export const dynamicParams = true;
-//export const revalidate = 60
+/*export const revalidate = 60*/
 
 const Page = async ({ params, searchParams }: { params: { category: string, year: string, month: string, day: string, title: string }, searchParams: { source: string } }) => {
 
@@ -135,7 +135,7 @@ const Page = async ({ params, searchParams }: { params: { category: string, year
               <div className='flex gap-3 items-center'>
                 <ClickOnArt title={params.title} date={date} source={searchParams.source}/>
                 <EditSave name={res.data.author} url={`${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} title={params.title.replaceAll('_', ' ').replaceAll('nb20','?')} />
-                <CopyLink url={`https://online-newspaper.vercel.app/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
+                <CopyLink url={`${process.env.URL}/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}`} />
                 <ShareFacebook url={`/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=facebook`}
                   title={params.title.replaceAll('-', ' ')} />
                 <ShareX url={`/${params.category}/${params.year}/${params.month}/${params.day}/${params.title}?source=x`}

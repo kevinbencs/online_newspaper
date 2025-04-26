@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, createContext, ReactNode, useEffect, useContext,use } from "react"
+import { useState, createContext, ReactNode, useEffect, useContext } from "react"
 import useSWR from 'swr'
 import { preload } from "react-dom";
 
-interface Art{
+interface Art {
     url: string,
     title: string
 }
@@ -13,31 +13,36 @@ type LoggedContent = {
     WhoLogged: string,
     setLogged: (val: string) => void,
     RoleLogged: string,
-    setRole: (val:string) => void,
+    setRole: (val: string) => void,
     subscribe: boolean,
     setSubscribe: (val: boolean) => void,
     saveArtUrls: Art[],
     setSaveArtUrls: (val: Art[]) => void,
-    email:string,
+    email: string,
     setEmail: (val: string) => void
 }
 
 const LogContext = createContext<LoggedContent | undefined>(undefined);
 
-const fetcher = async (url: string): Promise<{role: string, name: string, email: string, subscribe: boolean, saveArt: Art[] }> => {
-    const res = await fetch(url);
+const fetcher = async (url: string): Promise<{ role: string, name: string, email: string, subscribe: boolean, saveArt: Art[] }> => {
+    try {
+        const res = await fetch(url);
 
-  if(!res.ok){
-    const error = new Error();
-    error.cause = res.json().then((data: {error: string}) => data.error)
-    console.error(error.cause);
-    throw error;
-  }
+        if (!res.ok) {
+            const error = new Error();
+            error.cause = res.json().then((data: { error: string }) => data.error)
+            console.error(error.cause);
+            throw error;
+        }
 
-  return res.json()
+        return res.json()
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
 }
 
-preload('/api/islogged',{ as: 'fetch', crossOrigin: "anonymous"})
+preload('/api/islogged', { as: 'fetch', crossOrigin: "anonymous" })
 
 
 
@@ -49,10 +54,10 @@ export const IsLoggedProvider = ({ children }: { children: ReactNode }) => {
     const [saveArtUrls, setSaveArtUrls] = useState<Art[]>([])
     const [email, setEmail] = useState<string>('')
 
-    const {data, error} = useSWR<{role: string, name: string, email: string, subscribe: boolean, saveArt: Art[]}, Error>('/api/islogged', fetcher);
+    const { data, error } = useSWR<{ role: string, name: string, email: string, subscribe: boolean, saveArt: Art[] }, Error>('/api/islogged', fetcher);
 
     useEffect(() => {
-        if(data){
+        if (data) {
             setLogged(data.name);
             setRole(data.role);
             setEmail(data.email);
@@ -62,7 +67,7 @@ export const IsLoggedProvider = ({ children }: { children: ReactNode }) => {
     }, [data])
 
     return (
-        <LogContext.Provider value={{ WhoLogged, setLogged, RoleLogged, setRole, subscribe, setSubscribe, saveArtUrls, setSaveArtUrls, email,  setEmail, }}>
+        <LogContext.Provider value={{ WhoLogged, setLogged, RoleLogged, setRole, subscribe, setSubscribe, saveArtUrls, setSaveArtUrls, email, setEmail, }}>
             {children}
         </LogContext.Provider>
     )

@@ -41,6 +41,7 @@ export const deleteAccount = async () => {
         else return { error: 'Please log in' }
     }
     catch (err) {
+        console.log(err)
         return { error: 'Server error' }
     }
 }
