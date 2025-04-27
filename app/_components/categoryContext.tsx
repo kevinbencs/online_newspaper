@@ -24,10 +24,10 @@ const fetcher = async (url: string): Promise<{ success: Cat[] }> => {
             throw error;
         }
 
-        return await res.json()
+        return res.json()
     } catch (error) {
         console.error(error)
-        throw error;
+        throw new Error('Api error');
     }
 
 }
@@ -53,7 +53,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
 export const useCategory = () => {
     const context = useContext(categoryContext);
     if (context === undefined) {
-        throw new Error('useCategory must be used within an SearchProvider');
+        throw new Error('useCategory must be used within the CategoryProvider');
     }
     return context;
 }

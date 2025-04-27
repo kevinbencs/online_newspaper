@@ -20,7 +20,7 @@ const fetcher = async (url: string): Promise<{ success: imageUrl[] }> => {
 
         if (!res.ok) {
             const error = new Error('An error occurred while fetching the data.')
-            error.cause = res.json().then((data: { error: string }) => data.error)
+            error.cause = await res.json().then((data: { error: string }) => data.error)
             console.log(error.cause)
 
             throw error;

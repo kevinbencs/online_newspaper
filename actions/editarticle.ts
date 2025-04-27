@@ -10,6 +10,7 @@ import { chooseTypeOfTextItem, editImageIdToData, isValidYoutubeUrl, searchAudio
 import { chooseTypeOfTextItemSearch } from "@/lib/makeSearchArt";
 import { cookies } from "next/headers";
 import { Eligibility } from "@/utils/mongo/eligibility";
+import { revalidatePath } from "next/cache";
 
 interface Theme {
     id: string,
@@ -196,6 +197,8 @@ export const editArticle = async (value: z.infer<typeof EditArticleSchema>) => {
             console.log(error);
             return { error: 'Server error' }
         }
+
+        revalidatePath(value.lastUrl)
 
 
         if (lastArticle.data) {

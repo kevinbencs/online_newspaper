@@ -924,6 +924,32 @@ Code   Description
 500    role: '', name: '', email: '', saveArt: [], subscribe: false 
 ```
 
+Get /api/latestnews: get the latest news
+
+Return:
+```
+Code   Description
+200    data: DataMainPage[]
+```
+
+```
+DataMainPage {
+  id: string,
+  title: string,
+  date: string,
+  time: string,
+  category: string,
+  paywall: boolean,
+}
+```
+
+Error: 
+```
+Code   Description
+500    role: '', name: '', email: '', saveArt: [], subscribe: false 
+```
+
+
 Get /api/lockedarticlenumber: get the number of locked article
 
 Authorization: `admin, editor`

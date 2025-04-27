@@ -172,7 +172,8 @@ export const EditArticleSchema = z.object({
     cover_img_id: z.string().min(1, { message: 'Cover image is required' }),
     keyword: z.array(z.string().min(1, { message: 'Themes are required' })),
     paywall_text: z.string(),
-    detail: z.string().min(1, { message: 'Detail is required' })
+    detail: z.string().min(1, { message: 'Detail is required' }),
+    lastUrl: z.string().min(1, { message: 'Last url is required' }),
 })
 
 export const getArtSchema = z.object({

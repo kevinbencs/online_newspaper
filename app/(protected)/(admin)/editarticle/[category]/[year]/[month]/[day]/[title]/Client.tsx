@@ -231,7 +231,7 @@ const Client = (props: {
                 editArticle({
                     text: paragraphInput.split('\n').filter(item => item !== '').join('$'), title: titleInput, first_element: firstElementInput, first_element_url: firstElementUrl, category: categoryInput, important: importantInput,
                     paywall: paywall === 'Paywall: yes' ? true : false, sidebar: sidebar === 'Sidebar: yes' ? true : false, keyword: themes, cover_img_id: coverImageId,
-                    paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: props.params.title.replaceAll('_', ' ')
+                    paywall_text: paragraphPaywallInput.split('\n').filter(item => item !== '').join('$'), detail, lastTitle: props.params.title.replaceAll('_', ' '), lastUrl: `/${props.params.category}/${props.params.year}/${props.params.month}/${props.params.day}/${props.params.title}`
 
                 })
                     .then((res) => {

@@ -66,9 +66,9 @@ const packag = `{
 
 const Latest = `"use client";
 
-import { useState, MouseEvent, useRef, useEffect, TouchEvent } from "react";
+import { useState, MouseEvent, useRef,  TouchEvent } from "react";
 import LatestNewsLink from "./latestnewslink";
-import { latestNewsMainPage } from "@/actions/getlatestnews";
+import useSWR from 'swr'
 
 
 interface DataMainPage {
@@ -77,9 +77,29 @@ interface DataMainPage {
   date: string,
   time: string,
   category: string,
-  paywall: boolean
+  paywall: boolean,
 }
 
+
+const fetcher = async (url: string): Promise<{ data: DataMainPage[] }  > => {
+  try {
+    const res = await fetch(url)
+
+    if (!res.ok) {
+      const error = new Error('An error occurred while fetching the data.')
+      error.cause = await res.json().then((data: { error: string }) => data.error)
+      console.log(error.cause)
+
+      throw error;
+  }
+
+  return res.json();
+
+  } catch (error) {
+    console.error(error)
+    throw new Error('Api error')
+  }
+}
 
 
 const LatestNews = (props: {
@@ -96,29 +116,9 @@ const LatestNews = (props: {
   const [startX, setStartX] = useState<number>(0);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
   const [isDragging, setDragging] = useState<boolean>(false);
-  const [data, setData] = useState<DataMainPage[] | undefined>(props.res.data)
-  const [error, setError] = useState<string | undefined>(props.res.error);
 
+  const {data, error, isLoading} = useSWR('/api/latestnews', fetcher, {refreshInterval: 5000, fallbackData: props.res.data ? { data: props.res.data } : undefined})
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      latestNewsMainPage()
-      .then((res) => {
-        if(res.error){
-          console.log(error)
-        }
-        if(res.data){
-          setError('')
-          setData(res.data)
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    }, 5000)
-
-    return () => clearInterval(id)
-  })
 
 
 
@@ -178,8 +178,8 @@ const LatestNews = (props: {
   return (
     <div>
 
-      {(error !== '' && error !== undefined)&&
-        <div>{error}</div>
+      {(props.res.error !== '' && props.res.error !== undefined && isLoading)&&
+        <div>{props.res.error}</div>
       }
 
       <div className=" overflow-x-hidden overflow-y-hidden cursor-pointer mb-5 ml-5 sm:ml-0"
@@ -192,7 +192,7 @@ const LatestNews = (props: {
         onTouchEnd={handleTouchEnd}
         ref={scrollContainerRef}>
         <section className="flex gap-8  mb-5 flex-nowrap  no-scrollbar">
-          {data && data?.map(item => <LatestNewsLink Article={{ header: item.title, paywall: item.paywall, date: item.date, link: '/'+item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')+'/'+item.date.slice(0, 4)+'/'+item.date.slice(5, 7)+'/'+item.date.slice(8, 10)+'/'+item.title.replaceAll(' ', '_').replace('?','nb20') }} key={item.id} isDragging={isDragging} />)}
+          {data !== undefined && data.data.map(item => <LatestNewsLink Article={{ header: item.title, paywall: item.paywall, date: item.date, link: '/'+item.category.toLowerCase().replaceAll(' ', '').replace('&', '_')+'/'+item.date.slice(0, 4)+'/'+item.date.slice(5, 7)+'/'+item.date.slice(8, 10)+'/'+item.title.replaceAll(' ', '_').replace('?','nb20') }} key={item.id} isDragging={isDragging} />) }
         </section>
       </div>
     </div>

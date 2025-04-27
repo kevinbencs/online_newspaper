@@ -17,7 +17,7 @@ interface DataMainPage {
     date: string,
     time: string,
     category: string,
-    paywall: boolean
+    paywall: boolean,
 }
 
 
