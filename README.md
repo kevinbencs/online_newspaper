@@ -424,7 +424,7 @@ $$ LANGUAGE plpgsql;
 
 ### API requests
 
-Get /api/article: article urls for sitemap
+- Get /api/article: article urls for sitemap
 
 Return:
 ```
@@ -446,7 +446,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Delete /api/article: delete articles
+- Delete /api/article: delete articles
 
 Authorization: `editor, admin`
 
@@ -470,7 +470,7 @@ Code   Description
 ```
 
 
-Get /api/article/ispaywall/[category]/[year]/[month]/[day]/[title]: check article has paywall
+- Get /api/article/ispaywall/[category]/[year]/[month]/[day]/[title]: check article has paywall
 
 Return:
 ```
@@ -485,7 +485,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Get /api/articlesaved/[category]/[year]/[month]/[day]/[title]: checking user saved the article
+- Get /api/articlesaved/[category]/[year]/[month]/[day]/[title]: checking user saved the article
 
 Return:
 ```
@@ -499,7 +499,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Get /api/audio: get audio title, url, id, date
+- Get /api/audio: get audio title, url, id, date
 
 Authorization: `editor, admin, author`
 
@@ -526,7 +526,7 @@ Code   Description
 ```
 
 
-Post /api/audio: add audio title, url, date
+- Post /api/audio: add audio title, url, date
 
 Authorization: `editor, admin, author`
 
@@ -551,7 +551,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Put /api/audio: update audio title or url
+- Put /api/audio: update audio title or url
 
 Authorization: `editor, admin`
 
@@ -577,7 +577,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Delete /api/audio: delete audio
+- Delete /api/audio: delete audio
 
 Authorization: `editor, admin`
 
@@ -600,7 +600,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Get /api/authors: get authors, editors and admins in order of importance and alphabet.
+- Get /api/authors: get authors, editors and admins in order of importance and alphabet.
 
 
 Return:
@@ -622,7 +622,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Get /api/career: get careers title 
+- Get /api/career: get careers title 
 
 Return:
 ```
@@ -644,7 +644,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Delete /api/career: delete careers by ids
+- Delete /api/career: delete careers by ids
 
 Authorization: `editor, admin`
 
@@ -668,7 +668,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Get /api/category: get category with id
+- Get /api/category: get category with id
 
 Return:
 ```
@@ -689,7 +689,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Post /api/category: add category
+- Post /api/category: add category
 
 Authorization: `admin`
 
@@ -713,7 +713,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Put /api/category: update category
+- Put /api/category: update category
 
 Authorization: `admin`
 
@@ -738,7 +738,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Delete /api/category: delete category
+- Delete /api/category: delete category
 
 Authorization: `admin`
 
@@ -762,7 +762,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Get /api/colleague: get authors, editors and admins
+- Get /api/colleague: get authors, editors and admins
 
 Authorization: `admin, editor, author`
 
@@ -788,7 +788,7 @@ Code   Description
 401    error: 'Please log in as admin, editor or author'
 ```
 
-Delete /api/colleague: delete authors, editors or admins by id
+- Delete /api/colleague: delete authors, editors or admins by id
 
 Authorization: `admin`
 
@@ -812,7 +812,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Get /api/img: get image url, id, detail
+- Get /api/img: get image url, id, detail
 
 Authorization: `admin, editor, author`
 
@@ -838,7 +838,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Post /api/img: add image url, detail
+- Post /api/img: add image url, detail
 
 Authorization: `admin, editor, author`
 
@@ -862,7 +862,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Put /api/img: update image url or detail
+- Put /api/img: update image url or detail
 
 Authorization: `admin, editor`
 
@@ -887,7 +887,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Delete /api/img: delete image
+- Delete /api/img: delete image
 
 Authorization: `admin, editor`
 
@@ -910,7 +910,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Get api/islogged: check the user is logged
+- Get api/islogged: check the user is logged
 
 Return:
 ```
@@ -924,7 +924,7 @@ Code   Description
 500    role: '', name: '', email: '', saveArt: [], subscribe: false 
 ```
 
-Get /api/latestnews: get the latest news
+- Get /api/latestnews: get the latest news
 
 Return:
 ```
@@ -950,7 +950,7 @@ Code   Description
 ```
 
 
-Get /api/lockedarticlenumber: get the number of locked article
+- Get /api/lockedarticlenumber: get the number of locked article
 
 Authorization: `admin, editor`
 
@@ -966,7 +966,7 @@ Code   Description
 500    number: 0
 ```
 
-Get /api/search: get category, authors, editors, admins, themes of articles, and words od titles of articles
+- Get /api/search: get category, authors, editors, admins, themes of articles, and words od titles of articles
 
 Return:
 ```
@@ -999,7 +999,7 @@ Code   Description
 500    error: 'Server error'
 ```
 
-Get /api/search/sitemap: get themes of articles
+- Get /api/search/sitemap: get themes of articles
 
 Return:
 ```
@@ -1018,7 +1018,7 @@ Error:
 Code   Description
 500    error: 'Server error'
 ```
-Get api/task: get tasks
+- Get api/task: get tasks
 
 Authorization: `admin, editor, author`
 
@@ -1043,7 +1043,7 @@ Code   Description
 401    error: 'Please log in as admin, editor, or author'
 ```
 
-Post api/task: write task 
+- Post api/task: write task 
 
 Authorization: `admin, editor, author`
 
@@ -1066,7 +1066,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Delete api/task/[id]: delete task
+- Delete api/task/[id]: delete task
 
 Authorization: `admin, editor, author`
 
@@ -1083,7 +1083,7 @@ Code   Description
 ```
 
 
-Put api/task/[id]: change the name of owner of the task
+- Put api/task/[id]: change the name of owner of the task
 
 Authorization: `admin, editor, author`
 
@@ -1102,7 +1102,7 @@ Code   Description
 404    error: 'The task does not exist'
 ```
 
-Post api/unlockarticle: unlock article
+- Post api/unlockarticle: unlock article
 
 Authorization: `admin, editor`
 
@@ -1137,7 +1137,7 @@ Code   Description
 400    error: string
 ```
 
-Get /api/user: get the list of users
+- Get /api/user: get the list of users
 
 Authorization: `admin, editor, author`
 
@@ -1155,7 +1155,7 @@ Code   Description
 401    error: 'Please log in as admin, editor, or author'
 ```
 
-Delete /api/user: delete users by id
+- Delete /api/user: delete users by id
 
 Authorization: `admin`
 
@@ -1177,7 +1177,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Get /api/video: get video url, id, title
+- Get /api/video: get video url, id, title
 
 Authorization: `admin, editor, author`
 
@@ -1201,7 +1201,7 @@ Code   Description
 401    error: 'Please log in as admin, editor, or author'
 ```
 
-Post /api/video: add video url, title
+- Post /api/video: add video url, title
 
 Authorization: `admin, editor, author`
 
@@ -1225,7 +1225,7 @@ Code   Description
 400    error: 'This video is in the database.'
 ```
 
-Put /api/video: update video url or title
+- Put /api/video: update video url or title
 
 Authorization: `admin, editor`
 
@@ -1250,7 +1250,7 @@ Code   Description
 404    error: 'Video does not exist.'
 ```
 
-Delete /api/video: delete video
+- Delete /api/video: delete video
 
 Authorization: `admin, editor`
 
@@ -1272,7 +1272,7 @@ Code   Description
 400    failed: string[]
 ```
 
-Post /api/writearticle: write article
+- Post /api/writearticle: write article
 
 Authorization: `admin, editor, author`
 
@@ -1307,7 +1307,7 @@ Code   Description
 404    error: string
 ```
 
-Get /auth/callback: supabase oauth (e.g.: google, github...),
+- Get /auth/callback: supabase oauth (e.g.: google, github...),
 
 Return
 ```
@@ -1322,7 +1322,7 @@ Code   Description
 307    redirect /auth/auth-code-error
 ```
 
-Get /auth/confirm/resetpassword: redirect /resetpassword or the error page
+- Get /auth/confirm/resetpassword: redirect /resetpassword or the error page
 
 Return:
 ```
@@ -1336,7 +1336,7 @@ Code   Description
 307    redirect /auth/auth-code-error
 ```
 
-Post /auth/mongomiddleware/paywall: check the admin privileges for protected pages.
+- Post /auth/mongomiddleware/paywall: check the admin privileges for protected pages.
 
 Body:
 ```
@@ -1349,7 +1349,7 @@ Code   Description
 200    role: string, email: string, name: string, id: string
 ```
 
-Post /auth/provider/twofa: check the token in the url for 2FA page when user sing in with provider.
+- Post /auth/provider/twofa: check the token in the url for 2FA page when user sing in with provider.
 
 Body:
 ```
@@ -1372,7 +1372,7 @@ Code   Description
 404    res: false
 ```
 
-Post /auth/provider/twofa/twofausercookie: check the cookie in protected page for user who has 2FA 
+- Post /auth/provider/twofa/twofausercookie: check the cookie in protected page for user who has 2FA 
 
 Body:
 ```
@@ -1395,7 +1395,7 @@ Code   Description
 404    res: false
 ```
 
-Post /auth/provider/twofa/twofasingincookie: check the cookie for 2FA page when user sing in.
+- Post /auth/provider/twofa/twofasingincookie: check the cookie for 2FA page when user sing in.
 
 Body:
 ```
@@ -1415,7 +1415,7 @@ Code   Description
 400    res: 'false'
 ```
 
-Get /rss: get the rss
+- Get /rss: get the rss
 
 Return:
 ```
