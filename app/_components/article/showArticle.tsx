@@ -344,7 +344,7 @@ const createImg = (s: string) => {
     const id = s.slice(index1 + 1, index2);
 
     return (
-        <div className='w-[550px] block mb-10' key={uuid()}>
+        <div className='w-[550px] block mb-10 max-w-full' key={uuid()}>
             <Img id={id} />
         </div>
     )
