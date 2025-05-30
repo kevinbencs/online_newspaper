@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
 export const loginGithub = async () => {
+  let Data;
   try {
     const supabase = createClient();
 
@@ -20,12 +21,23 @@ export const loginGithub = async () => {
       },
     })
 
-    if (data.url) {
-      redirect(data.url)
+    if (error) {
+      throw new Error(error.message)
     }
+
+    Data = data;
+
   } catch (error) {
     console.log(error)
     redirect(`/auth/auth-code-error`)
   }
+
+  if (Data.url) {
+    redirect(Data.url)
+  }
+  else {
+    redirect(`/auth/auth-code-error`)
+  }
+
 
 }
