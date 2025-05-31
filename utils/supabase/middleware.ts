@@ -301,7 +301,6 @@ export async function updateSession(request: NextRequest) {
       //The browser gets the cookie slowly 
       const token = request.nextUrl.searchParams.get('linkToken');
       if (token) {
-
         const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -397,13 +396,14 @@ export async function updateSession(request: NextRequest) {
   if ((!TWOFA) &&
     request.nextUrl.pathname.startsWith('/signin/twofa')
   ) {
+    console.log(30)
     const search = request.nextUrl.searchParams.get('linkToken');
     if (search) {
 
       const res = await fetch(`${request.nextUrl.origin}/auth/provider/twofa`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ search })
+        body: JSON.stringify({ token: search })
       })
 
       const resJSON: { res: string } = await res.json()
@@ -445,7 +445,7 @@ export async function updateSession(request: NextRequest) {
   if (user && user.app_metadata.twofa === 'true' && Cookie && (
     request.nextUrl.pathname.startsWith('/signin') ||
     request.nextUrl.pathname.startsWith('/signup') ||
-    request.nextUrl.pathname === '/dhdhdhsefgsgerhtrherwgerhagfws'
+    request.nextUrl.pathname === '/admin_login'
   )) {
     const url = request.nextUrl.clone()
     url.pathname = '/'

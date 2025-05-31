@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
         const token: token  = tokenSchema.parse(body);
-        const validatedFields = tokenSchema.safeParse(tokenSchema);
+        const validatedFields = tokenSchema.safeParse(token);
         if (validatedFields.error) return NextResponse.json({ res: 'false' }, { status: 400 }) ;
         const decoded = await jwt.verify(token.token, process.env.Link_Code!)
         return NextResponse.json({ res: 'true' }, { status: 200 })

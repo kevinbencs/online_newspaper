@@ -47,12 +47,12 @@ export async function GET(request: Request) {
           //The browser gets the cookie slowly 
           return NextResponse.redirect(`${origin}/signin/twofa?linkToken=${linkToken}${next === '/' ? '' : '&next=' + next}`)
         } else if (forwardedHost) {
-          return NextResponse.redirect(`https://${forwardedHost}/signin/twofatwofa?linkToken=${linkToken}${next === '/' ? '' : '&next=' + next}`)
+          return NextResponse.redirect(`https://${forwardedHost}/signin/twofa?linkToken=${linkToken}${next === '/' ? '' : '&next=' + next}`)
         } else {
           return NextResponse.redirect(`${origin}/signin/twofatwofa?linkToken=${linkToken}${next === '/' ? '' : '&next=' + next}`)
         }
       }
-
+      
       if (isLocalEnv) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`)
