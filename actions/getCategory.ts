@@ -51,7 +51,7 @@ export const catArtNum = async (name: string) => {
     try {
         const res = (await supabase.from('article').select('id', { count: 'exact' }).eq('category', `${name.slice(0, 1).toUpperCase() + name.slice(1, name.length)}`).eq('locked', false)).count;
 
-        if (res === null) return { res: 0 }
+        if (res === null) return { res: undefined }
 
         return { res }
     } catch (error) {

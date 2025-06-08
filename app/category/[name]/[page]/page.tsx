@@ -81,7 +81,7 @@ const Page = async ({ params }: { params: { name: string, page: number } }) => {
 
     
     const lastPage = (await catArtNum(params.name.slice(0, 1).toUpperCase() + params.name.slice(1, params.name.length).replace('_', ' & '))).res
-    if (lastPage === undefined || Number(params.page) > Math.ceil(lastPage / 20)) notFound();
+    if (lastPage === undefined || (Number(params.page) > Math.ceil(lastPage / 20) && Number(params.page) !== 1 )) notFound();
     const ResApi = await catArt(params.page, params.name.slice(0, 1).toUpperCase() + params.name.slice(1, params.name.length).replace('_', ' & '))
     const res = ResApi.res 
 
@@ -115,7 +115,7 @@ const Page = async ({ params }: { params: { name: string, page: number } }) => {
                         {res.data.map(item => <Category_menu_articles paywall={item.paywall} link={'/' + params.name.toLowerCase().replaceAll(' ', '').replace('&', '_') + '/' + item.date.slice(0, 4) + '/' + item.date.slice(6, 8) + '/' + item.date.slice(10, 12) + '/' + item.title.replaceAll(' ', '_').replace('?', 'nb20')}
                             date={item.date} detail={item.detail} category_name={item.author} category_name_link={`/authors/${item.author.replaceAll(' ', '_')}`} imageId={item.cover_img_id} title={item.title} key={item.id} />)}
                     </div>
-                    {lastPage !== null && <Pagination url={`category/${params.name}?`} page={params.page} lastPage={Math.round(lastPage / 20)} />}
+                    {lastPage !== null && <Pagination url={`category/${params.name}?`} page={params.page} lastPage={Math.round(Number(lastPage) / 20)} />}
                 </div>
                 <div className="lg:w-80">
                     <Rightsidebar />
