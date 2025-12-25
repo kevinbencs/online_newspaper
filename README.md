@@ -4,7 +4,7 @@ Here is the next.js code for an online newspaper.
 
 Page: https://online-newspaper.vercel.app/
 
-Admin Page: https://online-newspaper.vercel.app/admin-login
+Admin Page: https://online-newspaper.vercel.app/admin_login
 
 Technologies used: `next.js, typeScript, tailwindCSS, supabase, mongodb, mongoose, bcrypt, sendgrid, chart.js, jsonwebtoken, react-chartjs-2, socket.io, socket.io-client, speakeasy, srw, zod, cross-env, flatpickr, react-social-media-embed, react-tweet, sharp, qrcode, rss.`
 
@@ -14,7 +14,7 @@ Technologies used: `next.js, typeScript, tailwindCSS, supabase, mongodb, mongoos
 
 1. Run `npm run websocket` and `npm run comment`
 2. Install the dependencies with `npm install`.
-3. Make the .env.local file in the root dictionary which containing the following:
+3. Make the .env.local file in the root directory, which contains the following:
 ```
 #Website url:
  URL
@@ -42,7 +42,7 @@ Technologies used: `next.js, typeScript, tailwindCSS, supabase, mongodb, mongoos
 
 1. Run `npm run api` and `npm run comment`
 2. Install the dependencies with `npm install`.
-3. Make the .env.local file in the root dictionary which containing the following:
+3. Make the .env.local file in the root directory, which contains the following:
 ```
 #Website url:
  URL
@@ -70,20 +70,20 @@ Technologies used: `next.js, typeScript, tailwindCSS, supabase, mongodb, mongoos
 
 ### Websocket
 
-The newspaper use websocket server to display tasks in admin dashboard, number of locked article, and the latest news in real time. The server is created in `server.js`.
+The newspaper uses websocket server to display tasks in the admin dashboard, the number of locked articles, and the latest news in real time. The server is created in `server.js`.
 
-- `lastMainPage`: server get a title, id and date of the lates news from /api/unlockarticle post request
-- `lastMainPageNews`: server send the clients the title, id and date of the lates news
-- `authenticate`: check the client is author, editor or admin
-- `writeArticle`: server get the number of unlockarticle from writearticle server action (writearticle.ts)
-- `unLockArticle`: server get the number of unlockarticle from /api/unlockarticle post request
-- `addTask`: server get the tasks from addTask server action (author, editor, admin privileges, addtask.ts)
-- `task`: server send the clients the tasks (author, editor, admin privileges)
-- `numberOfLockedArticle`: server send the clients the number of unlockarticle (author, editor, admin privileges)
-- `deleteTask`: server get the tasks from deleteTask server action (author, editor, admin privileges, deletetask.ts)
-- `setNameForTask`: server get the tasks from addNameTask server action (author, editor, admin privileges, addnametask.ts)
+- `lastMainPage`: server gets a title, id, and date of the latest news from /api/unlockarticle post request
+- `lastMainPageNews`: server sends the clients the title, id, and date of the latest news
+- `authenticate`: check the client is an author, editor, or admin
+- `writeArticle`: server gets the number of unlockarticle from writearticle server action (writearticle.ts)
+- `unLockArticle`: server gets the number of unlockarticle from /api/unlockarticle post request
+- `addTask`: server gets the tasks from addTask server action (author, editor, admin privileges, addtask.ts)
+- `task`: server sends the clients the tasks (author, editor, admin privileges)
+- `numberOfLockedArticle`: server sends the clients the number of unlockarticle (author, editor, admin privileges)
+- `deleteTask`: server gets the tasks from deleteTask server action (author, editor, admin privileges, deletetask.ts)
+- `setNameForTask`: server gets the tasks from addNameTask server action (author, editor, admin privileges, addnametask.ts)
 
-In order to avoid creating a new websocket client during api calls and server actions, they are stored in a class (`/service/socketService.ts`).
+To avoid creating a new websocket client during api calls and server actions, they are stored in a class (`/service/socketService.ts`).
 
 
 ### MongoDB
@@ -124,7 +124,7 @@ name: string
 - Image
 ```
 url: string,
-detail: string,,
+detail: string,
 ```
 
 - Task
@@ -600,7 +600,7 @@ Code   Description
 400    failed: string[]
 ```
 
-- Get /api/authors: get authors, editors and admins in order of importance and alphabet.
+- Get /api/authors: get authors, editors, and admins in order of importance and alphabet.
 
 
 Return:
@@ -950,7 +950,7 @@ Code   Description
 ```
 
 
-- Get /api/lockedarticlenumber: get the number of locked article
+- Get /api/lockedarticlenumber: get the number of locked articles
 
 Authorization: `admin, editor`
 
@@ -966,7 +966,7 @@ Code   Description
 500    number: 0
 ```
 
-- Get /api/search: get category, authors, editors, admins, themes of articles, and words od titles of articles
+- Get /api/search: get category, authors, editors, admins, themes of articles, and words of titles of articles
 
 Return:
 ```
@@ -1083,7 +1083,7 @@ Code   Description
 ```
 
 
-- Put api/task/[id]: change the name of owner of the task
+- Put api/task/[id]: change the name of the owner of the task
 
 Authorization: `admin, editor, author`
 
@@ -1349,7 +1349,7 @@ Code   Description
 200    role: string, email: string, name: string, id: string
 ```
 
-- Post /auth/provider/twofa: check the token in the url for 2FA page when user sing in with provider.
+- Post /auth/provider/twofa: check the token in the url for the 2FA page when the user signs in with the provider.
 
 Body:
 ```
@@ -1372,7 +1372,7 @@ Code   Description
 404    res: false
 ```
 
-- Post /auth/provider/twofa/twofausercookie: check the cookie in protected page for user who has 2FA 
+- Post /auth/provider/twofa/twofausercookie: check the cookie in the protected page for the user who has 2FA 
 
 Body:
 ```
@@ -1395,7 +1395,7 @@ Code   Description
 404    res: false
 ```
 
-- Post /auth/provider/twofa/twofasingincookie: check the cookie for 2FA page when user sing in.
+- Post /auth/provider/twofa/twofasingincookie: check the cookie for the 2FA page when the user signs in.
 
 Body:
 ```
