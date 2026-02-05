@@ -9,7 +9,6 @@ import useSWR from 'swr';
 
 interface imageUrl {
     url: string,
-    alt: string,
     detail: string,
     _id: string
 }
@@ -56,7 +55,7 @@ const NewsLetterImgOptgroup = (props: { imageCopyMessage: string, setImageCopyMe
 
 
     const handleFilter = (arrayItem: imageUrl) => {
-        return arrayItem.detail.toLocaleLowerCase().indexOf(optInput.toLocaleLowerCase()) > -1 || arrayItem.alt.toLocaleLowerCase().indexOf(optInput.toLocaleLowerCase()) > -1;
+        return arrayItem.detail.toLocaleLowerCase().indexOf(optInput.toLocaleLowerCase()) > -1;
     }
 
     const handleClick = () => {
