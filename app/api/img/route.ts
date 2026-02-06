@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
         const cate = await Image.findOne({ url: imageoData.url });
 
-        if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 422 })
+        if (cate) return NextResponse.json({ error: 'This image is in the database.' }, { status: 422 })
 
        /* const NewImageUrl = new Image({
             url: imageoData.url,

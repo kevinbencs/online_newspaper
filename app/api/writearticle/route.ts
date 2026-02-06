@@ -160,7 +160,7 @@ export async function POST(req: NextRequest) {
         */
 
 
-        return NextResponse.json({ success: 'Success' }, { status: 200 })
+        return NextResponse.json({ success: 'Success' }, { status: 201 })
     }
     catch (err) {
         console.log(err)
