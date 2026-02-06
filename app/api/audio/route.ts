@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 })
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 })
 
         const aud: audioUrl[] = await Audio.find();
 
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const body = await request.json()
         const audioData: audioData = AudioVideoUrlSchema.parse(body);
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
         const aud = await Audio.findOne({ url: audioData.url });
 
-        if (aud) return NextResponse.json({ error: 'This url is in the database.' }, { status: 400 })
+        if (aud) return NextResponse.json({ error: 'This url is in the database.' }, { status: 422 })
 
         /*const date = new Date().toISOString().slice(0, 10).replaceAll('-', '. ') + '.';
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
         await NewVideoUrl.save();*/
 
-        return NextResponse.json({ success: 'Success' }, { status: 200 })
+        return NextResponse.json({ success: 'Success' }, { status: 201 })
     }
     catch (err) {
         console.log(err)
@@ -92,7 +92,7 @@ export async function DELETE(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !=='Admin' && coll.role!== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
+        if (coll.role !=='Admin' && coll.role!== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 403 });
 
         const body = await request.json();
         const audio: audio = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
@@ -117,7 +117,7 @@ export async function PUT(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !=='Admin' && coll.role!== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 })
+        if (coll.role !=='Admin' && coll.role!== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 403 })
         
         const body = await request.json()
         const audio: audioUpdate = AudioVideoUrlUpdateSchema.parse(body)
@@ -128,8 +128,8 @@ export async function PUT(request: NextRequest) {
 
         if (cate.error) {
             console.log(cate.error);
-            if (cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' }, { status: 400 })
-            else return NextResponse.json({ error: 'Server error' }, { status: 400 })
+            if (cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' }, { status: 404 })
+            else return NextResponse.json({ error: 'Server error' }, { status: 500 })
         }
 
         /*if (audio.title) await Audio.findByIdAndUpdate(audio.id, { title: audio.title });

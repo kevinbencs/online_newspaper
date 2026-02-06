@@ -18,7 +18,7 @@ export async function DELETE(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const id = req.nextUrl.pathname.slice(10, req.nextUrl.pathname.length)
 
@@ -39,17 +39,16 @@ export async function PUT(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
 
         const id = req.nextUrl.pathname.slice(10, req.nextUrl.pathname.length)
 
         const task = await Task.findById(id);
-        if (!task) return NextResponse.json({ error: 'Server errors' }, { status: 500 });
+        if (!task) return NextResponse.json({ error: 'The task does not exists' }, { status: 404 });
 
         if (!task.name) {
             const NewTask = await Task.findByIdAndUpdate(id, { name: coll.name })
-            if (!NewTask) return NextResponse.json({ error: 'The task does not exist' }, { status: 404 })
         }
         else {
             if (task.name === coll.name) await Task.findByIdAndUpdate(id, { name: null })

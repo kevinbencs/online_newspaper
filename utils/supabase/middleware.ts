@@ -140,7 +140,7 @@ export async function updateSession(request: NextRequest) {
       if (resJson.res.role !== '' && (
         url.startsWith('/signin') ||
         url === '/signup' ||
-        url === '/dhdhdhsefgsgerhtrherwgerhagfws'
+        url === '/admin_login'
       )) {
 
         const newUrl = request.nextUrl.clone()
@@ -332,7 +332,7 @@ export async function updateSession(request: NextRequest) {
     (
       request.nextUrl.pathname.startsWith('/signin') ||
       request.nextUrl.pathname.startsWith('/signup') ||
-      request.nextUrl.pathname === '/dhdhdhsefgsgerhtrherwgerhagfws'
+      request.nextUrl.pathname === '/admin_login'
     )
   ) {
     const url = request.nextUrl.clone()

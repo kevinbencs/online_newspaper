@@ -40,7 +40,7 @@ export async function DELETE(request: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if(coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin/editor' }, { status: 401 });
+        if(coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin/editor' }, { status: 403 });
 
         const body = await request.json()
 

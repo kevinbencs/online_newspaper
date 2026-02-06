@@ -2,9 +2,9 @@
 
 
 import jwt from "jsonwebtoken"
+import { Resend } from 'resend';
 import * as z from 'zod';
 import { NewsletterSchema } from "@/schema";
-import sgMail from '@sendgrid/mail';
 import { supabase } from "@/utils/supabase/article";
 import { getImageById } from "./getimageurl";
 import { cookies } from "next/headers";
@@ -22,21 +22,20 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
         const coll = await Eligibility(Cookie?.value)
 
-        if (coll.role === '') return {error: 'Please log in as admin or editor or author' };
+        if (coll.role === '') return { error: 'Please log in as admin or editor or author' };
 
         const validatedFields = NewsletterSchema.safeParse(newsletter);
         if (validatedFields.error) return { failed: validatedFields.error.errors }
 
-        const data = await supabase.from('newsletter').select();
+        const Emails = await supabase.from('newsletter').select();
 
-        if (data.error) return { error: 'Supabase error' }
+        if (Emails.error) return { error: 'Supabase error' }
 
-        if(!process.env.SENDGRID_API_KEY) return {error: "SENDGRID_API_KEY missing for Sendgrid"}
-        if(!process.env.EMAIL) return {error: "EMAIL missing for Sendgrid"}
+        if (!process.env.RESEND_API_KEY) return { error: "process.env.RESEND_API_KEY missing for Resend" }
+        if (!process.env.EMAIL) return { error: "EMAIL missing for Sendgrid" }
 
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
 
-        let err: string = '';
+        const resend = new Resend(process.env.RESEND_API_KEY!);
 
         const dayArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDate: string = new Date().toLocaleDateString();
@@ -57,13 +56,13 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
 
 
 
-        for (let i = 0; i < data.data.length && err === ''; i++) {
-            const token = jwt.sign({ email: data.data[i].email }, process.env.SECRET_CODE!)
-            const msg = {
-                to: data.data[i].email,
+        for (let i = 0; i < Emails.data.length; i++) {
+            const token = jwt.sign({ email: Emails.data[i].email }, process.env.SECRET_CODE!)
+
+            const { data, error } = await resend.emails.send({
                 from: process.env.EMAIL!,
+                to: Emails.data[i].email,
                 subject: newsletter.subject,
-                text: 'Email',
                 html: `
                      <!DOCTYPE html>
                      <html lang="en">
@@ -79,7 +78,7 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                                 </div>
                                 <div style="padding-left:8px;margin-bottom:40px"> ${currentDate} ${dayArray[day]}</div>
                                 <div style="margin-bottom:40px; font-size:30px; line-height: 36px; font-weight: 700; padding-left: 8px">${newsletter.title}</div>
-                                <div style="margin-bottom:20px; padding-left: 8px;">Dear ${data.data[i].name},</div>
+                                <div style="margin-bottom:20px; padding-left: 8px;">Dear ${Emails.data[i].name},</div>
                                 ${emailNewTextArr.join('')}
                                 <footer style="background:black; margin-top:20px; color:white; padding: 8px;">
                                      <ul style="display:flex; gap:10px; list-style:none; margin-bottom:40px;margin-top:8px; padding-left:0">
@@ -124,20 +123,14 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
                      </body>
                      </html>
                  `
+            });
+            if(error) {
+                console.log(error);
+                return{ error: 'Server error' }
             }
-            await sgMail
-                .send(msg)
-                .then(() => {
-                    console.log('Email sent');
-                })
-                .catch((error) => {
-                    err = 'err'
-                    console.error(error);
-                })
 
         }
 
-        if (err !== '') return { error: 'Server error' }
         return { success: 'Success' }
 
     }
@@ -146,7 +139,6 @@ export const writeNewsletter = async (newsletter: z.infer<typeof NewsletterSchem
         return { error: 'Server error' }
     }
 }
-
 
 
 

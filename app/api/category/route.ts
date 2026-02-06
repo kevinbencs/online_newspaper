@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 403 });
 
         const body = await request.json()
         const categoryData: categoryData = CategorySchema.parse(body);
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
         const cate = await Category.findOne({ name: categoryData.name });
 
-        if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
+        if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 422 })
 
         
 
@@ -76,7 +76,7 @@ export async function DELETE(request: NextRequest) {
         if (!Cookie) return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 403 });
 
         const body = await request.json();
         const category: category = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 403 });
 
         const body = await request.json()
         const category: categoryUpdate = CategoryUpdateSchema.parse(body)
@@ -115,8 +115,8 @@ export async function PUT(request: NextRequest) {
 
         if(cate.error) {
             console.log(cate.error);
-            if(cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' },{status: 400})
-            else return NextResponse.json({ error: 'Server error' },{status: 400})
+            if(cate.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' },{status: 404})
+            else return NextResponse.json({ error: 'Server error' },{status: 500})
         }
         revalidateTag('categoryTags')    
         */

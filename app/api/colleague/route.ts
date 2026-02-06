@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role === '') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const Col: Colleague[] = await Admin.find({}, { email: 1, name: 1, id: 1 }).sort({ name: 1 });
 
@@ -41,7 +41,7 @@ export async function DELETE(request: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 401 });
+        if (coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin' }, { status: 403 });
 
         const body = await request.json()
 

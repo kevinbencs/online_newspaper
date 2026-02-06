@@ -28,13 +28,13 @@ export async function GET(req: NextRequest) {
 
             const tokenRes = await Token.find({ token: TwoFA.value });
 
-            if (!tokenRes) return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 200 });
+            if (!tokenRes) return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 401 });
 
-            if (!process.env.TwoFA_URI) return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 200 });
+            if (!process.env.TwoFA_URI) return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 401 });
 
             const decoded = await jwt.verify(TwoFA.value, process.env.TwoFA_URI!) as Decoded;
 
-            if (decoded.id !== data.user.id) return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 200 });
+            if (decoded.id !== data.user.id) return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 401 });
 
             const res = await getAllSaveArticle()
             const newsletter = await supabase.from('newsletter').select().eq('email', data.user?.email)
@@ -48,14 +48,14 @@ export async function GET(req: NextRequest) {
 
             const coll = await Eligibility(Cookie.value)
 
-            if (coll.role === '') return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 200 });
+            if (coll.role === '') return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 401 });
 
             return NextResponse.json({ role: coll.role, name: coll.name, email: '', saveArt: [], subscribe: false }, { status: 200 });
 
 
         }
 
-        return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 200 });
+        return NextResponse.json({ role: '', name: '', email: '', saveArt: [], subscribe: false }, { status: 401 });
 
     }
 

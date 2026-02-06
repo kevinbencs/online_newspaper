@@ -6,27 +6,25 @@ import { Eligibility } from "@/utils/mongo/eligibility";
 
 export async function GET(request: NextRequest) {
 
-    const Cookie = request.cookies.get('admin-log');
+    try {
 
-    if (Cookie) {
-        try {
+        const Cookie = request.cookies.get('admin-log');
 
-            const coll = await Eligibility(Cookie.value)
+        if (!Cookie) return NextResponse.json({ number: 0 }, { status: 403 });
 
-            if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ number: 0 }, { status: 200 });
+        const coll = await Eligibility(Cookie.value)
 
-            const article: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ number: 0 }, { status: 403 });
 
-            if (!article.data || article.data.length === 0) return NextResponse.json({ number: 0 }, { status: 200 });
+        const article: PostgrestSingleResponse<{ id: string }[]> = await supabase.from('article').select('id', { count: 'exact' }).eq('locked', true)
 
-            return NextResponse.json({ number: article.count }, { status: 200 });
-        }
-        catch (err) {
-            console.log(err)
-            return NextResponse.json({ number: 0 }, { status: 500 });
-        }
+        if (!article.data || article.data.length === 0) return NextResponse.json({ number: 0 }, { status: 200 });
+
+        return NextResponse.json({ number: article.count }, { status: 200 });
     }
-    else {
-        return NextResponse.json({ number: 0 }, { status: 200 });
+    catch (err) {
+        console.log(err)
+        return NextResponse.json({ number: 0 }, { status: 500 });
     }
+
 }

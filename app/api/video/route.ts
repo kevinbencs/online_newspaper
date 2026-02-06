@@ -29,7 +29,7 @@ export async function GET() {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const video: videoUrl[] = await Video.find();
 
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const body = await request.json()
         const videoData: videoData = AudioVideoUrlSchema.parse(body);
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
         const res = await Video.findOne({ url: videoData.url });
 
-        if (res) return NextResponse.json({ error: 'This video is in the database.' }, { status: 400 })
+        if (res) return NextResponse.json({ error: 'This video is in the database.' }, { status: 422 })
 
         /*const NewVideoUrl = new Video({
             url: videoData.url,
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
         await NewVideoUrl.save();*/
 
-        return NextResponse.json({ success: 'Success' }, { status: 200 })
+        return NextResponse.json({ success: 'Success' }, { status: 201 })
     }
     catch (err) {
         return NextResponse.json({ error: 'Server error' }, { status: 500 })
@@ -81,7 +81,7 @@ export async function DELETE(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 403 });
 
         const body = await request.json();
         const vid: video = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
@@ -106,7 +106,7 @@ export async function PUT(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin, or editor' }, { status: 403 });
         const body = await request.json()
         const video: videoUpdate = AudioVideoUrlUpdateSchema.parse(body)
         const validatedFields = AudioVideoUrlUpdateSchema.safeParse(video);

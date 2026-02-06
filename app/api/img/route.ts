@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         if (!Cookie) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });;
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author'  ) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author'  ) return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const image: img[] = await Image.find();
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const body = await request.json()
         const imageoData: imageoData = ImageUrlSchema.parse(body);
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
         const cate = await Image.findOne({ url: imageoData.url });
 
-        if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 400 })
+        if (cate) return NextResponse.json({ error: 'This category is in the database.' }, { status: 422 })
 
        /* const NewImageUrl = new Image({
             url: imageoData.url,
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
         await NewImageUrl.save();*/
 
-        return NextResponse.json({ success: 'Success' }, { status: 200 })
+        return NextResponse.json({ success: 'Success' }, { status: 201 })
     }
     catch (err) {
         return NextResponse.json({ error: 'Server error' }, { status: 500 })
@@ -80,7 +80,7 @@ export async function DELETE(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 403 });
 
         const body = await request.json();
         const img: image = AudioVideoImageCategoryDeleteUrlSchema.parse(body)
@@ -105,7 +105,7 @@ export async function PUT(request: NextRequest) {
 
         const coll = await Eligibility(Cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 403 });
 
 
         const body = await request.json()
@@ -117,7 +117,7 @@ export async function PUT(request: NextRequest) {
 
         if (res.error) {
             console.log(res.error);
-            if (res.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' }, { status: 400 })
+            if (res.error.name === 'CastError') return NextResponse.json({ error: 'Id is not valid.' }, { status: 404 })
             else return NextResponse.json({ error: 'Server error' }, { status: 500 })
         }
 

@@ -22,23 +22,25 @@ export async function GET(request: NextRequest) {
         const supabase_user = createClient();
         const { data, error } = await supabase_user.auth.getUser();
 
+        if (error || !data || !data.user) NextResponse.json({ saved: false }, { status: 401});
+
         const Cookie = request.cookies.get('user-log-2fa');
 
         if (data.user?.app_metadata.twofa === 'true') {
-            if (!Cookie) return NextResponse.json({ saved: false }, { status: 200 }) ;
+            if (!Cookie) return NextResponse.json({ saved: false }, { status: 401 }) ;
 
             const tokenRes = await Token.find({ token: Cookie.value });
 
-            if (!tokenRes) return NextResponse.json({ saved: false }, { status: 200 }) ;
+            if (!tokenRes) return NextResponse.json({ saved: false }, { status: 401 }) ;
 
-            if (!process.env.TwoFA_URI) return NextResponse.json({ saved: false }, { status: 200 }) 
+            if (!process.env.TwoFA_URI) return NextResponse.json({ saved: false }, { status: 500 }) 
 
             const decoded = await jwt.verify(Cookie.value, process.env.TwoFA_URI!) as Decoded;
 
-            if (decoded.id !== data.user.id) return NextResponse.json({ saved: false }, { status: 200 }) ;
+            if (decoded.id !== data.user.id) return NextResponse.json({ saved: false }, { status: 401 }) ;
         }
 
-        if (error || !data || !data.user) NextResponse.json({ saved: false }, { status: 200 });
+        
 
         const res: PostgrestSingleResponse<{ user_email: string }[]> = await supabase.from('saveArticle').select('user_email').eq('title', title.replaceAll('_', ' '))
 

@@ -18,11 +18,11 @@ export async function GET(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const tasks = await Task.find() as TaskType[];
 
-        return NextResponse.json({res: tasks})
+        return NextResponse.json({res: tasks}, {status: 200})
 
     } catch (err) {
         console.log(err)
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const body = await req.json()
         const value = taskSchema.parse(body)
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
         await task.save();
 
-        return NextResponse.json({ success: 'Success' }, { status: 200 });
+        return NextResponse.json({ success: 'Success' }, { status: 201 });
     }
     catch (err) {
         console.log(err)
@@ -69,7 +69,7 @@ export async function DELETE(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 401 });
+        if (coll.role !== 'Admin' && coll.role !== 'Editor' && coll.role !== 'Author') return NextResponse.json({ error: 'Please log in as admin, editor or author' }, { status: 403 });
 
         const body = await req.json()
         const value = idSchema.parse(body);

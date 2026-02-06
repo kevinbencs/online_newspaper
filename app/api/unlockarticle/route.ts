@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
         const coll = await Eligibility(cookie.value)
 
-        if (coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 401 });
+        if (coll.role !== 'Editor' && coll.role !== 'Admin') return NextResponse.json({ error: 'Please log in as admin or editor' }, { status: 403 });
 
         const body = await req.json();
         const value = EditArticleSchema.parse(body);
